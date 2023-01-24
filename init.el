@@ -585,27 +585,16 @@ before packages are loaded."
 (setq make-backup-files nil) ; stop creating backup~ files
 (setq auto-save-default nil) ; stop creating #autosave# files
 
-;; (set-face-font 'default "JetBrains Mono 13")
-;; (set-face-font 'variable-pitch "JetBrains Mono 13")1
-
-
-;; (add-to-list 'default-frame-alist '(font . "JetBrains Mono 13" ))
-;; (set-face-attribute 'default t :font "JetBrains Mono 13" )
 ;; delete/replace selected text (plutôt que de le placer après, ce qui me fait enrager)
 (setq dired-hide-details-mode t)
 
 (delete-selection-mode 1)
 
-;; (require 'json-reformat)
 (show-paren-mode 1)
-;; (wrap-region-mode t)
-
-;; (desktop-save-mode 1)
 
 ;; when a file is updated outside emacs, make it update if it's already opened in emacs
 (global-auto-revert-mode 1)
 
-;; (require 'calfw-org)
 (require 'org-protocol)
 
 ;; --------
@@ -624,13 +613,6 @@ before packages are loaded."
 (unless (package-installed-p 'use-package)
   (package-refresh-contents)
   (package-install 'use-package))
-
-;; quelpa
-;; (package-initialize)
-;; (unless (require 'quelpa nil t)
-;; (with-temp-buffer
-;; (url-insert-file-contents "https://github.com/quelpa/quelpa/raw/master/bootstrap.el")
-;; (eval-buffer)))
 
 ;; ----------------
 ;; CUSTOM VARIABLES
@@ -688,12 +670,6 @@ fb50b6d00e8b01c2208e55543a6337433a" default))
  '(magit pdf-tools json-reformat json-mode jq-format tabbar htmlize typit wttrin quelpa-use-package quelpa org-ql ivy monkeytype magit chronos chess mu4e-alert evil doom-themes color-theme-sanityinc-tomorrow soothe-theme deft org-journal yaml-mode yasnippet-snippets wrap-region web-mode visual-regexp use-package rjsx-mode processing-mode pomidor php-mode org-vcard org-agenda-property markdown-mode less-css-mode helm-swoop helm-c-yasnippet emms auto-complete))
  '(speedbar-show-unknown-files t)
  '(window-divider-mode nil))
-;; (custom-set-faces
-;; custom-set-faces was added by Custom.
-;; If you edit it by hand, you could mess it up, so be careful.
-;; Your init file should contain only one such instance.
-;; If there is more than one, they won't work right.
-;; '(fringe ((t (:background "pjn-bg-color")))))
 
 (set-face-attribute 'org-level-1 nil :height 1.0)
 (set-face-attribute 'org-level-2 nil :height 1.0)
@@ -714,12 +690,6 @@ fb50b6d00e8b01c2208e55543a6337433a" default))
   	     ("C-c a" . org-agenda))
   ;; Configure org
   :config (progn
-
-	          ;; org and mu4e
-	          ;;store org-mode links to messages
-	          ;; (require 'org-mu4e)
-	          ;; ;;store link to message if in header view, not to header query
-	          ;; (setq org-mu4e-link-query-in-headers-mode nil)
 
 	          ;; org refile mechanism
 	          (setq org-refile-targets `((,(concat org-directory "notes_docs.org") :maxlevel . 9)
@@ -759,18 +729,11 @@ fb50b6d00e8b01c2208e55543a6337433a" default))
   	         org-src-tab-acts-natively t
 
   	         ;; Set Org-Files for Agenda
-  	         ;; org-directory "~/org/"
-  	         ;; org-agenda-files (list (concat org-directory "travail.org")(concat org-directory "perso.org")(concat org-directory "maison.org")(concat org-directory "thomas-cal.org"))
   	         org-archive-location (concat org-directory "archive/archive.org::* %s")
 
 	           ;; column view format
 	           ;; org-columns-default-format "%40ITEM(Tâche) %17Effort(Temps prévu){:} %CLOCKSUM(Temps passé) %PRIORITY(p)"
 	           org-columns-default-format "%40ITEM(Tâche) %17Effort(Temps prévu){:} %CLOCKSUM(Temps passé)"
-
-  	         ;; Mobile Org Settings
-  	         ;; org-mobile-directory "~/Dropbox/Notes/"
-  	         ;; org-mobile-files (list "Schedule.org" "Incoming.org")
-  	         ;; org-mobile-inbox-for-pull (concat org-directory "Schedule.org")
 
   	         ;; Org-Babel execute without confirmation
   	         org-confirm-babel-evaluate nil
@@ -823,26 +786,6 @@ fb50b6d00e8b01c2208e55543a6337433a" default))
 				                              :kill-buffer t
 				                              :empty-lines 1)
 
-				                             ;; de l'administratif
-				                             ;; ("i" "Administratif" entry (file+headline "~/org/administratif.org" "Administratif")
-				                             ;;  "* TODO %^{Titre}\n \n:PROPERTIES:\n:Created: %U\n:END:"
-				                             ;;  :prepend t :kill-buffer t :empty-lines 1)
-
-				                             ;; une tâche pour la maison
-				                             ;; ("m" "Tâche, pour la maison" entry (file+headline "~/org/maison.org" "Maison")
-				                             ;; "* TODO %^{Titre}\n \n:PROPERTIES:\n:Created: %U\n:END:"
-				                             ;; :prepend t :kill-buffer t :empty-lines 1)
-
-				                             ;; un achat à effectuer
-				                             ;; ("a" "Achat" entry (file+headline "~/org/maison.org" "Maison")
-				                             ;;  "* TODO %^{Titre}   :acheter:\n \n:PROPERTIES:\n:Created: %U\n:END:"
-				                             ;;  :prepend t :kill-buffer t :empty-lines 1)
-
-				                             ;; un rendez-vous
-				                             ;; ("r" "rendez-vous" entry (file "~/org/thomas-cal.org")
-				                             ;;  "* %^{Titre}\n"
-				                             ;;  :prepend t :kill-buffer t :empty-lines 1)
-
 	                                   ;; un item de wishlist
 				                             ("w"
 				                              "à lire/voir/entendre"
@@ -860,11 +803,6 @@ fb50b6d00e8b01c2208e55543a6337433a" default))
 			                                :prepend t
 				                              :kill-buffer t
 				                              :empty-lines 1)
-
-				                             ;; une note de travail
-				                             ;; ("n" "Note pro" entry (file+headline "~/org/notes_notes-pro.org" "notes-pro")
-				                             ;;  "* %^{Titre}\n \n:PROPERTIES:\n:Created: %U\n:END:"
-				                             ;;  :prepend t :kill-buffer t :empty-lines 1)
 
 				                             ;; une note d'écriture
 				                             ("e"
@@ -886,155 +824,14 @@ fb50b6d00e8b01c2208e55543a6337433a" default))
 				                              :prepend t :kill-buffer t :empty-lines 1)
 				                             ))
 
-            ;; Org-Babel tangle
-            ;; (require 'ob-tangle)
 
-	          ;; (setq org-ditaa-jar-path "~/.emacs.d/contrib/ditaa0_9.jar")
-
-            ;; Setup Babel languages. Can now do Literate Programming
-            ;; (org-babel-do-load-languages 'org-babel-load-languages
-            ;; '((python . t)
-            ;; (shell . t)
-            ;; (emacs-lisp . t)
-            ;; (ledger . t)
-            ;; (ditaa . t)
-            ;; (js . t)
-            ;; (C . t)))
-
-            ;; Link to specific (git) versions of a file.
-	          ;;            (require 'org-git-link)
-
-            ;; Github Link Formatter
-            ;; (defun gitlink (tag)
-            ;;   "converts github issues, pull requests into valid format"
-            ;;   (setq ghsplit (split-string tag "/"))
-            ;;   (if (string-match-p (regexp-quote "i#") (car (last ghsplit)))
-            ;;       (concat (pop ghsplit) "/" (pop ghsplit) "/issues/" (substring (pop ghsplit) 2 nil))
-            ;;     (if (string-match-p (regexp-quote "p#") (car (last ghsplit)))
-            ;;         (concat (pop ghsplit) "/" (pop ghsplit) "/pull/" (substring (pop ghsplit) 2 nil))
-            ;;       (concat "" tag))))
-
-            ;; ;; Shorthand for links
-            ;; (setq org-link-abbrev-alist '(("github" . "https://github.com/%(gitlink)")
-            ;;                               ("gitlab" . "https://gitlab.com/%(gitlink)")
-            ;;                               ("google" . "https://www.google.com/search?q=%s")
-            ;;                               ("gmap"   . "https://maps.google.com/maps?q=%s")
-            ;;                               ("osm"    . "https://nominatim.openstreetmap.org/search?q=%s&polygon=1")))
-
-            ;; Thunderlink. Open an email in Thunderbird with ThunderLink.
-            ;; (defun org-thunderlink-open (path) (start-process "myname" nil "thunderbird" "-thunderlink" (concat "thunderlink:" path)))
-            ;; (org-link-set-parameters
-            ;;  "thunderlink"
-            ;;  :follow 'org-thunderlink-open
-            ;;  :face '(:foreground "dodgerblue" :underline t))
-
-            ;; (org-link-set-parameters
-            ;;  "mu4e"
-            ;;  :face '(:foreground "dodgerblue" :underline t))
-
-            ;; (org-link-set-parameters
-            ;;  "C"
-            ;;  :follow '(lambda(path) (message "Link only available on Windows"))
-            ;;  :face '(:foreground "darkgoldenrod" :underline t :strike-through t))
-
-            ;; (org-link-set-parameters
-            ;;  "E"
-            ;;  :follow '(lambda(path) (message "Link only available on Windows"))
-            ;;  :face '(:foreground "darkgoldenrod" :underline t :strike-through t))
-
-            ;; (org-link-set-parameters
-            ;;  "outlook"
-            ;;  :follow '(lambda(path) (message "Outlook not available on linux"))
-            ;;  :face '(:foreground "dodgerblue" :underline t :strike-through t)
-            ;;  :help-echo "Outlook not available on this machine")
-
-
-
-	          ;; -------------------------------------
-	          ;; NOTIFICATIONS
-	          ;; -------------------------------------
-	          ;; appointments
-	          ;; (require 'appt)
-	          ;; (appt-activate t)
-
-	          ;; (setq appt-message-warning-time 5) ; Show notification 5 minutes before event
-	          ;; (setq appt-display-interval appt-message-warning-time) ; Disable multiple reminders
-	          ;; (setq appt-display-mode-line nil)
-
-	          ;; 				; Use appointment data from org-mode
-	          ;; (defun my-org-agenda-to-appt ()
-	          ;;   (interactive)
-	          ;;   (setq appt-time-msg-list nil)
-	          ;;   (org-agenda-to-appt))
-
-	          ;; 				; Update alarms when...
-	          ;; 				; (1) ... Starting Emacs
-	          ;; (my-org-agenda-to-appt)
-
-	          ;; 				; (2) ... Everyday at 12:05am (useful in case you keep Emacs always on)
-	          ;; (run-at-time "12:05am" (* 24 3600) 'my-org-agenda-to-appt)
-
-	          ;; 				; (3) ... When TODO.txt is saved
-	          ;; (add-hook 'after-save-hook
-	          ;; 	      '(lambda ()
-	          ;; 		 (if (string= (buffer-file-name) (concat (getenv "HOME") "/ideas/TODO.txt"))
-	          ;; 		     (my-org-agenda-to-appt))))
-
-	          ;; 				; Display appointments as a window manager notification
-	          ;; (setq appt-disp-window-function 'my-appt-display)
-	          ;; (setq appt-delete-window-function (lambda () t))
-
-	          ;; (setq my-appt-notification-app (concat (getenv "HOME") "~/scripts/appt-notification"))
-
-	          ;; (defun my-appt-display (min-to-app new-time msg)
-	          ;;   (if (atom min-to-app)
-	          ;; 	  (start-process "my-appt-notification-app" nil my-appt-notification-app min-to-app msg)
-	          ;; 	(dolist (i (number-sequence 0 (1- (length min-to-app))))
-	          ;; 	  (start-process "my-appt-notification-app" nil my-appt-notification-app (nth i min-to-app) (nth i msg)))))
-	          ;; ;; -------------------------------------
-	          ;; FIN NOTIFICATIONS
-	          ;; -------------------------------------
-  	        
-
-	          ;; Make appt aware of appointments from the agenda
-	          ;; (defun org-agenda-to-appt ()
-	          ;;   "Activate appointments found in `org-agenda-files'."
-	          ;;   (interactive)
-	          ;;   (require 'org)
-	          ;;   (let* ((today (org-date-to-gregorian
-	          ;; 		     (time-to-days (current-time))))
-	          ;; 	     (files org-agenda-files) entries file)
-	          ;; 	(while (setq file (pop files))
-	          ;; 	  (setq entries (append entries (org-agenda-get-day-entries
-	          ;; 					 file today :timestamp))))
-	          ;; 	(setq entries (delq nil entries))
-	          ;; 	(mapc (lambda(x)
-	          ;; 		(let* ((event (org-trim (get-text-property 1 'txt x)))
-	          ;; 		       (time-of-day (get-text-property 1 'time-of-day x)) tod)
-	          ;; 		  (when time-of-day
-	          ;; 		    (setq tod (number-to-string time-of-day)
-	          ;; 			  tod (when (string-match
-	          ;; 				     "\\([0-9]\\{1,2\\}\\)\\([0-9]\\{2\\}\\)" tod)
-	          ;; 				(concat (match-string 1 tod) ":"
-	          ;; 					(match-string 2 tod))))
-	          ;; 		    (if tod (appt-add tod event))))) entries)))
 	          
-	          ;; ---------------------------------------
-	          ;; from : <https://whhone.com/posts/org-mode-task-management/>
-	          ;; Emacs Easy Customization ("M-x customize") syntax is used.
-	          ;; If you prefer using .el files directly, set it with "setq".
-	          
-	          ;; TODO keywords.
-	          ;; (setq org-todo-keywords
-	          ;; '((sequence "TODO" "FEEDBACK" "VERIFY" "|" "DONE" "DELEGATED")))
 	          (setq org-todo-keywords
 		              '((sequence "TODO(t)" "NEXT(n)" "PROG(p)" "INTR(i)" "CANCELED(c)" "DONE(d)")))
 	          
 	          ;; Show the daily agenda by default.
 	          (setq org-agenda-span 'day)
 	          
-	          ;; Hide tasks that are scheduled in the future.
-	          ;; (setq org-agenda-todo-ignore-scheduled 'future)
 	          
 	          ;; Use "second" instead of "day" for time comparison.
 	          ;; It hides tasks with a scheduled time like "<2020-11-15 Sun 11:30>"
@@ -1043,23 +840,6 @@ fb50b6d00e8b01c2208e55543a6337433a" default))
 	          ;; Hide the deadline prewarning prior to scheduled date.
 	          (setq org-agenda-skip-deadline-prewarning-if-scheduled 'pre-scheduled)
 	          
-	          ;; (setq org-agenda-custom-commands
-	          ;; 	  '(("n" "Agenda / INTR / PROG / NEXT"
-	          ;; 	     ((agenda "" nil)
-	          ;; 	      (todo "INTR" nil)
-	          ;; 	      (todo "PROG" nil)
-	          ;; 	      (todo "NEXT" nil))
-	          ;; 	     nil)))
-	          ;; ---------------------------------
-
-	          ;; (require 'org-collector)
-
-	          ;; (use-package org-ql
-	          ;;   :quelpa (org-ql :fetcher github :repo "alphapapa/org-ql"
-	          ;; 		      :files (:defaults (:exclude "helm-org-ql.el"))))""
-	          
-  	        ;; (require 'org-contacts)
-  	        ;; (setq org-contacts-files (list (concat org-directory "contacts.org")))))
             ))
 
 
@@ -1080,29 +860,6 @@ fb50b6d00e8b01c2208e55543a6337433a" default))
   (org-duration-set-regexps)
   )
 
-;; (load "org-caldav")
-;; Calendrier de Thomas
-;; (setq org-caldav-url "https://framagenda.org/remote.php/dav/calendars/patjennings/"
-;; org-caldav-calendar-id "thomas"
-;; org-caldav-inbox "~/org/thomas-cal.org"
-;; org-icalendar-timezone "Europe/Paris")
-;; )
-
-;; Calendrier de Clém
-;; (setq org-caldav-url "https://framagenda.org/remote.php/dav/calendars/clemencegantois/"
-;;       org-caldav-calendar-id "personal"
-;;       org-caldav-inbox "~/org/clemence-cal.org"
-;;       org-icalendar-timezone "Europe/Paris")
-
-;; (setq org-caldav-calendars
-;;       '((:calendar-id "thomas"
-;; 		      :inbox "~/org/thomas-cal.org"
-;; 		      ;; :file "~/org/thomas-cal.org"
-;; 		      :icalendar-timezone "Europe/Paris")))
-;; (:calendar-id "clemence-1"
-;; 	      :inbox "~/org/clemence-cal.org"
-;; 	      ;; :file "~/org/clemence-cal.org"
-;; 	      :icalendar-timezone "Europe/Paris"))) 
 
 ;; ----------------
 ;; ORG-PUBLISH

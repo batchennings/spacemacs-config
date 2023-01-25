@@ -240,7 +240,19 @@ It should only modify the values of Spacemacs settings."
    ;; Press `SPC T n' to cycle to the next theme in the list (works great
    ;; with 2 themes variants, one dark and one light)
    dotspacemacs-themes '(spacemacs-dark
-                         spacemacs-light)
+                         spacemacs-light
+                         cyberpunk
+                         hc-zenburn
+                         heroku
+                         organic-green
+                         niflheim
+                         sanityinc-tomorrow-blue
+                         tango
+                         subatomic
+                         stekene-light
+                         underwater
+                         zenburn)
+
 
    ;; Set the theme for the Spaceline. Supported themes are `spacemacs',
    ;; `all-the-icons', `custom', `doom', `vim-powerline' and `vanilla'. The
@@ -1063,7 +1075,7 @@ fb50b6d00e8b01c2208e55543a6337433a" default))
  '(org-id-extra-files t)
  '(org-id-track-globally t)
  '(package-selected-packages
-   '(evil-org gnuplot helm-org-rifle org org-cliplink org-contrib org-download org-mime org-pomodoro alert log4e gntp org-present org-projectile org-category-capture org-rich-yank orgit-forge orgit counsel-gtags dap-mode lsp-docker lsp-treemacs bui lsp-mode ggtags helm-gtags import-js grizzl js-doc js2-refactor multiple-cursors livid-mode nodejs-repl npm-mode skewer-mode js2-mode tern add-node-modules-path company-web web-completion-data company counsel-css counsel swiper emmet-mode helm-css-scss impatient-mode simple-httpd prettier-js pug-mode sass-mode haml-mode scss-mode slim-mode tagedit web-beautify yasnippet magit pdf-tools json-reformat json-mode jq-format tabbar htmlize typit wttrin quelpa-use-package quelpa org-ql ivy monkeytype magit chronos chess mu4e-alert evil doom-themes color-theme-sanityinc-tomorrow soothe-theme deft org-journal yaml-mode yasnippet-snippets wrap-region web-mode visual-regexp use-package rjsx-mode processing-mode pomidor php-mode org-vcard org-agenda-property markdown-mode less-css-mode helm-swoop helm-c-yasnippet emms auto-complete))
+   '(hc-zenburn-theme heroku-theme organic-green-theme subatomic-theme sublime-themes underwater-theme zenburn-theme magit pdf-tools json-reformat json-mode jq-format tabbar htmlize typit wttrin quelpa-use-package quelpa org-ql ivy monkeytype magit chronos chess mu4e-alert evil doom-themes color-theme-sanityinc-tomorrow soothe-theme deft org-journal yaml-mode yasnippet-snippets wrap-region web-mode visual-regexp use-package rjsx-mode processing-mode pomidor php-mode org-vcard org-agenda-property markdown-mode less-css-mode helm-swoop helm-c-yasnippet emms auto-complete))
  '(speedbar-show-unknown-files t)
  '(window-divider-mode nil))
 (custom-set-faces

@@ -71,7 +71,7 @@ This function should only modify configuration layer settings."
    dotspacemacs-frozen-packages '()
 
    ;; A list of packages that will not be installed and loaded.
-   dotspacemacs-excluded-packages '()
+   dotspacemacs-excluded-packages '(org-superstar)
 
    ;; Defines the behaviour of Spacemacs when installing packages.
    ;; Possible values are `used-only', `used-but-keep-unused' and `all'.
@@ -572,7 +572,7 @@ Put your configuration code here, except for variables that should be set
 before packages are loaded."
 
 
-;; (add-to-list 'load-path "~/.emacs.d/plugins/") ;; on signale à emacs l'emplacement des plugins
+(add-to-list 'load-path "~/.emacs.d/plugins/") ;; on signale à emacs l'emplacement des plugins
 (setq-default flycheck-emacs-lisp-load-path 'inherit)
 
 (setq user-full-name "thomas guesnon")
@@ -673,6 +673,9 @@ fb50b6d00e8b01c2208e55543a6337433a" default))
 
 (set-face-attribute 'org-level-1 nil :height 1.0)
 (set-face-attribute 'org-level-2 nil :height 1.0)
+
+(add-to-list 'load-path "~/.emacs.d/plugins/evil-org-mode")
+(require 'evil-org)
 
 ;; --------
 ;; ORG-MODE

@@ -32,7 +32,9 @@ This function should only modify configuration layer settings."
 
    ;; List of configuration layers to load.
    dotspacemacs-configuration-layers
-   '(javascript
+   '(yaml
+     ruby
+     javascript
      html
      ;; ----------------------------------------------------------------
      ;; Example of useful layers you may want to use right away.
@@ -48,9 +50,9 @@ This function should only modify configuration layer settings."
      ;; markdown
      multiple-cursors
      org
-     ;; (shell :variables
-     ;;        shell-default-height 30
-     ;;        shell-default-position 'bottom)
+     (shell :variables
+            shell-default-height 30
+            shell-default-position 'bottom)
      ;; spell-checking
      ;; syntax-checking
      ;; version-control
@@ -553,6 +555,12 @@ This function is called immediately after `dotspacemacs/init', before layer
 configuration.
 It is mostly for variables that should be set before packages are loaded.
 If you are unsure, try setting them in `dotspacemacs/user-config' first."
+  ;; https://emacs.stackexchange.com/questions/35117/how-to-set-the-keybinding-for-addind-the-hash-symbol-in-spacemacs-with-macos
+  (setq-default mac-right-option-modifier nil)
+
+  (setq mac-option-modifier nil
+        mac-command-modifier 'meta
+        x-select-enable-clipboard t)
 )
 
 
@@ -570,7 +578,7 @@ This function is called at the very end of Spacemacs startup, after layer
 configuration.
 Put your configuration code here, except for variables that should be set
 before packages are loaded."
-
+  (define-key evil-normal-state-map (kbd "M-5") "[")
 
 (add-to-list 'load-path "~/.emacs.d/plugins/") ;; on signale à emacs l'emplacement des plugins
 (setq-default flycheck-emacs-lisp-load-path 'inherit)
@@ -1008,7 +1016,6 @@ TAG is chosen interactively from the global tags completion table."
 
 )
 
-
 ;; Do not write anything past this comment. This is where Emacs will
 ;; auto-generate custom variable definitions.
 (defun dotspacemacs/emacs-custom-settings ()
@@ -1063,7 +1070,7 @@ fb50b6d00e8b01c2208e55543a6337433a" default))
  '(org-id-extra-files t)
  '(org-id-track-globally t)
  '(package-selected-packages
-   '(tern hc-zenburn-theme heroku-theme organic-green-theme subatomic-theme sublime-themes underwater-theme zenburn-theme magit pdf-tools json-reformat json-mode jq-format tabbar htmlize typit wttrin quelpa-use-package quelpa org-ql ivy monkeytype magit chronos chess mu4e-alert evil doom-themes color-theme-sanityinc-tomorrow soothe-theme deft org-journal yaml-mode yasnippet-snippets wrap-region web-mode visual-regexp use-package rjsx-mode processing-mode pomidor php-mode org-vcard org-agenda-property markdown-mode less-css-mode helm-swoop helm-c-yasnippet emms auto-complete))
+   '(multi-vterm xref shell-pop terminal-here tern vterm xterm-color add-node-modules-path bundler chruby company counsel-gtags counsel swiper dap-mode lsp-docker lsp-treemacs bui lsp-mode enh-ruby-mode ggtags helm-gtags minitest rake rbenv robe inf-ruby rspec-mode rubocop rubocopfmt ruby-hash-syntax ruby-refactor ruby-test-mode ruby-tools rvm seeing-is-believing magit pdf-tools json-reformat json-mode jq-format tabbar htmlize typit wttrin quelpa-use-package quelpa org-ql ivy monkeytype magit chronos chess mu4e-alert evil doom-themes color-theme-sanityinc-tomorrow soothe-theme deft org-journal yaml-mode yasnippet-snippets wrap-region web-mode visual-regexp use-package rjsx-mode processing-mode pomidor php-mode org-vcard org-agenda-property markdown-mode less-css-mode helm-swoop helm-c-yasnippet emms auto-complete))
  '(speedbar-show-unknown-files t)
  '(window-divider-mode nil))
 (custom-set-faces

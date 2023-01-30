@@ -32,7 +32,8 @@ This function should only modify configuration layer settings."
 
    ;; List of configuration layers to load.
    dotspacemacs-configuration-layers
-   '(yaml
+   '(csv
+     yaml
      ruby
      javascript
      html
@@ -46,6 +47,7 @@ This function should only modify configuration layer settings."
      emacs-lisp
      git
      helm
+     tabs
      ;; lsp
      ;; markdown
      multiple-cursors
@@ -599,8 +601,8 @@ before packages are loaded."
 (delete-selection-mode 1)
 
 (show-paren-mode 1)
-
-;; when a file is updated outside emacs, make it update if it's already opened in emacs
+;; (setq powerline-default-separator 'utf-8) ;; https://emacs.stackexchange.com/questions/31860/spacemacs-modeline-color-mismatch
+                                        ;https://emacs.stackexchange.com/questions/31860/spacemacs-modeline-color-mismatch; when a file is updated outside emacs, make it update if it's already opened in emacs
 (global-auto-revert-mode 1)
 
 (require 'org-protocol)
@@ -670,7 +672,9 @@ fb50b6d00e8b01c2208e55543a6337433a" default))
      ,(concat org-directory "notes_links.org")
      ,(concat org-directory "notes_travail.org")
      ,(concat org-directory "notes_perso.org")
-     ,(concat org-directory "notes_wishlist.org")))
+     ,(concat org-directory "notes_wishlist.org"))
+
+)
  '(org-export-with-sub-superscripts nil)
  '(org-id-extra-files t)
  '(org-id-track-globally t)
@@ -1014,6 +1018,14 @@ TAG is chosen interactively from the global tags completion table."
                finally return
                (cl-sort result #'> :key #'car)))))
 
+;; LilyPond mode
+(add-to-list 'load-path "~/.emacs.d/plugins/lilypond-init.el")
+(autoload 'LilyPond-mode "lilypond-mode")
+(setq auto-mode-alist
+      (cons '("\\.ly$" . LilyPond-mode) auto-mode-alist))
+
+(add-hook 'LilyPond-mode-hook (lambda () (turn-on-font-lock)))
+
 )
 
 ;; Do not write anything past this comment. This is where Emacs will
@@ -1070,7 +1082,7 @@ fb50b6d00e8b01c2208e55543a6337433a" default))
  '(org-id-extra-files t)
  '(org-id-track-globally t)
  '(package-selected-packages
-   '(multi-vterm xref shell-pop terminal-here tern vterm xterm-color add-node-modules-path bundler chruby company counsel-gtags counsel swiper dap-mode lsp-docker lsp-treemacs bui lsp-mode enh-ruby-mode ggtags helm-gtags minitest rake rbenv robe inf-ruby rspec-mode rubocop rubocopfmt ruby-hash-syntax ruby-refactor ruby-test-mode ruby-tools rvm seeing-is-believing magit pdf-tools json-reformat json-mode jq-format tabbar htmlize typit wttrin quelpa-use-package quelpa org-ql ivy monkeytype magit chronos chess mu4e-alert evil doom-themes color-theme-sanityinc-tomorrow soothe-theme deft org-journal yaml-mode yasnippet-snippets wrap-region web-mode visual-regexp use-package rjsx-mode processing-mode pomidor php-mode org-vcard org-agenda-property markdown-mode less-css-mode helm-swoop helm-c-yasnippet emms auto-complete))
+   '(centaur-tabs csv-mode multi-vterm xref shell-pop terminal-here tern vterm xterm-color add-node-modules-path bundler chruby company counsel-gtags counsel swiper dap-mode lsp-docker lsp-treemacs bui lsp-mode enh-ruby-mode ggtags helm-gtags minitest rake rbenv robe inf-ruby rspec-mode rubocop rubocopfmt ruby-hash-syntax ruby-refactor ruby-test-mode ruby-tools rvm seeing-is-believing magit pdf-tools json-reformat json-mode jq-format tabbar htmlize typit wttrin quelpa-use-package quelpa org-ql ivy monkeytype magit chronos chess mu4e-alert evil doom-themes color-theme-sanityinc-tomorrow soothe-theme deft org-journal yaml-mode yasnippet-snippets wrap-region web-mode visual-regexp use-package rjsx-mode processing-mode pomidor php-mode org-vcard org-agenda-property markdown-mode less-css-mode helm-swoop helm-c-yasnippet emms auto-complete))
  '(speedbar-show-unknown-files t)
  '(window-divider-mode nil))
 (custom-set-faces

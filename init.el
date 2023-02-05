@@ -47,7 +47,7 @@ This function should only modify configuration layer settings."
      emacs-lisp
      git
      helm
-     tabs
+     ;; tabs
      ;; lsp
      ;; markdown
      multiple-cursors
@@ -549,7 +549,7 @@ default it calls `spacemacs/load-spacemacs-env' which loads the environment
 variables declared in `~/.spacemacs.env' or `~/.spacemacs.d/.spacemacs.env'.
 See the header of this file for more information."
   (spacemacs/load-spacemacs-env)
-)
+  )
 
 (defun dotspacemacs/user-init ()
   "Initialization for user code:
@@ -563,7 +563,7 @@ If you are unsure, try setting them in `dotspacemacs/user-config' first."
   (setq mac-option-modifier nil
         mac-command-modifier 'meta
         x-select-enable-clipboard t)
-)
+  )
 
 
 (defun dotspacemacs/user-load ()
@@ -571,7 +571,7 @@ If you are unsure, try setting them in `dotspacemacs/user-config' first."
 This function is called only while dumping Spacemacs configuration. You can
 `require' or `load' the libraries of your choice that will be included in the
 dump."
-)
+  )
 
 
 (defun dotspacemacs/user-config ()
@@ -582,451 +582,452 @@ Put your configuration code here, except for variables that should be set
 before packages are loaded."
   (define-key evil-normal-state-map (kbd "M-5") "[")
 
-(add-to-list 'load-path "~/.emacs.d/plugins/") ;; on signale à emacs l'emplacement des plugins
-(setq-default flycheck-emacs-lisp-load-path 'inherit)
+  ;; on signale à emacs l'emplacement des plugins
+  (setq-default flycheck-emacs-lisp-load-path 'inherit)
 
-(setq user-full-name "thomas guesnon")
-(setq user-mail-address "bonjour@thomasguesnon.fr")
+  (setq user-full-name "thomas guesnon")
+  (setq user-mail-address "bonjour@thomasguesnon.fr")
 
-;; default path for file creation
-(setq default-directory "~/Documents/")
-(setq org-directory "~/Dropbox/org/")
+  ;; default path for file creation
+  (setq default-directory "~/Documents/")
+  (setq org-directory "~/Dropbox/org/")
 
-(setq make-backup-files nil) ; stop creating backup~ files
-(setq auto-save-default nil) ; stop creating #autosave# files
+  (setq make-backup-files nil) ; stop creating backup~ files
+  (setq auto-save-default nil) ; stop creating #autosave# files
 
-;; delete/replace selected text (plutôt que de le placer après, ce qui me fait enrager)
-(setq dired-hide-details-mode t)
+  ;; delete/replace selected text (plutôt que de le placer après, ce qui me fait enrager)
+  (setq dired-hide-details-mode t)
 
-(delete-selection-mode 1)
+  (delete-selection-mode 1)
 
-(show-paren-mode 1)
-;; (setq powerline-default-separator 'utf-8) ;; https://emacs.stackexchange.com/questions/31860/spacemacs-modeline-color-mismatch
-                                        ;https://emacs.stackexchange.com/questions/31860/spacemacs-modeline-color-mismatch; when a file is updated outside emacs, make it update if it's already opened in emacs
-(global-auto-revert-mode 1)
+  (show-paren-mode 1)
+  ;; (setq powerline-default-separator 'utf-8) ;; https://emacs.stackexchange.com/questions/31860/spacemacs-modeline-color-mismatch
+  ;; https://emacs.stackexchange.com/questions/31860/spacemacs-modeline-color-mismatch; when a file is updated outside emacs, make it update if it's already opened in emacs
+  (global-auto-revert-mode 1)
 
-(require 'org-protocol)
+  (require 'org-protocol)
 
-;; --------
-;; PACKAGES
-;; --------
+  ;; --------
+  ;; PACKAGES
+  ;; --------
 
-;; packages repos
-(require 'package)
-(add-to-list 'package-archives '("melpa" . "https://melpa.org/packages/") t)
-;; (add-to-list 'package-archives '("org" . "https://orgmode.org/elpa/") t)
-(add-to-list 'package-archives '("gnu" . "https://elpa.gnu.org/packages/") t)
-(add-to-list 'package-archives '("elpy" . "http://jorgenschaefer.github.io/packages/") t)
-;; (package-initialize)
+  (add-to-list 'load-path "~/.emacs.d/plugins/") 
 
-;; Install use-package
-(unless (package-installed-p 'use-package)
-  (package-refresh-contents)
-  (package-install 'use-package))
+  ;; packages repos
+  (require 'package)
+  ;; (add-to-list 'package-archives '("melpa" . "https://melpa.org/packages/") t)
+  ;; (add-to-list 'package-archives '("org" . "https://orgmode.org/elpa/") t)
+  ;; (add-to-list 'package-archives '("gnu" . "https://elpa.gnu.org/packages/") t)
+  ;; (add-to-list 'package-archives '("elpy" . "http://jorgenschaefer.github.io/packages/") t)
+  ;; (package-initialize)
 
-;; ----------------
-;; CUSTOM VARIABLES
-;; ----------------
-(custom-set-variables
- ;; custom-set-variables was added by Custom.
- ;; If you edit it by hand, you could mess it up, so be careful.
- ;; Your init file should contain only one such instance.
- ;; If there is more than one, they won't work right.
- '(ansi-color-faces-vector
-   [default bold shadow italic underline bold bold-italic bold])
- '(custom-safe-themes
-   '("02f57ef0a20b7f61adce51445b68b2a7e832648ce2e7efb19d217b6454c1b644" "ed5c37f3c823f0b4348e5025707ac40b95dbecd99a67d93cd4416c258eaf75f0" "966a49d899d00211fa2fa652b5f64e106782cd84b30dff4c658eb5d542fce5a1" "7f666327ab76c4cf1bd60d55e2fd17e46ebf44c10df466adc86312089bb3fdfe" "ae30c27916f58eb24285b19d52e2c4ae36b862a3856bbbc5e932f5d436dc7d61" "246a9596178bb806c5f41e5b571546bb6e0f4bd41a9da0df5dfbca7ec6e2250c" "835868dcd17131ba8b9619d14c67c127aa18b90a82438c8613586331129dda63" "8f5a7a9a3c510ef9cbb88e600c0b4c53cdcdb502cfe3eb50040b7e13c6f4e78e" "82d2cac368ccdec2fcc7573f24c3f79654b78bf133096f9b40c20d97ec1d8016" "b0334e8e314ea69f745eabbb5c1817a173f5e9715493d63b592a8dc9c19a4de6" "7a994c16aa550678846e82edc8c9d6a7d39cc6564baaaacc305a3fdc0bd8725f" "c83c095dd01cde64b631fb0fe5980587deec3834dc55144a6e78ff91ebc80b19" "fce3524887a0994f8b9b047aef9cc4cc017c5a93a5fb1f84d300391fba313743" "2c49d6ac8c0bf19648c9d2eabec9b246d46cb94d83713eaae4f26b49a8183fc4" "77113617a0642d74767295c4408e17da3bfd9aa80aaa2b4eeb34680f6172d71a" "bb08c73af94ee74453c90422485b29e5643b73b05e8de029a6909af6a3fb3f58" "628278136f88aa1a151bb2d6c8a86bf2b7631fbea5f0f76cba2a0079cd910f7d" "1b8d67b43ff1723960eb5e0cba512a2c7a2ad544ddb2533a90101fd1852b426e" "06f0b439b62164c6f8f84fdda32b62
-fb50b6d00e8b01c2208e55543a6337433a" default))
- '(doc-view-continuous t)
- '(flycheck-color-mode-line-face-to-color 'mode-line-buffer-id)
- '(helm-completion-style 'emacs)
- '(org-agenda-custom-commands
-   '(("x" "Tags dans links/docs/notes-pro/wishlist" tags ""
-      ((org-agenda-files
-	      `(,(concat org-directory "notes_docs.org")
-	        ,(concat org-directory "notes_links.org")
-	        ,(concat org-directory "notes_travail.org")
-	        ,(concat org-directory "notes_perso.org")
-	        ,(concat org-directory "notes_wishlist.org")))))
-     ("n" "Agenda / INTR / PROG / NEXT"
-      ((agenda "" nil)
-       (todo "INTR" nil)
-       (todo "PROG" nil)
-       (todo "NEXT" nil))
-      nil)))
- '(org-agenda-files
-   `(,(concat org-directory "travail.org")
-     ,(concat org-directory "perso.org")
-     ,(concat org-directory "projets.org")))
- ;; ,(concat org-directory "cal/thomas-cal.org")
- ;; ,(concat org-directory "cal/thomas-free-cal.org")
- ;; ,(concat org-directory "cal/clemence-cal.org")))
- '(org-agenda-search-view-max-outline-level 1)
- '(org-agenda-text-search-extra-files
-   `(,(concat org-directory "archive/archive.org")
-     ,(concat org-directory "notes_docs.org")
-     ,(concat org-directory "projets_archive.org")
-     ,(concat org-directory "notes_famille.org")
-     ,(concat org-directory "notes_reference.org")
-     ,(concat org-directory "notes_inbox.org")
-     ,(concat org-directory "notes_links.org")
-     ,(concat org-directory "notes_travail.org")
-     ,(concat org-directory "notes_perso.org")
-     ,(concat org-directory "notes_wishlist.org"))
+  ;; Install use-package
+  ;; (unless (package-installed-p 'use-package)
+    ;; (package-refresh-contents)
+    ;; (package-install 'use-package))
 
-)
- '(org-export-with-sub-superscripts nil)
- '(org-id-extra-files t)
- '(org-id-track-globally t)
- '(package-selected-packages
- '(magit pdf-tools json-reformat json-mode jq-format tabbar htmlize typit wttrin quelpa-use-package quelpa org-ql ivy monkeytype magit chronos chess mu4e-alert evil doom-themes color-theme-sanityinc-tomorrow soothe-theme deft org-journal yaml-mode yasnippet-snippets wrap-region web-mode visual-regexp use-package rjsx-mode processing-mode pomidor php-mode org-vcard org-agenda-property markdown-mode less-css-mode helm-swoop helm-c-yasnippet emms auto-complete))
- '(speedbar-show-unknown-files t)
- '(window-divider-mode nil))
+  ;; ----------------
+  ;; CUSTOM VARIABLES
+  ;; ----------------
 
-(set-face-attribute 'org-level-1 nil :height 1.0)
-(set-face-attribute 'org-level-2 nil :height 1.0)
+  (custom-set-variables
+   ;; custom-set-variables was added by Custom.
+   ;; If you edit it by hand, you could mess it up, so be careful.
+   ;; Your init file should contain only one such instance.
+   ;; If there is more than one, they won't work right.
+   '(doc-view-continuous t)
+   '(flycheck-color-mode-line-face-to-color 'mode-line-buffer-id)
+   '(helm-completion-style 'emacs)
+   '(org-agenda-custom-commands
+     '(("x" "Tags dans links/docs/notes-pro/wishlist" tags ""
+        ((org-agenda-files
+	        `(,(concat org-directory "notes_docs.org")
+	          ,(concat org-directory "notes_links.org")
+	          ,(concat org-directory "notes_travail.org")
+	          ,(concat org-directory "notes_perso.org")
+	          ,(concat org-directory "notes_wishlist.org")))))
+       ("n" "Agenda / INTR / PROG / NEXT"
+        ((agenda "" nil)
+         (todo "INTR" nil)
+         (todo "PROG" nil)
+         (todo "NEXT" nil))
+        nil)))
+   '(org-agenda-files
+     `(,(concat org-directory "travail.org")
+       ,(concat org-directory "perso.org")
+       ,(concat org-directory "projets.org")))
+   '(org-agenda-search-view-max-outline-level 1)
+   '(org-agenda-text-search-extra-files
+     `(,(concat org-directory "archive/archive.org")
+       ,(concat org-directory "notes_docs.org")
+       ,(concat org-directory "projets_archive.org")
+       ,(concat org-directory "notes_famille.org")
+       ,(concat org-directory "notes_reference.org")
+       ,(concat org-directory "notes_inbox.org")
+       ,(concat org-directory "notes_links.org")
+       ,(concat org-directory "notes_travail.org")
+       ,(concat org-directory "notes_perso.org")
+       ,(concat org-directory "notes_wishlist.org"))
 
-(add-to-list 'load-path "~/.emacs.d/plugins/evil-org-mode")
-(require 'evil-org)
+     )
+   '(org-export-with-sub-superscripts nil)
+   '(org-id-extra-files t)
+   '(org-id-track-globally t)
+   '(package-selected-packages
+     '(magit pdf-tools json-reformat json-mode jq-format tabbar htmlize typit wttrin quelpa-use-package quelpa org-ql ivy monkeytype magit chronos chess mu4e-alert evil doom-themes color-theme-sanityinc-tomorrow soothe-theme deft org-journal yaml-mode yasnippet-snippets wrap-region web-mode visual-regexp use-package rjsx-mode processing-mode pomidor php-mode org-vcard org-agenda-property markdown-mode less-css-mode helm-swoop helm-c-yasnippet emms auto-complete))
+   '(speedbar-show-unknown-files t)
+   '(window-divider-mode nil))
 
-;; --------
-;; ORG-MODE
-;; --------
-(use-package org
-  ;; Install package org-plus-contrib for org
-  ;; :ensure org-plus-contrib
-  ;; Install from 'org' package archive
-  :pin gnu
-  ;; Load org in org-mode
-  :mode (("\\.org$" . org-mode))
-  ;; Bind keys
-  :bind (("C-c c" . org-capture)
-  	     ("C-c l" . org-store-link)
-  	     ("C-c a" . org-agenda))
-  ;; Configure org
-  :config (progn
+  (set-face-attribute 'org-level-1 nil :height 1.0)
+  (set-face-attribute 'org-level-2 nil :height 1.0)
+  (set-face-attribute 'org-level-3 nil :height 1.0)
+  (set-face-attribute 'org-level-4 nil :height 1.0)
+  (set-face-attribute 'org-level-5 nil :height 1.0)
+  (set-face-attribute 'org-level-6 nil :height 1.0)
+  (set-face-attribute 'org-level-7 nil :height 1.0)
+  (set-face-attribute 'org-document-title nil :height 1.0)
 
-	          ;; org refile mechanism
-	          (setq org-refile-targets `((,(concat org-directory "notes_docs.org") :maxlevel . 9)
-				                               (,(concat org-directory "notes_ecrire.org") :maxlevel . 9)
-				                               (,(concat org-directory "notes_famille.org") :maxlevel . 9)
-				                               (,(concat org-directory "notes_reference.org") :maxlevel . 9)
-				                               (,(concat org-directory "notes_links.org") :maxlevel . 9)
-				                               (,(concat org-directory "notes_travail.org") :maxlevel . 9)
-				                               (,(concat org-directory "notes_perso.org") :maxlevel . 9)
-				                               (,(concat org-directory "archive_projets.org") :maxlevel . 9)
-				                               (,(concat org-directory "notes_son.org") :maxlevel . 9)
-                                       (org-agenda-files :maxlevel . 9)))
-	          (setq org-outline-path-complete-in-steps nil)         ; Refile in a single go
-	          ;; (setq org-refile-use-outline-path t)                  ; Show full paths for refiling
+  (add-to-list 'load-path "~/.emacs.d/plugins/evil-org-mode")
+  (require 'evil-org)
 
-	          (setq org-refile-use-outline-path 'file)
-	          ;; (setq org-refile-targets '((org-agenda-files :level . 1)))
+  ;; --------
+  ;; ORG-MODE
+  ;; --------
+  (with-eval-after-load 'org
+    ;; Install package org-plus-contrib for org
+    ;; :ensure org-plus-contrib
+    ;; Install from 'org' package archive
+    :pin gnu
+    ;; Load org in org-mode
+    :mode (("\\.org$" . org-mode))
+    ;; Bind keys
+    :bind (("C-c c" . org-capture)
+  	       ("C-c l" . org-store-link)
+  	       ("C-c a" . org-agenda))
+    ;; Configure org
+    :config (progn
 
-	          ;; html exports
-	          (setq org-html-checkbox-type 'html)
-  	        (setq
-  	         org-log-done t
-  	         org-log-into-drawer t
-  	         org-reverse-note-order t
+	            ;; org refile mechanism
+	            (setq org-refile-targets `((,(concat org-directory "notes_docs.org") :maxlevel . 9)
+				                                 (,(concat org-directory "notes_ecrire.org") :maxlevel . 9)
+				                                 (,(concat org-directory "notes_famille.org") :maxlevel . 9)
+				                                 (,(concat org-directory "notes_reference.org") :maxlevel . 9)
+				                                 (,(concat org-directory "notes_links.org") :maxlevel . 9)
+				                                 (,(concat org-directory "notes_travail.org") :maxlevel . 9)
+				                                 (,(concat org-directory "notes_perso.org") :maxlevel . 9)
+				                                 (,(concat org-directory "archive_projets.org") :maxlevel . 9)
+				                                 (,(concat org-directory "notes_son.org") :maxlevel . 9)
+                                         (org-agenda-files :maxlevel . 9)))
+	            (setq org-outline-path-complete-in-steps nil)         ; Refile in a single go
+	            ;; (setq org-refile-use-outline-path t)                  ; Show full paths for refiling
 
-  	         ;; Speed Commands
-  	         org-use-speed-commands t
+	            (setq org-refile-use-outline-path 'file)
+	            ;; (setq org-refile-targets '((org-agenda-files :level . 1)))
 
+	            ;; html exports
+	            (setq org-html-checkbox-type 'html)
+  	          (setq
+  	           org-log-done t
+  	           org-log-into-drawer t
+  	           org-reverse-note-order t
 
-  	         ;; Enforce TODO dependency chains
-  	         org-enforce-todo-dependencies t
-
-  	         ;; Syntax hilighting of code blocks in Org-Babel
-  	         org-src-fontify-natively t
-
-  	         ;; Auto-indent of code blocks in Org-Babel
-  	         org-src-tab-acts-natively t
-
-  	         ;; Set Org-Files for Agenda
-  	         org-archive-location (concat org-directory "archive/archive.org::* %s")
-
-	           ;; column view format
-	           ;; org-columns-default-format "%40ITEM(Tâche) %17Effort(Temps prévu){:} %CLOCKSUM(Temps passé) %PRIORITY(p)"
-	           org-columns-default-format "%40ITEM(Tâche) %17Effort(Temps prévu){:} %CLOCKSUM(Temps passé)"
-
-  	         ;; Org-Babel execute without confirmation
-  	         org-confirm-babel-evaluate nil
-
-  	         ;; Org-Mode Link Search
-  	         org-link-search-must-match-exact-headline nil
-
-  	         ;; Default to Boolean Search
-  	         org-agenda-search-view-always-boolean t
-
-	           org-agenda-todo-list-sublevels t
-
-  	         ;; Export backends
-  	         org-export-backends '(ascii html icalendar latex md org)
-  	         org-export-coding-system 'utf-8
-  	         org-export-babel-evaluate nil
-
-  	         ;; Include Org Modules
-  	         org-modules '(org-habit org-drill)
-
-	           ;; Org-Habit Settings
-  	         org-habit-preceding-days 30
-  	         org-habit-following-days 3
-  	         org-habit-graph-column 80
-
-  	         ;; Setup Org Capture
-  	         org-default-notes-file (concat org-directory "notes_inbox.org")
-
-  	         org-capture-templates `(		     ;; inbox
-				                             ("i" "Inbox" entry (file, (concat org-directory "notes_inbox.org"))
-				                              "* %^{Titre}\n \n:PROPERTIES:\n:Created: %U\n:END:"
-				                              :prepend t
-				                              :kill-buffer t
-				                              :empty-lines 1)
-
-				                             ("t"
-				                              "Travail"
-				                              entry (file, (concat org-directory "travail.org"))  ;; pour une tâche pro
-  				                            "* TODO [#B] %^{Titre}\n:PROPERTIES:\n:Created: %U\n:END:"
-  				                            :prepend t
-				                              :kill-buffer t
-				                              :empty-lines 1)
-
-				                             ;; une tâche perso
-				                             ("p"
-				                              "Perso"
-				                              entry (file , (concat org-directory "perso.org"))
-				                              "* TODO [#B] %^{Titre}\n:PROPERTIES:\n:Created: %U\n:END:"
-				                              :prepend t
-				                              :kill-buffer t
-				                              :empty-lines 1)
-
-	                                   ;; un item de wishlist
-				                             ("w"
-				                              "à lire/voir/entendre"
-				                              entry (file, (concat org-directory "notes_wishlist.org"))
-				                              "* TODO %^{Titre}\n:PROPERTIES:\n:Created: %U\n:END:"
-				                              :prepend t
-				                              :kill-buffer t
-				                              :empty-lines 1)
-
-				                             ;; un groupe/compositeur/interprète
-				                             ("u"
-				                              "musique à écouter"
-				                              entry (file, (concat org-directory "notes_wishlist.org"))
-				                              "* TODO %^{Titre} :musique: \n:PROPERTIES:\n:Created: %U\n:END:"
-			                                :prepend t
-				                              :kill-buffer t
-				                              :empty-lines 1)
-
-				                             ;; une note d'écriture
-				                             ("e"
-				                              "Note d'écriture"
-				                              entry (file, (concat org-directory "notes_ecrire.org"))
-				                              "* %^{Titre}\n:PROPERTIES:\n:Created: %U\n:END:"
-				                              :prepend t :kill-buffer t :empty-lines 1)
-
-				                             ;; un lien
-				                             ("l"
-				                              "Lien"
-				                              entry (file, (concat org-directory "notes_links.org"))
-				                              "* %^{Titre}\n:PROPERTIES:\n:Created: %U\n:END:"
-				                              :prepend t :kill-buffer t :empty-lines 1)
-
-				                             ;; une note technique
-				                             ("d" "Doc technique" entry (file, (concat org-directory "notes_docs.org"))
-				                              "* %^{Titre}\n"
-				                              :prepend t :kill-buffer t :empty-lines 1)
-				                             ))
+  	           ;; Speed Commands
+  	           org-use-speed-commands t
 
 
-	          
-	          (setq org-todo-keywords
-		              '((sequence "TODO(t)" "NEXT(n)" "PROG(p)" "INTR(i)" "CANCELED(c)" "DONE(d)")))
-	          
-	          ;; Show the daily agenda by default.
-	          (setq org-agenda-span 'day)
-	          
-	          
-	          ;; Use "second" instead of "day" for time comparison.
-	          ;; It hides tasks with a scheduled time like "<2020-11-15 Sun 11:30>"
-	          (setq org-agenda-todo-ignore-time-comparison-use-seconds t)
-	          
-	          ;; Hide the deadline prewarning prior to scheduled date.
-	          (setq org-agenda-skip-deadline-prewarning-if-scheduled 'pre-scheduled)
-	          
-            ))
+  	           ;; Enforce TODO dependency chains
+  	           org-enforce-todo-dependencies t
+
+  	           ;; Syntax hilighting of code blocks in Org-Babel
+  	           org-src-fontify-natively t
+
+  	           ;; Auto-indent of code blocks in Org-Babel
+  	           org-src-tab-acts-natively t
+
+  	           ;; Set Org-Files for Agenda
+  	           org-archive-location (concat org-directory "archive/archive.org::* %s")
+
+	             ;; column view format
+	             ;; org-columns-default-format "%40ITEM(Tâche) %17Effort(Temps prévu){:} %CLOCKSUM(Temps passé) %PRIORITY(p)"
+	             org-columns-default-format "%40ITEM(Tâche) %17Effort(Temps prévu){:} %CLOCKSUM(Temps passé)"
+
+  	           ;; Org-Babel execute without confirmation
+  	           org-confirm-babel-evaluate nil
+
+  	           ;; Org-Mode Link Search
+  	           org-link-search-must-match-exact-headline nil
+
+  	           ;; Default to Boolean Search
+  	           org-agenda-search-view-always-boolean t
+
+	             org-agenda-todo-list-sublevels t
+
+  	           ;; Export backends
+  	           org-export-backends '(ascii html icalendar latex md org)
+  	           org-export-coding-system 'utf-8
+  	           org-export-babel-evaluate nil
+
+  	           ;; Include Org Modules
+  	           org-modules '(org-habit org-drill)
+
+	             ;; Org-Habit Settings
+  	           org-habit-preceding-days 30
+  	           org-habit-following-days 3
+  	           org-habit-graph-column 80
+
+  	           ;; Setup Org Capture
+  	           org-default-notes-file (concat org-directory "notes_inbox.org")
+
+  	           org-capture-templates `(		     ;; inbox
+				                               ("i" "Inbox" entry (file, (concat org-directory "notes_inbox.org"))
+				                                "* %^{Titre}\n \n:PROPERTIES:\n:Created: %U\n:END:"
+				                                :prepend t
+				                                :kill-buffer t
+				                                :empty-lines 1)
+
+				                               ("t"
+				                                "Travail"
+				                                entry (file, (concat org-directory "travail.org"))  ;; pour une tâche pro
+  				                              "* TODO [#B] %^{Titre}\n:PROPERTIES:\n:Created: %U\n:END:"
+  				                              :prepend t
+				                                :kill-buffer t
+				                                :empty-lines 1)
+
+				                               ;; une tâche perso
+				                               ("p"
+				                                "Perso"
+				                                entry (file , (concat org-directory "perso.org"))
+				                                "* TODO [#B] %^{Titre}\n:PROPERTIES:\n:Created: %U\n:END:"
+				                                :prepend t
+				                                :kill-buffer t
+				                                :empty-lines 1)
+
+	                                     ;; un item de wishlist
+				                               ("w"
+				                                "à lire/voir/entendre"
+				                                entry (file, (concat org-directory "notes_wishlist.org"))
+				                                "* TODO %^{Titre}\n:PROPERTIES:\n:Created: %U\n:END:"
+				                                :prepend t
+				                                :kill-buffer t
+				                                :empty-lines 1)
+
+				                               ;; un groupe/compositeur/interprète
+				                               ("u"
+				                                "musique à écouter"
+				                                entry (file, (concat org-directory "notes_wishlist.org"))
+				                                "* TODO %^{Titre} :musique: \n:PROPERTIES:\n:Created: %U\n:END:"
+			                                  :prepend t
+				                                :kill-buffer t
+				                                :empty-lines 1)
+
+				                               ;; une note d'écriture
+				                               ("e"
+				                                "Note d'écriture"
+				                                entry (file, (concat org-directory "notes_ecrire.org"))
+				                                "* %^{Titre}\n:PROPERTIES:\n:Created: %U\n:END:"
+				                                :prepend t :kill-buffer t :empty-lines 1)
+
+				                               ;; un lien
+				                               ("l"
+				                                "Lien"
+				                                entry (file, (concat org-directory "notes_links.org"))
+				                                "* %^{Titre}\n:PROPERTIES:\n:Created: %U\n:END:"
+				                                :prepend t :kill-buffer t :empty-lines 1)
+
+				                               ;; une note technique
+				                               ("d" "Doc technique" entry (file, (concat org-directory "notes_docs.org"))
+				                                "* %^{Titre}\n"
+				                                :prepend t :kill-buffer t :empty-lines 1)
+				                               ))
+
+
+	            
+	            (setq org-todo-keywords
+		                '((sequence "TODO(t)" "NEXT(n)" "PROG(p)" "INTR(i)" "CANCELED(c)" "DONE(d)")))
+	            
+	            ;; Show the daily agenda by default.
+	            (setq org-agenda-span 'day)
+	            
+	            
+	            ;; Use "second" instead of "day" for time comparison.
+	            ;; It hides tasks with a scheduled time like "<2020-11-15 Sun 11:30>"
+	            (setq org-agenda-todo-ignore-time-comparison-use-seconds t)
+	            
+	            ;; Hide the deadline prewarning prior to scheduled date.
+	            (setq org-agenda-skip-deadline-prewarning-if-scheduled 'pre-scheduled)
+	            
+              ))
 
 
 
-;; permet de définir la journée de travail à 8 heures dans org-mode
-;; <https://emacs.stackexchange.com/questions/51114/set-org-duration-units-for-org-mode-scheduling#tab-top>
-(use-package org-duration
-  :config
-  ;; permet d'afficher le temps passé en hours:minutes seulement (et pas en day:hour:minutes, comme par défaut)
-  ;; les lignes commentées en dessous, permettent tout de même de configurer 1 day=8heures, ce qui donne quelque chose de cohérent si jamais on veut repasser au format day:hour:minutes
-  ;; (setq org-duration-format (quote h:mm))
-  (setq org-duration-units   `(("min" . 1)
-			                         ("h" . 60)
-			                         ("d" . ,(* 60 7))
-			                         ("w" . ,(* 60 7 5))
-			                         ("m" . ,(* 60 7 5 4))
-			                         ("y" . ,(* 60 7 5 4 11))))
-  (org-duration-set-regexps)
-  )
+  ;; permet de définir la journée de travail à 8 heures dans org-mode
+  ;; <https://emacs.stackexchange.com/questions/51114/set-org-duration-units-for-org-mode-scheduling#tab-top>
+  (use-package org-duration
+    :config
+    ;; permet d'afficher le temps passé en hours:minutes seulement (et pas en day:hour:minutes, comme par défaut)
+    ;; les lignes commentées en dessous, permettent tout de même de configurer 1 day=8heures, ce qui donne quelque chose de cohérent si jamais on veut repasser au format day:hour:minutes
+    ;; (setq org-duration-format (quote h:mm))
+    (setq org-duration-units   `(("min" . 1)
+			                           ("h" . 60)
+			                           ("d" . ,(* 60 7))
+			                           ("w" . ,(* 60 7 5))
+			                           ("m" . ,(* 60 7 5 4))
+			                           ("y" . ,(* 60 7 5 4 11))))
+    (org-duration-set-regexps)
+    )
 
 
-;; ----------------
-;; ORG-PUBLISH
-;; ----------------
-(require 'ox-publish)
-(setq org-publish-project-alist
-      '(
-	      ("server-notes"
-	       :base-directory "~/Dropbox/org/"
-	       :base-extension "org"
-	       ;; :publishing-directory "~/public_html/"
-	       :publishing-directory "/ssh:debian@51.210.101.191:/var/www/platform.thomasguesnon.net/org"
-	       :recursive nil
-	       :exclude "perso.org\\|travail.org\\|projets.org\\|projets_archive.org\\|notes_famille.org\\|notes_ecrire.org\\|notes_travail.org\\|notes_perso.org\\|notes_inbox.org\\|notes_son.org"
-	       :publishing-function org-html-publish-to-html
-	       :headline-levels 4             ; Just the default for this project.
-	       :auto-preamble t
-	       )
-	      ("server-static"
-	       :base-directory "~/Dropbox/org/"
-	       :base-extension "css\\|js\\|png\\|jpg\\|gif\\|pdf\\|mp3\\|ogg\\|ttf\\|otf\\|eot"
-	       ;; :publishing-directory "~/public_html/"
-	       :publishing-directory "/ssh:debian@51.210.101.191:/var/www/platform.thomasguesnon.net/org"
-	       :recursive t
-	       :publishing-function org-publish-attachment
-	       )
-	      ("server" :components ("server-notes" "server-static"))
-	      ("local-notes"
-	       :base-directory "~/Dropbox/org/"
-	       :base-extension "org"
-	       :publishing-directory "~/public_html/"
-	       :recursive nil
-	       :exclude "perso.org\\|travail.org\\|projets.org\\|projets_archive.org\\|notes_famille.org\\|notes_ecrire.org\\|notes_travail.org\\|notes_perso.org\\|notes_inbox.org\\|notes_son.org"
-	       :publishing-function org-html-publish-to-html
-	       :headline-levels 4             ; Just the default for this project.
-	       :auto-preamble t
-	       )
-	      ("local-static"
-	       :base-directory "~/Dropbox/org/"
-	       :base-extension "css\\|js\\|png\\|jpg\\|gif\\|pdf\\|mp3\\|ogg\\|ttf\\|otf\\|eot"
-	       :publishing-directory "~/public_html/"
-	       :recursive t
-	       :publishing-function org-publish-attachment
-	       )
-	      ("local" :components ("local-notes" "local-static"))
-	      ))
+  ;; ----------------
+  ;; ORG-PUBLISH
+  ;; ----------------
+  (require 'ox-publish)
+  (setq org-publish-project-alist
+        '(
+	        ("server-notes"
+	         :base-directory "~/Dropbox/org/"
+	         :base-extension "org"
+	         ;; :publishing-directory "~/public_html/"
+	         :publishing-directory "/ssh:debian@51.210.101.191:/var/www/platform.thomasguesnon.net/org"
+	         :recursive nil
+	         :exclude "perso.org\\|travail.org\\|projets.org\\|projets_archive.org\\|notes_famille.org\\|notes_ecrire.org\\|notes_travail.org\\|notes_perso.org\\|notes_inbox.org\\|notes_son.org"
+	         :publishing-function org-html-publish-to-html
+	         :headline-levels 4             ; Just the default for this project.
+	         :auto-preamble t
+	         )
+	        ("server-static"
+	         :base-directory "~/Dropbox/org/"
+	         :base-extension "css\\|js\\|png\\|jpg\\|gif\\|pdf\\|mp3\\|ogg\\|ttf\\|otf\\|eot"
+	         ;; :publishing-directory "~/public_html/"
+	         :publishing-directory "/ssh:debian@51.210.101.191:/var/www/platform.thomasguesnon.net/org"
+	         :recursive t
+	         :publishing-function org-publish-attachment
+	         )
+	        ("server" :components ("server-notes" "server-static"))
+	        ("local-notes"
+	         :base-directory "~/Dropbox/org/"
+	         :base-extension "org"
+	         :publishing-directory "~/public_html/"
+	         :recursive nil
+	         :exclude "perso.org\\|travail.org\\|projets.org\\|projets_archive.org\\|notes_famille.org\\|notes_ecrire.org\\|notes_travail.org\\|notes_perso.org\\|notes_inbox.org\\|notes_son.org"
+	         :publishing-function org-html-publish-to-html
+	         :headline-levels 4             ; Just the default for this project.
+	         :auto-preamble t
+	         )
+	        ("local-static"
+	         :base-directory "~/Dropbox/org/"
+	         :base-extension "css\\|js\\|png\\|jpg\\|gif\\|pdf\\|mp3\\|ogg\\|ttf\\|otf\\|eot"
+	         :publishing-directory "~/public_html/"
+	         :recursive t
+	         :publishing-function org-publish-attachment
+	         )
+	        ("local" :components ("local-notes" "local-static"))
+	        ))
 
 
-;; --------
-;; MAGIT
-;; --------
-;; (add-hook 'magit-process-find-password-functions
-;; 'magit-process-password-auth-source)
+  ;; --------
+  ;; MAGIT
+  ;; --------
+  ;; (add-hook 'magit-process-find-password-functions
+  ;; 'magit-process-password-auth-source)
 
-;; --------
-;; CALENDAR
-;; --------
+  ;; --------
+  ;; CALENDAR
+  ;; --------
 
-(add-hook 'calendar-load-hook
-	        (lambda ()
-	          (calendar-set-date-style 'european)))
+  (add-hook 'calendar-load-hook
+	          (lambda ()
+	            (calendar-set-date-style 'european)))
 
-(setq calendar-week-start-day 1
-      calendar-day-name-array ["Dimanche" "Lundi" "Mardi" "Mercredi"
-			                         "Jeudi" "Vendredi" "Samedi"]
-      calendar-month-name-array ["Janvier" "Février" "Mars" "Avril" "Mai"
-				                         "Juin" "Juillet" "Août" "Septembre"
-				                         "Octobre" "Novembre" "Décembre"])
+  (setq calendar-week-start-day 1
+        calendar-day-name-array ["Dimanche" "Lundi" "Mardi" "Mercredi"
+			                           "Jeudi" "Vendredi" "Samedi"]
+        calendar-month-name-array ["Janvier" "Février" "Mars" "Avril" "Mai"
+				                           "Juin" "Juillet" "Août" "Septembre"
+				                           "Octobre" "Novembre" "Décembre"])
 
 
-;; From https://blog.aaronbieber.com/2016/03/05/playing-tag-in-org-mode.html
-(defun air--org-swap-tags (tags)
-  "Replace any tags on the current headline with TAGS.
+  ;; From https://blog.aaronbieber.com/2016/03/05/playing-tag-in-org-mode.html
+  (defun air--org-swap-tags (tags)
+    "Replace any tags on the current headline with TAGS.
 The assumption is that TAGS will be a string conforming to Org Mode's
 tag format specifications, or nil to remove all tags."
-  (let ((old-tags (org-get-tags-string))
-        (tags (if tags
-                  (concat " " tags)
-                "")))
-    (save-excursion
-      (beginning-of-line)
-      (re-search-forward
-       (concat "[ \t]*" (regexp-quote old-tags) "[ \t]*$")
-       (line-end-position) t)
-      (replace-match tags)
-      (org-set-tags t))))
-(defun air-org-set-tags (tag)
-  "Add TAG if it is not in the list of tags, remove it otherwise.
+    (let ((old-tags (org-get-tags-string))
+          (tags (if tags
+                    (concat " " tags)
+                  "")))
+      (save-excursion
+        (beginning-of-line)
+        (re-search-forward
+         (concat "[ \t]*" (regexp-quote old-tags) "[ \t]*$")
+         (line-end-position) t)
+        (replace-match tags)
+        (org-set-tags t))))
+  (defun air-org-set-tags (tag)
+    "Add TAG if it is not in the list of tags, remove it otherwise.
 TAG is chosen interactively from the global tags completion table."
-  (interactive
-   (list (let ((org-last-tags-completion-table
-                (if (derived-mode-p 'org-mode)
-                    (org-uniquify
-                     (delq nil (append (org-get-buffer-tags)
-                                       (org-global-tags-completion-table))))
-                  (org-global-tags-completion-table))))
-           (org-icompleting-read
-            "Tag: " 'org-tags-completion-function nil nil nil
-            'org-tags-history))))
-  (let* ((cur-list (org-get-tags))
-         (new-tags (mapconcat 'identity
-                              (if (member tag cur-list)
-                                  (delete tag cur-list)
-                                (append cur-list (list tag)))
-                              ":"))
-         (new (if (> (length new-tags) 1) (concat " :" new-tags ":")
-                nil)))
-    (air--org-swap-tags new)))
+    (interactive
+     (list (let ((org-last-tags-completion-table
+                  (if (derived-mode-p 'org-mode)
+                      (org-uniquify
+                       (delq nil (append (org-get-buffer-tags)
+                                         (org-global-tags-completion-table))))
+                    (org-global-tags-completion-table))))
+             (org-icompleting-read
+              "Tag: " 'org-tags-completion-function nil nil nil
+              'org-tags-history))))
+    (let* ((cur-list (org-get-tags))
+           (new-tags (mapconcat 'identity
+                                (if (member tag cur-list)
+                                    (delete tag cur-list)
+                                  (append cur-list (list tag)))
+                                ":"))
+           (new (if (> (length new-tags) 1) (concat " :" new-tags ":")
+                  nil)))
+      (air--org-swap-tags new)))
 
-?;;;; Override default org-set-tags keybindings (C-c C-q and C-c C-c on a headline) to use air-org-set-tags.
-(defun air-org-set-tags-ctrl-c-ctrl-c-hook ()
-  (let* ((context (org-element-context))
-         (type (org-element-type context)))
-    (if (or (eq type 'headline)
-            (eq type 'inlinetask))
-        (save-excursion (goto-char (org-element-property :begin context))
-                        (call-interactively #'air-org-set-tags)
-                        t)
-      nil)))
-(add-hook 'org-ctrl-c-ctrl-c-hook #'air-org-set-tags-ctrl-c-ctrl-c-hook)
-(org-defkey org-mode-map (kbd "C-c C-q") #'air-org-set-tags)
+  ?;;;; Override default org-set-tags keybindings (C-c C-q and C-c C-c on a headline) to use air-org-set-tags.
+  (defun air-org-set-tags-ctrl-c-ctrl-c-hook ()
+    (let* ((context (org-element-context))
+           (type (org-element-type context)))
+      (if (or (eq type 'headline)
+              (eq type 'inlinetask))
+          (save-excursion (goto-char (org-element-property :begin context))
+                          (call-interactively #'air-org-set-tags)
+                          t)
+        nil)))
+  (add-hook 'org-ctrl-c-ctrl-c-hook #'air-org-set-tags-ctrl-c-ctrl-c-hook)
+  (org-defkey org-mode-map (kbd "C-c C-q") #'air-org-set-tags)
 
 
-;; count tags in org-mode
-(defun count-tags ()
-  (let (tags count)
-    (save-excursion
-      (goto-char (point-min))
-      (while (re-search-forward org-complex-heading-regexp nil t)
-        (dolist (tag (org-get-tags))
-          (push tag tags)))
-      (cl-loop with result
-               for tag in tags
-               do (push (list (cl-count tag tags
-                                        :test #'string=)
-                              tag)
-                        count)
-               collect
-               (setq result (cl-remove-duplicates count
-                                                  :test #'equal))
-               finally return
-               (cl-sort result #'> :key #'car)))))
+  ;; count tags in org-mode
+  (defun count-tags ()
+    (let (tags count)
+      (save-excursion
+        (goto-char (point-min))
+        (while (re-search-forward org-complex-heading-regexp nil t)
+          (dolist (tag (org-get-tags))
+            (push tag tags)))
+        (cl-loop with result
+                 for tag in tags
+                 do (push (list (cl-count tag tags
+                                          :test #'string=)
+                                tag)
+                          count)
+                 collect
+                 (setq result (cl-remove-duplicates count
+                                                    :test #'equal))
+                 finally return
+                 (cl-sort result #'> :key #'car)))))
 
-;; LilyPond mode
-(add-to-list 'load-path "~/.emacs.d/plugins/lilypond-init.el")
-(autoload 'LilyPond-mode "lilypond-mode")
-(setq auto-mode-alist
-      (cons '("\\.ly$" . LilyPond-mode) auto-mode-alist))
+  ;; LilyPond mode
+  (add-to-list 'load-path "~/.emacs.d/plugins/lilypond-init.el")
+  (autoload 'LilyPond-mode "lilypond-mode")
+  (setq auto-mode-alist
+        (cons '("\\.ly$" . LilyPond-mode) auto-mode-alist))
 
-(add-hook 'LilyPond-mode-hook (lambda () (turn-on-font-lock)))
+  (add-hook 'LilyPond-mode-hook (lambda () (turn-on-font-lock)))
 
-)
+  )
 
 ;; Do not write anything past this comment. This is where Emacs will
 ;; auto-generate custom variable definitions.
@@ -1035,63 +1036,59 @@ TAG is chosen interactively from the global tags completion table."
 This is an auto-generated function, do not modify its content directly, use
 Emacs customize menu instead.
 This function is called at the very end of Spacemacs initialization."
-(custom-set-variables
- ;; custom-set-variables was added by Custom.
- ;; If you edit it by hand, you could mess it up, so be careful.
- ;; Your init file should contain only one such instance.
- ;; If there is more than one, they won't work right.
- '(ansi-color-faces-vector
-   [default bold shadow italic underline bold bold-italic bold])
- '(custom-safe-themes
-   '("02f57ef0a20b7f61adce51445b68b2a7e832648ce2e7efb19d217b6454c1b644" "ed5c37f3c823f0b4348e5025707ac40b95dbecd99a67d93cd4416c258eaf75f0" "966a49d899d00211fa2fa652b5f64e106782cd84b30dff4c658eb5d542fce5a1" "7f666327ab76c4cf1bd60d55e2fd17e46ebf44c10df466adc86312089bb3fdfe" "ae30c27916f58eb24285b19d52e2c4ae36b862a3856bbbc5e932f5d436dc7d61" "246a9596178bb806c5f41e5b571546bb6e0f4bd41a9da0df5dfbca7ec6e2250c" "835868dcd17131ba8b9619d14c67c127aa18b90a82438c8613586331129dda63" "8f5a7a9a3c510ef9cbb88e600c0b4c53cdcdb502cfe3eb50040b7e13c6f4e78e" "82d2cac368ccdec2fcc7573f24c3f79654b78bf133096f9b40c20d97ec1d8016" "b0334e8e314ea69f745eabbb5c1817a173f5e9715493d63b592a8dc9c19a4de6" "7a994c16aa550678846e82edc8c9d6a7d39cc6564baaaacc305a3fdc0bd8725f" "c83c095dd01cde64b631fb0fe5980587deec3834dc55144a6e78ff91ebc80b19" "fce3524887a0994f8b9b047aef9cc4cc017c5a93a5fb1f84d300391fba313743" "2c49d6ac8c0bf19648c9d2eabec9b246d46cb94d83713eaae4f26b49a8183fc4" "77113617a0642d74767295c4408e17da3bfd9aa80aaa2b4eeb34680f6172d71a" "bb08c73af94ee74453c90422485b29e5643b73b05e8de029a6909af6a3fb3f58" "628278136f88aa1a151bb2d6c8a86bf2b7631fbea5f0f76cba2a0079cd910f7d" "1b8d67b43ff1723960eb5e0cba512a2c7a2ad544ddb2533a90101fd1852b426e" "06f0b439b62164c6f8f84fdda32b62
+  (custom-set-variables
+   ;; custom-set-variables was added by Custom.
+   ;; If you edit it by hand, you could mess it up, so be careful.
+   ;; Your init file should contain only one such instance.
+   ;; If there is more than one, they won't work right.
+   '(ansi-color-faces-vector
+     [default bold shadow italic underline bold bold-italic bold])
+   '(custom-safe-themes
+     '("02f57ef0a20b7f61adce51445b68b2a7e832648ce2e7efb19d217b6454c1b644" "ed5c37f3c823f0b4348e5025707ac40b95dbecd99a67d93cd4416c258eaf75f0" "966a49d899d00211fa2fa652b5f64e106782cd84b30dff4c658eb5d542fce5a1" "7f666327ab76c4cf1bd60d55e2fd17e46ebf44c10df466adc86312089bb3fdfe" "ae30c27916f58eb24285b19d52e2c4ae36b862a3856bbbc5e932f5d436dc7d61" "246a9596178bb806c5f41e5b571546bb6e0f4bd41a9da0df5dfbca7ec6e2250c" "835868dcd17131ba8b9619d14c67c127aa18b90a82438c8613586331129dda63" "8f5a7a9a3c510ef9cbb88e600c0b4c53cdcdb502cfe3eb50040b7e13c6f4e78e" "82d2cac368ccdec2fcc7573f24c3f79654b78bf133096f9b40c20d97ec1d8016" "b0334e8e314ea69f745eabbb5c1817a173f5e9715493d63b592a8dc9c19a4de6" "7a994c16aa550678846e82edc8c9d6a7d39cc6564baaaacc305a3fdc0bd8725f" "c83c095dd01cde64b631fb0fe5980587deec3834dc55144a6e78ff91ebc80b19" "fce3524887a0994f8b9b047aef9cc4cc017c5a93a5fb1f84d300391fba313743" "2c49d6ac8c0bf19648c9d2eabec9b246d46cb94d83713eaae4f26b49a8183fc4" "77113617a0642d74767295c4408e17da3bfd9aa80aaa2b4eeb34680f6172d71a" "bb08c73af94ee74453c90422485b29e5643b73b05e8de029a6909af6a3fb3f58" "628278136f88aa1a151bb2d6c8a86bf2b7631fbea5f0f76cba2a0079cd910f7d" "1b8d67b43ff1723960eb5e0cba512a2c7a2ad544ddb2533a90101fd1852b426e" "06f0b439b62164c6f8f84fdda32b62
 fb50b6d00e8b01c2208e55543a6337433a" default))
- '(doc-view-continuous t)
- '(flycheck-color-mode-line-face-to-color 'mode-line-buffer-id)
- '(helm-completion-style 'emacs)
- '(org-agenda-custom-commands
-   '(("x" "Tags dans links/docs/notes-pro/wishlist" tags ""
-      ((org-agenda-files
-        `(,(concat org-directory "notes_docs.org")
-          ,(concat org-directory "notes_links.org")
-          ,(concat org-directory "notes_travail.org")
-          ,(concat org-directory "notes_perso.org")
-          ,(concat org-directory "notes_wishlist.org")))))
-     ("n" "Agenda / INTR / PROG / NEXT"
-      ((agenda "" nil)
-       (todo "INTR" nil)
-       (todo "PROG" nil)
-       (todo "NEXT" nil))
-      nil)))
- '(org-agenda-files
-   `(,(concat org-directory "travail.org")
-     ,(concat org-directory "perso.org")
-     ,(concat org-directory "projets.org")))
- '(org-agenda-search-view-max-outline-level 1)
- '(org-agenda-text-search-extra-files
-   `(,(concat org-directory "archive/archive.org")
-     ,(concat org-directory "notes_docs.org")
-     ,(concat org-directory "projets_archive.org")
-     ,(concat org-directory "notes_famille.org")
-     ,(concat org-directory "notes_reference.org")
-     ,(concat org-directory "notes_inbox.org")
-     ,(concat org-directory "notes_links.org")
-     ,(concat org-directory "notes_travail.org")
-     ,(concat org-directory "notes_perso.org")
-     ,(concat org-directory "notes_wishlist.org")))
- '(org-export-with-sub-superscripts nil)
- '(org-id-extra-files t)
- '(org-id-track-globally t)
- '(package-selected-packages
-   '(centaur-tabs csv-mode multi-vterm xref shell-pop terminal-here tern vterm xterm-color add-node-modules-path bundler chruby company counsel-gtags counsel swiper dap-mode lsp-docker lsp-treemacs bui lsp-mode enh-ruby-mode ggtags helm-gtags minitest rake rbenv robe inf-ruby rspec-mode rubocop rubocopfmt ruby-hash-syntax ruby-refactor ruby-test-mode ruby-tools rvm seeing-is-believing magit pdf-tools json-reformat json-mode jq-format tabbar htmlize typit wttrin quelpa-use-package quelpa org-ql ivy monkeytype magit chronos chess mu4e-alert evil doom-themes color-theme-sanityinc-tomorrow soothe-theme deft org-journal yaml-mode yasnippet-snippets wrap-region web-mode visual-regexp use-package rjsx-mode processing-mode pomidor php-mode org-vcard org-agenda-property markdown-mode less-css-mode helm-swoop helm-c-yasnippet emms auto-complete))
- '(speedbar-show-unknown-files t)
- '(window-divider-mode nil))
-(custom-set-faces
- ;; custom-set-faces was added by Custom.
- ;; If you edit it by hand, you could mess it up, so be careful.
- ;; Your init file should contain only one such instance.
- ;; If there is more than one, they won't work right.
- )
-)
+   '(doc-view-continuous t)
+   '(flycheck-color-mode-line-face-to-color 'mode-line-buffer-id)
+   '(helm-completion-style 'emacs)
+   '(org-agenda-custom-commands
+     '(("x" "Tags dans links/docs/notes-pro/wishlist" tags ""
+        ((org-agenda-files
+          `(,(concat org-directory "notes_docs.org")
+            ,(concat org-directory "notes_links.org")
+            ,(concat org-directory "notes_travail.org")
+            ,(concat org-directory "notes_perso.org")
+            ,(concat org-directory "notes_wishlist.org")))))
+       ("n" "Agenda / INTR / PROG / NEXT"
+        ((agenda "" nil)
+         (todo "INTR" nil)
+         (todo "PROG" nil)
+         (todo "NEXT" nil))
+        nil)))
+   '(org-agenda-search-view-max-outline-level 1)
+   '(org-agenda-text-search-extra-files
+     `(,(concat org-directory "archive/archive.org")
+       ,(concat org-directory "notes_docs.org")
+       ,(concat org-directory "projets_archive.org")
+       ,(concat org-directory "notes_famille.org")
+       ,(concat org-directory "notes_reference.org")
+       ,(concat org-directory "notes_inbox.org")
+       ,(concat org-directory "notes_links.org")
+       ,(concat org-directory "notes_travail.org")
+       ,(concat org-directory "notes_perso.org")
+       ,(concat org-directory "notes_wishlist.org")))
+   '(org-export-with-sub-superscripts nil)
+   '(org-id-extra-files t)
+   '(org-id-track-globally t)
+   '(package-selected-packages
+     '(centaur-tabs csv-mode multi-vterm xref shell-pop terminal-here tern vterm xterm-color add-node-modules-path bundler chruby company counsel-gtags counsel swiper dap-mode lsp-docker lsp-treemacs bui lsp-mode enh-ruby-mode ggtags helm-gtags minitest rake rbenv robe inf-ruby rspec-mode rubocop rubocopfmt ruby-hash-syntax ruby-refactor ruby-test-mode ruby-tools rvm seeing-is-believing magit pdf-tools json-reformat json-mode jq-format tabbar htmlize typit wttrin quelpa-use-package quelpa org-ql ivy monkeytype magit chronos chess mu4e-alert evil doom-themes color-theme-sanityinc-tomorrow soothe-theme deft org-journal yaml-mode yasnippet-snippets wrap-region web-mode visual-regexp use-package rjsx-mode processing-mode pomidor php-mode org-vcard org-agenda-property markdown-mode less-css-mode helm-swoop helm-c-yasnippet emms auto-complete))
+   '(speedbar-show-unknown-files t)
+   '(window-divider-mode nil))
+  (custom-set-faces
+   ;; custom-set-faces was added by Custom.
+   ;; If you edit it by hand, you could mess it up, so be careful.
+   ;; Your init file should contain only one such instance.
+   ;; If there is more than one, they won't work right.
+   )
+  )
 
 ;; ---------------
 ;; PANDOC/MARKDOWN

@@ -840,21 +840,30 @@ before packages are loaded."
 				                      :prepend t :kill-buffer t :empty-lines 1)
 				                     ))
 
-	  
+
 	  (setq org-todo-keywords
 		      '((sequence "TODO(t)" "NEXT(n)" "PROG(p)" "INTR(i)" "CANCELED(c)" "DONE(d)")))
-	  
+
 	  ;; Show the daily agenda by default.
 	  (setq org-agenda-span 'day)
-	  
-	  
+
+    ;; customize item display in agenda
+    ;; (setq org-agenda-prefix-format '((todo . "%-30b") (tags . "%-30b") (agenda . "%-30b")))
+    ;; (setq org-agenda-prefix-format '((todo . "%-30b") (tags . "%-30b") (agenda . "%-30b")))
+    ;; (setq org-agenda-prefix-format '((todo . "  %-12:b%?-12t% s") (agenda . "  %-12:b%?-12t% s")))
+    ;; (setq org-agenda-prefix-format '((todo . "%c : %b % s") (agenda . "  %-12:b%? t%c %b % s")))
+    (setq org-agenda-prefix-format '((todo . "%c : %b % s")
+                                     (tags . "%c : %b % s")
+                                     (search . "%c : %b % s")
+                                     (agenda . "%c : %b % s")))
+
 	  ;; Use "second" instead of "day" for time comparison.
 	  ;; It hides tasks with a scheduled time like "<2020-11-15 Sun 11:30>"
 	  (setq org-agenda-todo-ignore-time-comparison-use-seconds t)
-	  
+
 	  ;; Hide the deadline prewarning prior to scheduled date.
 	  (setq org-agenda-skip-deadline-prewarning-if-scheduled 'pre-scheduled)
-	  
+
     )
 
 

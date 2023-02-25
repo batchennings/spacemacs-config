@@ -42,7 +42,19 @@ This function should only modify configuration layer settings."
      ;; Uncomment some layer names and press `SPC f e R' (Vim style) or
      ;; `M-m f e R' (Emacs style) to install them.
      ;; ----------------------------------------------------------------
-     ;; auto-completion
+     auto-completion
+     (auto-completion :variables
+                      auto-completion-return-key-behavior 'complete
+                      auto-completion-tab-key-behavior 'complet
+                      auto-completion-complete-with-key-sequence nil
+                      auto-completion-complete-with-key-sequence-delay 0.1
+                      auto-completion-minimum-prefix-length 2
+                      auto-completion-idle-delay 0.2
+                      auto-completion-private-snippets-directory nil
+                      auto-completion-enable-snippets-in-popup nil
+                      auto-completion-enable-help-tooltip nil
+                      auto-completion-use-company-box nil
+                      auto-completion-enable-sort-by-usage nil)
      ;; better-defaults
      emacs-lisp
      git
@@ -58,6 +70,8 @@ This function should only modify configuration layer settings."
      ;; spell-checking
      ;; syntax-checking
      ;; version-control
+     tern
+     (tern :variables tern-command '("node" "/opt/homebrew/bin/tern"))
      treemacs)
 
 
@@ -426,8 +440,15 @@ It should only modify the values of Spacemacs settings."
    ;;   :size-limit-kb 1000)
    ;; When used in a plist, `visual' takes precedence over `relative'.
    ;; (default nil)
-   dotspacemacs-line-numbers nil
-
+   dotspacemacs-line-numbers '(:relative nil
+     :visual nil
+     :disabled-for-modes dired-mode
+                         doc-view-mode
+                         markdown-mode
+                         org-mode
+                         pdf-view-mode
+                         text-mode
+    :size-limit-kb 1000)
    ;; Code folding method. Possible values are `evil', `origami' and `vimish'.
    ;; (default 'evil)
    dotspacemacs-folding-method 'evil
@@ -610,7 +631,7 @@ before packages are loaded."
   ;; --------
   ;; PACKAGES
   ;; --------
-
+  (global-set-key (kbd "TAB") 'yas-expand)
   (add-to-list 'load-path "~/.emacs.d/plugins/") 
 
   ;; packages repos
@@ -626,9 +647,15 @@ before packages are loaded."
   ;; (package-refresh-contents)
   ;; (package-install 'use-package))
 
+  ;; évite à Emacs d'ouvrir les nouvelles windows verticalement dans org-agenda
+  (defadvice org-agenda (around split-vertically activate)
+    (let ((split-width-threshold 80))  ; or whatever width makes sense for you
+      ad-do-it))
   ;; ----------------
   ;; CUSTOM VARIABLES
   ;; ----------------
+
+
 
   (custom-set-variables
    ;; custom-set-variables was added by Custom.
@@ -953,6 +980,27 @@ before packages are loaded."
 				                         "Juin" "Juillet" "Août" "Septembre"
 				                         "Octobre" "Novembre" "Décembre"])
 
+;;---------------------
+;; FRINGES
+;;---------------------
+;; Huuu, pour avoir de grosses marges de chaque côté de l'écran
+;; From https://bzg.fr/en/emacs-strip-tease.html/
+
+;; A small minor mode to use a big fringe
+(defvar bzg-big-fringe-mode nil)
+(define-minor-mode bzg-big-fringe-mode
+  "Minor mode to use big fringe in the current buffer."
+  :init-value nil
+  :global t
+  :variable bzg-big-fringe-mode
+  :group 'editing-basics
+  (if (not bzg-big-fringe-mode)
+      (set-fringe-style nil)
+    (set-fringe-mode
+     (/ (- (frame-pixel-width)
+           (* 100 (frame-char-width)))
+        2))))
+
 
 ;; From https://blog.aaronbieber.com/2016/03/05/playing-tag-in-org-mode.html
 (defun air--org-swap-tags (tags)
@@ -1030,8 +1078,6 @@ TAG is chosen interactively from the global tags completion table."
 ;; LilyPond mode
 (add-to-list 'load-path "~/.emacs.d/plugins/lilypond-init.el")
 (autoload 'LilyPond-mode "lilypond-mode")
-(setq auto-mode-alist
-      (cons '("\\.ly$" . LilyPond-mode) auto-mode-alist))
 
 (add-hook 'LilyPond-mode-hook (lambda () (turn-on-font-lock)))
 
@@ -1044,71 +1090,74 @@ TAG is chosen interactively from the global tags completion table."
 This is an auto-generated function, do not modify its content directly, use
 Emacs customize menu instead.
 This function is called at the very end of Spacemacs initialization."
-  (custom-set-variables
-   ;; custom-set-variables was added by Custom.
-   ;; If you edit it by hand, you could mess it up, so be careful.
-   ;; Your init file should contain only one such instance.
-   ;; If there is more than one, they won't work right.
-   '(ansi-color-faces-vector
-     [default bold shadow italic underline bold bold-italic bold])
-   '(custom-safe-themes
-     '("02f57ef0a20b7f61adce51445b68b2a7e832648ce2e7efb19d217b6454c1b644" "ed5c37f3c823f0b4348e5025707ac40b95dbecd99a67d93cd4416c258eaf75f0" "966a49d899d00211fa2fa652b5f64e106782cd84b30dff4c658eb5d542fce5a1" "7f666327ab76c4cf1bd60d55e2fd17e46ebf44c10df466adc86312089bb3fdfe" "ae30c27916f58eb24285b19d52e2c4ae36b862a3856bbbc5e932f5d436dc7d61" "246a9596178bb806c5f41e5b571546bb6e0f4bd41a9da0df5dfbca7ec6e2250c" "835868dcd17131ba8b9619d14c67c127aa18b90a82438c8613586331129dda63" "8f5a7a9a3c510ef9cbb88e600c0b4c53cdcdb502cfe3eb50040b7e13c6f4e78e" "82d2cac368ccdec2fcc7573f24c3f79654b78bf133096f9b40c20d97ec1d8016" "b0334e8e314ea69f745eabbb5c1817a173f5e9715493d63b592a8dc9c19a4de6" "7a994c16aa550678846e82edc8c9d6a7d39cc6564baaaacc305a3fdc0bd8725f" "c83c095dd01cde64b631fb0fe5980587deec3834dc55144a6e78ff91ebc80b19" "fce3524887a0994f8b9b047aef9cc4cc017c5a93a5fb1f84d300391fba313743" "2c49d6ac8c0bf19648c9d2eabec9b246d46cb94d83713eaae4f26b49a8183fc4" "77113617a0642d74767295c4408e17da3bfd9aa80aaa2b4eeb34680f6172d71a" "bb08c73af94ee74453c90422485b29e5643b73b05e8de029a6909af6a3fb3f58" "628278136f88aa1a151bb2d6c8a86bf2b7631fbea5f0f76cba2a0079cd910f7d" "1b8d67b43ff1723960eb5e0cba512a2c7a2ad544ddb2533a90101fd1852b426e" "06f0b439b62164c6f8f84fdda32b62
+(custom-set-variables
+ ;; custom-set-variables was added by Custom.
+ ;; If you edit it by hand, you could mess it up, so be careful.
+ ;; Your init file should contain only one such instance.
+ ;; If there is more than one, they won't work right.
+ '(ansi-color-faces-vector
+   [default bold shadow italic underline bold bold-italic bold])
+ '(custom-safe-themes
+   '("02f57ef0a20b7f61adce51445b68b2a7e832648ce2e7efb19d217b6454c1b644" "ed5c37f3c823f0b4348e5025707ac40b95dbecd99a67d93cd4416c258eaf75f0" "966a49d899d00211fa2fa652b5f64e106782cd84b30dff4c658eb5d542fce5a1" "7f666327ab76c4cf1bd60d55e2fd17e46ebf44c10df466adc86312089bb3fdfe" "ae30c27916f58eb24285b19d52e2c4ae36b862a3856bbbc5e932f5d436dc7d61" "246a9596178bb806c5f41e5b571546bb6e0f4bd41a9da0df5dfbca7ec6e2250c" "835868dcd17131ba8b9619d14c67c127aa18b90a82438c8613586331129dda63" "8f5a7a9a3c510ef9cbb88e600c0b4c53cdcdb502cfe3eb50040b7e13c6f4e78e" "82d2cac368ccdec2fcc7573f24c3f79654b78bf133096f9b40c20d97ec1d8016" "b0334e8e314ea69f745eabbb5c1817a173f5e9715493d63b592a8dc9c19a4de6" "7a994c16aa550678846e82edc8c9d6a7d39cc6564baaaacc305a3fdc0bd8725f" "c83c095dd01cde64b631fb0fe5980587deec3834dc55144a6e78ff91ebc80b19" "fce3524887a0994f8b9b047aef9cc4cc017c5a93a5fb1f84d300391fba313743" "2c49d6ac8c0bf19648c9d2eabec9b246d46cb94d83713eaae4f26b49a8183fc4" "77113617a0642d74767295c4408e17da3bfd9aa80aaa2b4eeb34680f6172d71a" "bb08c73af94ee74453c90422485b29e5643b73b05e8de029a6909af6a3fb3f58" "628278136f88aa1a151bb2d6c8a86bf2b7631fbea5f0f76cba2a0079cd910f7d" "1b8d67b43ff1723960eb5e0cba512a2c7a2ad544ddb2533a90101fd1852b426e" "06f0b439b62164c6f8f84fdda32b62
 fb50b6d00e8b01c2208e55543a6337433a" default))
-   '(doc-view-continuous t)
-   '(flycheck-color-mode-line-face-to-color 'mode-line-buffer-id)
-   '(helm-completion-style 'emacs)
-   '(org-agenda-custom-commands
-     '(("x" "Tags dans links/docs/notes-pro/wishlist" tags ""
-        ((org-agenda-files
-          `(,(concat org-directory "notes_docs.org")
-            ,(concat org-directory "notes_links.org")
-            ,(concat org-directory "notes_travail.org")
-            ,(concat org-directory "notes_perso.org")
-            ,(concat org-directory "notes_wishlist.org")))))
-       ("n" "Agenda / INTR / PROG / NEXT"
-        ((agenda "" nil)
-         (todo "INTR" nil)
-         (todo "PROG" nil)
-         (todo "NEXT" nil))
-        nil)))
-   '(org-agenda-search-view-max-outline-level 1)
-   '(org-agenda-text-search-extra-files
-     `(,(concat org-directory "archive/archive.org")
-       ,(concat org-directory "notes_docs.org")
-       ,(concat org-directory "projets_archive.org")
-       ,(concat org-directory "notes_famille.org")
-       ,(concat org-directory "notes_reference.org")
-       ,(concat org-directory "notes_inbox.org")
-       ,(concat org-directory "notes_links.org")
-       ,(concat org-directory "notes_travail.org")
-       ,(concat org-directory "notes_perso.org")
-       ,(concat org-directory "notes_wishlist.org")))
-   '(org-export-with-sub-superscripts nil)
-   '(org-id-extra-files t)
-   '(org-id-track-globally t)
-   '(package-selected-packages
-     '(centaur-tabs csv-mode multi-vterm xref shell-pop terminal-here tern vterm xterm-color add-node-modules-path bundler chruby company counsel-gtags counsel swiper dap-mode lsp-docker lsp-treemacs bui lsp-mode enh-ruby-mode ggtags helm-gtags minitest rake rbenv robe inf-ruby rspec-mode rubocop rubocopfmt ruby-hash-syntax ruby-refactor ruby-test-mode ruby-tools rvm seeing-is-believing magit pdf-tools json-reformat json-mode jq-format tabbar htmlize typit wttrin quelpa-use-package quelpa org-ql ivy monkeytype magit chronos chess mu4e-alert evil doom-themes color-theme-sanityinc-tomorrow soothe-theme deft org-journal yaml-mode yasnippet-snippets wrap-region web-mode visual-regexp use-package rjsx-mode processing-mode pomidor php-mode org-vcard org-agenda-property markdown-mode less-css-mode helm-swoop helm-c-yasnippet emms auto-complete))
-   '(speedbar-show-unknown-files t)
-   '(window-divider-mode nil))
-  (custom-set-faces
-   ;; custom-set-faces was added by Custom.
-   ;; If you edit it by hand, you could mess it up, so be careful.
-   ;; Your init file should contain only one such instance.
-   ;; If there is more than one, they won't work right.
-   )
-  )
+ '(doc-view-continuous t)
+ '(flycheck-color-mode-line-face-to-color 'mode-line-buffer-id)
+ '(helm-completion-style 'emacs)
+ '(org-agenda-custom-commands
+   '(("x" "Tags dans links/docs/notes-pro/wishlist" tags ""
+      ((org-agenda-files
+        `(,(concat org-directory "notes_docs.org")
+          ,(concat org-directory "notes_links.org")
+          ,(concat org-directory "notes_travail.org")
+          ,(concat org-directory "notes_perso.org")
+          ,(concat org-directory "notes_wishlist.org")))))
+     ("n" "Agenda / INTR / PROG / NEXT"
+      ((agenda "" nil)
+       (todo "INTR" nil)
+       (todo "PROG" nil)
+       (todo "NEXT" nil))
+      nil)))
+ '(org-agenda-files
+   `(,(concat org-directory "travail.org")
+     ,(concat org-directory "perso.org")
+     ,(concat org-directory "projets.org")))
+ '(org-agenda-search-view-max-outline-level 1)
+ '(org-agenda-text-search-extra-files
+   `(,(concat org-directory "archive/archive.org")
+     ,(concat org-directory "notes_docs.org")
+     ,(concat org-directory "projets_archive.org")
+     ,(concat org-directory "notes_famille.org")
+     ,(concat org-directory "notes_reference.org")
+     ,(concat org-directory "notes_inbox.org")
+     ,(concat org-directory "notes_links.org")
+     ,(concat org-directory "notes_travail.org")
+     ,(concat org-directory "notes_perso.org")
+     ,(concat org-directory "notes_wishlist.org")))
+ '(org-export-with-sub-superscripts nil)
+ '(org-id-extra-files t)
+ '(org-id-track-globally t)
+ '(package-selected-packages
+   '(ac-ispell auto-yasnippet company-web web-completion-data fuzzy helm-company centaur-tabs csv-mode multi-vterm xref shell-pop terminal-here tern vterm xterm-color add-node-modules-path bundler chruby company counsel-gtags counsel swiper dap-mode lsp-docker lsp-treemacs bui lsp-mode enh-ruby-mode ggtags helm-gtags minitest rake rbenv robe inf-ruby rspec-mode rubocop rubocopfmt ruby-hash-syntax ruby-refactor ruby-test-mode ruby-tools rvm seeing-is-believing magit pdf-tools json-reformat json-mode jq-format tabbar htmlize typit wttrin quelpa-use-package quelpa org-ql ivy monkeytype magit chronos chess mu4e-alert evil doom-themes color-theme-sanityinc-tomorrow soothe-theme deft org-journal yaml-mode yasnippet-snippets wrap-region web-mode visual-regexp use-package rjsx-mode processing-mode pomidor php-mode org-vcard org-agenda-property markdown-mode less-css-mode helm-swoop helm-c-yasnippet emms auto-complete))
+ '(speedbar-show-unknown-files t)
+ '(window-divider-mode nil))
+(custom-set-faces
+ ;; custom-set-faces was added by Custom.
+ ;; If you edit it by hand, you could mess it up, so be careful.
+ ;; Your init file should contain only one such instance.
+ ;; If there is more than one, they won't work right.
+ )
+)
 
 ;; ---------------
 ;; PANDOC/MARKDOWN
 ;; ---------------
-(setq markdown-command "/usr/bin/pandoc")
+(setq markdown-command "/opt/homebrew/bin/pandoc")
 (setq markdown-xhtml-header-content "<meta http-equiv='Content-Type' content='text/html' charset='utf-8' /><link rel='stylesheet' media='all' href='/var/www/html/Jypi/public/css/all.css'><style type='text/css'>body{padding: 32px;}</style>"   ) ;; on ajoute l'encodage et la feuille de style, pour que ce soille bô !
 
 ;; -----------------
 ;; ARDUINO MODE
 ;; -----------------
 (add-to-list 'load-path "~/.emacs.d/plugins/arduino-mode")
-(setq auto-mode-alist (cons '("\\.\\(pde\\|ino\\)$" . arduino-mode) auto-mode-alist))
 (autoload 'arduino-mode "arduino-mode" "Arduino editing mode." t)
 
 ;; ---------------
@@ -1121,7 +1170,6 @@ fb50b6d00e8b01c2208e55543a6337433a" default))
 ;; YAML
 ;; -------------
 ;; (require 'yaml-mode)
-;; (add-to-list 'auto-mode-alist '("\\.yml\\'" . yaml-mode))0
 
 ;; -------------
 ;; BOOKMARKS
@@ -1171,3 +1219,10 @@ fb50b6d00e8b01c2208e55543a6337433a" default))
 (add-hook 'org-mode-hook (lambda ()
 			                     (visual-line-mode t)))
 
+;; ------------
+;; MODES
+;; ------------
+(setq auto-mode-alist (cons '("\\.\\(pde\\|ino\\)$" . arduino-mode) auto-mode-alist))
+(add-to-list 'auto-mode-alist '("\\.yml\\'" . yaml-mode))
+(add-to-list 'auto-mode-alist '("\\.js\\'" . js2-mode))
+(setq auto-mode-alist (cons '("\\.ly$" . LilyPond-mode) auto-mode-alist))

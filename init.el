@@ -32,7 +32,9 @@ This function should only modify configuration layer settings."
 
    ;; List of configuration layers to load.
    dotspacemacs-configuration-layers
-   '(csv
+   '(php
+     python
+     csv
      yaml
      ruby
      javascript
@@ -651,6 +653,10 @@ before packages are loaded."
   (defadvice org-agenda (around split-vertically activate)
     (let ((split-width-threshold 80))  ; or whatever width makes sense for you
       ad-do-it))
+
+
+(require 'terminal-here)
+  (setq terminal-here-mac-terminal-command 'iterm2)
   ;; ----------------
   ;; CUSTOM VARIABLES
   ;; ----------------
@@ -668,8 +674,7 @@ before packages are loaded."
    '(org-agenda-custom-commands
      '(("x" "Tags dans links/docs/notes-pro/wishlist" tags ""
         ((org-agenda-files
-	        `(,(concat org-directory "notes_docs.org")
-	          ,(concat org-directory "notes_links.org")
+	        `(,(concat org-directory "notes_links.org")
 	          ,(concat org-directory "notes_travail.org")
 	          ,(concat org-directory "notes_perso.org")
 	          ,(concat org-directory "notes_wishlist.org")))))
@@ -686,7 +691,6 @@ before packages are loaded."
    '(org-agenda-search-view-max-outline-level 1)
    '(org-agenda-text-search-extra-files
      `(,(concat org-directory "archive/archive.org")
-       ,(concat org-directory "notes_docs.org")
        ,(concat org-directory "projets_archive.org")
        ,(concat org-directory "notes_famille.org")
        ,(concat org-directory "notes_reference.org")
@@ -733,16 +737,16 @@ before packages are loaded."
   	;; ("C-c a" . org-agenda))
     ;; Configure org
     ;; config (progn
-
+      '(require 'ox-gfm nil t)
 	  ;; org refile mechanism
-	  (setq org-refile-targets `((,(concat org-directory "notes_docs.org") :maxlevel . 9)
-				                       (,(concat org-directory "notes_ecrire.org") :maxlevel . 9)
+	  (setq org-refile-targets `((,(concat org-directory "notes_ecrire.org") :maxlevel . 9)
 				                       (,(concat org-directory "notes_famille.org") :maxlevel . 9)
 				                       (,(concat org-directory "notes_reference.org") :maxlevel . 9)
 				                       (,(concat org-directory "notes_links.org") :maxlevel . 9)
 				                       (,(concat org-directory "notes_travail.org") :maxlevel . 9)
 				                       (,(concat org-directory "notes_perso.org") :maxlevel . 9)
-				                       (,(concat org-directory "archive_projets.org") :maxlevel . 9)
+				                       (,(concat org-directory "notes_wishlist.org") :maxlevel . 9)
+				                       (,(concat org-directory "projets_archive.org") :maxlevel . 9)
 				                       (,(concat org-directory "notes_son.org") :maxlevel . 9)
                                (org-agenda-files :maxlevel . 9)))
 	  (setq org-outline-path-complete-in-steps nil)         ; Refile in a single go
@@ -859,11 +863,6 @@ before packages are loaded."
 				                      "Lien"
 				                      entry (file, (concat org-directory "notes_links.org"))
 				                      "* %^{Titre}\n:PROPERTIES:\n:Created: %U\n:END:"
-				                      :prepend t :kill-buffer t :empty-lines 1)
-
-				                     ;; une note technique
-				                     ("d" "Doc technique" entry (file, (concat org-directory "notes_docs.org"))
-				                      "* %^{Titre}\n"
 				                      :prepend t :kill-buffer t :empty-lines 1)
 				                     ))
 
@@ -1106,8 +1105,7 @@ fb50b6d00e8b01c2208e55543a6337433a" default))
  '(org-agenda-custom-commands
    '(("x" "Tags dans links/docs/notes-pro/wishlist" tags ""
       ((org-agenda-files
-        `(,(concat org-directory "notes_docs.org")
-          ,(concat org-directory "notes_links.org")
+        `(,(concat org-directory "notes_links.org")
           ,(concat org-directory "notes_travail.org")
           ,(concat org-directory "notes_perso.org")
           ,(concat org-directory "notes_wishlist.org")))))
@@ -1124,7 +1122,6 @@ fb50b6d00e8b01c2208e55543a6337433a" default))
  '(org-agenda-search-view-max-outline-level 1)
  '(org-agenda-text-search-extra-files
    `(,(concat org-directory "archive/archive.org")
-     ,(concat org-directory "notes_docs.org")
      ,(concat org-directory "projets_archive.org")
      ,(concat org-directory "notes_famille.org")
      ,(concat org-directory "notes_reference.org")
@@ -1137,7 +1134,7 @@ fb50b6d00e8b01c2208e55543a6337433a" default))
  '(org-id-extra-files t)
  '(org-id-track-globally t)
  '(package-selected-packages
-   '(ac-ispell auto-yasnippet company-web web-completion-data fuzzy helm-company centaur-tabs csv-mode multi-vterm xref shell-pop terminal-here tern vterm xterm-color add-node-modules-path bundler chruby company counsel-gtags counsel swiper dap-mode lsp-docker lsp-treemacs bui lsp-mode enh-ruby-mode ggtags helm-gtags minitest rake rbenv robe inf-ruby rspec-mode rubocop rubocopfmt ruby-hash-syntax ruby-refactor ruby-test-mode ruby-tools rvm seeing-is-believing magit pdf-tools json-reformat json-mode jq-format tabbar htmlize typit wttrin quelpa-use-package quelpa org-ql ivy monkeytype magit chronos chess mu4e-alert evil doom-themes color-theme-sanityinc-tomorrow soothe-theme deft org-journal yaml-mode yasnippet-snippets wrap-region web-mode visual-regexp use-package rjsx-mode processing-mode pomidor php-mode org-vcard org-agenda-property markdown-mode less-css-mode helm-swoop helm-c-yasnippet emms auto-complete))
+   '(ox-gfm company-php ac-php-core company-phpactor drupal-mode geben php-auto-yasnippets php-extras phpactor composer php-runtime phpcbf phpunit blacken code-cells company-anaconda anaconda-mode cython-mode helm-cscope helm-pydoc importmagic epc ctable concurrent deferred live-py-mode lsp-pyright lsp-python-ms nose pip-requirements pipenv load-env-vars pippel poetry compat py-isort pydoc pyenv-mode pythonic pylookup pytest pyvenv sphinx-doc stickyfunc-enhance xcscope yapfify jekyll-modes ac-ispell auto-yasnippet company-web web-completion-data fuzzy helm-company centaur-tabs csv-mode multi-vterm xref shell-pop terminal-here tern vterm xterm-color add-node-modules-path bundler chruby company counsel-gtags counsel swiper dap-mode lsp-docker lsp-treemacs bui lsp-mode enh-ruby-mode ggtags helm-gtags minitest rake rbenv robe inf-ruby rspec-mode rubocop rubocopfmt ruby-hash-syntax ruby-refactor ruby-test-mode ruby-tools rvm seeing-is-believing magit pdf-tools json-reformat json-mode jq-format tabbar htmlize typit wttrin quelpa-use-package quelpa org-ql ivy monkeytype magit chronos chess mu4e-alert evil doom-themes color-theme-sanityinc-tomorrow soothe-theme deft org-journal yaml-mode yasnippet-snippets wrap-region web-mode visual-regexp use-package rjsx-mode processing-mode pomidor php-mode org-vcard org-agenda-property markdown-mode less-css-mode helm-swoop helm-c-yasnippet emms auto-complete))
  '(speedbar-show-unknown-files t)
  '(window-divider-mode nil))
 (custom-set-faces

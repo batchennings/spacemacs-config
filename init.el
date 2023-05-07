@@ -66,6 +66,11 @@ This function should only modify configuration layer settings."
      ;; markdown
      multiple-cursors
      org
+     (org :variables
+           org-enable-roam-support t
+           org-roam-ui-mode t
+           org-enable-roam-protocol t)
+     ;; org-roam
      (shell :variables
             shell-default-height 30
             shell-default-position 'bottom)
@@ -638,7 +643,7 @@ before packages are loaded."
 
   ;; packages repos
   (require 'package)
-  ;; (add-to-list 'package-archives '("melpa" . "https://melpa.org/packages/") t)
+  (add-to-list 'package-archives '("melpa" . "https://melpa.org/packages/") t)
   ;; (add-to-list 'package-archives '("org" . "https://orgmode.org/elpa/") t)
   ;; (add-to-list 'package-archives '("gnu" . "https://elpa.gnu.org/packages/") t)
   ;; (add-to-list 'package-archives '("elpy" . "http://jorgenschaefer.github.io/packages/") t)
@@ -654,14 +659,28 @@ before packages are loaded."
     (let ((split-width-threshold 80))  ; or whatever width makes sense for you
       ad-do-it))
 
+  (require 'terminal-here)
 
-(require 'terminal-here)
   (setq terminal-here-mac-terminal-command 'iterm2)
   ;; ----------------
   ;; CUSTOM VARIABLES
   ;; ----------------
 
+  ;; (add-to-list 'load-path "~/.emacs.d/private/org-roam/")
+  ;; (add-to-list 'load-path "~/.emacs.d/private/org-roam/extensions/")
+  ;; (require 'org-roam)
 
+  ;; (use-package org-roam
+  ;;   :load-path "~/.emacs.d/private/org-roam"
+  ;;   :custom
+  ;;   (org-roam-directory "~/.emacs.d/private/org-roam") ; replace with your path
+  ;;   :bind (("C-c n l" . org-roam-buffer-toggle)
+  ;;          ("C-c n f" . org-roam-node-find))
+  ;;                                       ; global-page-break-lines-mode will break the org-roam buffer
+  ;;   :hook ( org-roam-mode . (lambda () (global-page-break-lines-mode -1)))
+  ;;   :config
+  ;;   (org-roam-setup))
+  (add-to-list 'image-types 'svg) ;; solve a problem raised by launching dired - svg reading in Mac OS Ventura - https://emacs.stackexchange.com/questions/74289/emacs-28-2-error-in-macos-ventura-image-type-invalid-image-type-svg
 
   (custom-set-variables
    ;; custom-set-variables was added by Custom.
@@ -704,8 +723,8 @@ before packages are loaded."
    '(org-export-with-sub-superscripts nil)
    '(org-id-extra-files t)
    '(org-id-track-globally t)
-   '(package-selected-packages
-     '(magit pdf-tools json-reformat json-mode jq-format tabbar htmlize typit wttrin quelpa-use-package quelpa org-ql ivy monkeytype magit chronos chess mu4e-alert evil doom-themes color-theme-sanityinc-tomorrow soothe-theme deft org-journal yaml-mode yasnippet-snippets wrap-region web-mode visual-regexp use-package rjsx-mode processing-mode pomidor php-mode org-vcard org-agenda-property markdown-mode less-css-mode helm-swoop helm-c-yasnippet emms auto-complete))
+   ;; '(package-selected-packages
+     ;; '(magit pdf-tools json-reformat json-mode jq-format tabbar htmlize typit wttrin quelpa-use-package quelpa org-ql ivy monkeytype magit chronos chess mu4e-alert evil doom-themes color-theme-sanityinc-tomorrow soothe-theme deft org-journal yaml-mode yasnippet-snippets wrap-region web-mode visual-regexp use-package rjsx-mode processing-mode pomidor php-mode org-vcard org-agenda-property markdown-mode less-css-mode helm-swoop helm-c-yasnippet emms auto-complete))
    '(speedbar-show-unknown-files t)
    '(window-divider-mode nil))
 
@@ -1133,8 +1152,9 @@ fb50b6d00e8b01c2208e55543a6337433a" default))
  '(org-export-with-sub-superscripts nil)
  '(org-id-extra-files t)
  '(org-id-track-globally t)
+ '(org-roam-directory "/Users/patjennings/Dropbox/org-roam")
  '(package-selected-packages
-   '(ox-gfm company-php ac-php-core company-phpactor drupal-mode geben php-auto-yasnippets php-extras phpactor composer php-runtime phpcbf phpunit blacken code-cells company-anaconda anaconda-mode cython-mode helm-cscope helm-pydoc importmagic epc ctable concurrent deferred live-py-mode lsp-pyright lsp-python-ms nose pip-requirements pipenv load-env-vars pippel poetry compat py-isort pydoc pyenv-mode pythonic pylookup pytest pyvenv sphinx-doc stickyfunc-enhance xcscope yapfify jekyll-modes ac-ispell auto-yasnippet company-web web-completion-data fuzzy helm-company centaur-tabs csv-mode multi-vterm xref shell-pop terminal-here tern vterm xterm-color add-node-modules-path bundler chruby company counsel-gtags counsel swiper dap-mode lsp-docker lsp-treemacs bui lsp-mode enh-ruby-mode ggtags helm-gtags minitest rake rbenv robe inf-ruby rspec-mode rubocop rubocopfmt ruby-hash-syntax ruby-refactor ruby-test-mode ruby-tools rvm seeing-is-believing magit pdf-tools json-reformat json-mode jq-format tabbar htmlize typit wttrin quelpa-use-package quelpa org-ql ivy monkeytype magit chronos chess mu4e-alert evil doom-themes color-theme-sanityinc-tomorrow soothe-theme deft org-journal yaml-mode yasnippet-snippets wrap-region web-mode visual-regexp use-package rjsx-mode processing-mode pomidor php-mode org-vcard org-agenda-property markdown-mode less-css-mode helm-swoop helm-c-yasnippet emms auto-complete))
+   '(sqlite3 org-roam magit pdf-tools json-reformat json-mode jq-format tabbar htmlize typit wttrin quelpa-use-package quelpa org-ql ivy monkeytype magit chronos chess mu4e-alert evil doom-themes color-theme-sanityinc-tomorrow soothe-theme deft org-journal yaml-mode yasnippet-snippets wrap-region web-mode visual-regexp use-package rjsx-mode processing-mode pomidor php-mode org-vcard org-agenda-property markdown-mode less-css-mode helm-swoop helm-c-yasnippet emms auto-complete))
  '(speedbar-show-unknown-files t)
  '(window-divider-mode nil))
 (custom-set-faces

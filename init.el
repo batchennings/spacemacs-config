@@ -61,6 +61,8 @@ This function should only modify configuration layer settings."
      emacs-lisp
      git
      helm
+     bibtex
+     deft
      ;; tabs
      ;; lsp
      ;; markdown
@@ -68,9 +70,10 @@ This function should only modify configuration layer settings."
      org
      (org :variables
            org-enable-roam-support t
+           org-enable-roam-ui t
            org-roam-ui-mode t
            org-enable-roam-protocol t)
-     ;; org-roam
+     org-roam-bibtex
      (shell :variables
             shell-default-height 30
             shell-default-position 'bottom)
@@ -591,7 +594,26 @@ If you are unsure, try setting them in `dotspacemacs/user-config' first."
   (setq mac-option-modifier nil
         mac-command-modifier 'meta
         x-select-enable-clipboard t)
-  )
+
+  (add-to-list 'image-types 'svg) ;; solve a problem raised by launching dired - svg reading in Mac OS Ventura - https://emacs.stackexchange.com/questions/74289/emacs-28-2-error-in-macos-ventura-image-type-invalid-image-type-svg
+
+  (setq org-roam-directory "~/Dropbox/org-roam/")
+  (setq org-roam-capture-templates
+        '(("c" "concept" plain "%?"
+           :if-new
+           (file+head "~/Dropbox/org-roam/concept/%<%Y%m%d%H%M%S>-${title}.org" "#+title: ${title}\n")
+           :immediate-finish t
+           :unnarrowed t)
+          ("r" "reference" plain "%?"
+           :if-new
+           (file+head "~/Dropbox/org-roam/reference/%<%Y%m%d%H%M%S>-${title}.org" "#+title: ${title}\n#+filetags: :reference:\n")
+           :immediate-finish t
+           :unnarrowed t)))
+
+  (setq deft-directory "~/Dropbox/org-roam")
+  (setq deft-extensions '("org" "md" "txt"))
+  (setq deft-recursive t)
+)
 
 
 (defun dotspacemacs/user-load ()
@@ -613,12 +635,16 @@ before packages are loaded."
   ;; on signale à emacs l'emplacement des plugins
   (setq-default flycheck-emacs-lisp-load-path 'inherit)
 
+
   (setq user-full-name "thomas guesnon")
   (setq user-mail-address "bonjour@thomasguesnon.fr")
 
   ;; default path for file creation
   (setq default-directory "~/Documents/")
   (setq org-directory "~/Dropbox/org/")
+
+
+  (org-roam-db-autosync-mode)
 
   (setq make-backup-files nil) ; stop creating backup~ files
   (setq auto-save-default nil) ; stop creating #autosave# files
@@ -634,7 +660,6 @@ before packages are loaded."
   (global-auto-revert-mode 1)
 
   (require 'org-protocol)
-
   ;; --------
   ;; PACKAGES
   ;; --------
@@ -662,6 +687,34 @@ before packages are loaded."
   (require 'terminal-here)
 
   (setq terminal-here-mac-terminal-command 'iterm2)
+
+
+  ;; --------
+  ;; ORG-MODE
+  ;; --------
+  (with-eval-after-load 'org
+    ;; Install package org-plus-contrib for org
+    ;; :ensure org-plus-contrib
+    ;; Install from 'org' package archive
+    ;; :pin gnu
+    ;; Load org in org-mode
+    ;; :mode (("\\.org$" . org-mode))
+    ;; Bind keys
+    ;; :bind (("C-c c" . org-capture)
+  	;; ("C-c l" . org-store-link)
+  	;; ("C-c a" . org-agenda))
+    ;; Configure org
+    ;; config (progn
+      '(require 'ox-gfm nil t)
+	  ;; org refile mechanism
+  (set-face-attribute 'org-level-1 nil :height 1.0)
+  (set-face-attribute 'org-level-2 nil :height 1.0)
+  (set-face-attribute 'org-level-3 nil :height 1.0)
+  (set-face-attribute 'org-level-4 nil :height 1.0)
+  (set-face-attribute 'org-level-5 nil :height 1.0)
+  (set-face-attribute 'org-level-6 nil :height 1.0)
+  (set-face-attribute 'org-level-7 nil :height 1.0)
+  (set-face-attribute 'org-document-title nil :height 1.0)
   ;; ----------------
   ;; CUSTOM VARIABLES
   ;; ----------------
@@ -680,7 +733,6 @@ before packages are loaded."
   ;;   :hook ( org-roam-mode . (lambda () (global-page-break-lines-mode -1)))
   ;;   :config
   ;;   (org-roam-setup))
-  (add-to-list 'image-types 'svg) ;; solve a problem raised by launching dired - svg reading in Mac OS Ventura - https://emacs.stackexchange.com/questions/74289/emacs-28-2-error-in-macos-ventura-image-type-invalid-image-type-svg
 
   (custom-set-variables
    ;; custom-set-variables was added by Custom.
@@ -718,7 +770,6 @@ before packages are loaded."
        ,(concat org-directory "notes_travail.org")
        ,(concat org-directory "notes_perso.org")
        ,(concat org-directory "notes_wishlist.org"))
-
      )
    '(org-export-with-sub-superscripts nil)
    '(org-id-extra-files t)
@@ -728,38 +779,13 @@ before packages are loaded."
    '(speedbar-show-unknown-files t)
    '(window-divider-mode nil))
 
-  (set-face-attribute 'org-level-1 nil :height 1.0)
-  (set-face-attribute 'org-level-2 nil :height 1.0)
-  (set-face-attribute 'org-level-3 nil :height 1.0)
-  (set-face-attribute 'org-level-4 nil :height 1.0)
-  (set-face-attribute 'org-level-5 nil :height 1.0)
-  (set-face-attribute 'org-level-6 nil :height 1.0)
-  (set-face-attribute 'org-level-7 nil :height 1.0)
-  (set-face-attribute 'org-document-title nil :height 1.0)
-
   (add-to-list 'load-path "~/.emacs.d/plugins/evil-org-mode")
   (require 'evil-org)
 
-  ;; --------
-  ;; ORG-MODE
-  ;; --------
-  (with-eval-after-load 'org
-    ;; Install package org-plus-contrib for org
-    ;; :ensure org-plus-contrib
-    ;; Install from 'org' package archive
-    ;; :pin gnu
-    ;; Load org in org-mode
-    ;; :mode (("\\.org$" . org-mode))
-    ;; Bind keys
-    ;; :bind (("C-c c" . org-capture)
-  	;; ("C-c l" . org-store-link)
-  	;; ("C-c a" . org-agenda))
-    ;; Configure org
-    ;; config (progn
-      '(require 'ox-gfm nil t)
-	  ;; org refile mechanism
+
 	  (setq org-refile-targets `((,(concat org-directory "notes_ecrire.org") :maxlevel . 9)
 				                       (,(concat org-directory "notes_famille.org") :maxlevel . 9)
+				                       (,(concat org-directory "notes_docs.org") :maxlevel . 9)
 				                       (,(concat org-directory "notes_reference.org") :maxlevel . 9)
 				                       (,(concat org-directory "notes_links.org") :maxlevel . 9)
 				                       (,(concat org-directory "notes_travail.org") :maxlevel . 9)
@@ -776,6 +802,8 @@ before packages are loaded."
 
 	  ;; html exports
 	  (setq org-html-checkbox-type 'html)
+
+
   	(setq
   	 org-log-done t
   	 org-log-into-drawer t
@@ -1099,72 +1127,6 @@ TAG is chosen interactively from the global tags completion table."
 
 (add-hook 'LilyPond-mode-hook (lambda () (turn-on-font-lock)))
 
-)
-
-;; Do not write anything past this comment. This is where Emacs will
-;; auto-generate custom variable definitions.
-(defun dotspacemacs/emacs-custom-settings ()
-  "Emacs custom settings.
-This is an auto-generated function, do not modify its content directly, use
-Emacs customize menu instead.
-This function is called at the very end of Spacemacs initialization."
-(custom-set-variables
- ;; custom-set-variables was added by Custom.
- ;; If you edit it by hand, you could mess it up, so be careful.
- ;; Your init file should contain only one such instance.
- ;; If there is more than one, they won't work right.
- '(ansi-color-faces-vector
-   [default bold shadow italic underline bold bold-italic bold])
- '(custom-safe-themes
-   '("02f57ef0a20b7f61adce51445b68b2a7e832648ce2e7efb19d217b6454c1b644" "ed5c37f3c823f0b4348e5025707ac40b95dbecd99a67d93cd4416c258eaf75f0" "966a49d899d00211fa2fa652b5f64e106782cd84b30dff4c658eb5d542fce5a1" "7f666327ab76c4cf1bd60d55e2fd17e46ebf44c10df466adc86312089bb3fdfe" "ae30c27916f58eb24285b19d52e2c4ae36b862a3856bbbc5e932f5d436dc7d61" "246a9596178bb806c5f41e5b571546bb6e0f4bd41a9da0df5dfbca7ec6e2250c" "835868dcd17131ba8b9619d14c67c127aa18b90a82438c8613586331129dda63" "8f5a7a9a3c510ef9cbb88e600c0b4c53cdcdb502cfe3eb50040b7e13c6f4e78e" "82d2cac368ccdec2fcc7573f24c3f79654b78bf133096f9b40c20d97ec1d8016" "b0334e8e314ea69f745eabbb5c1817a173f5e9715493d63b592a8dc9c19a4de6" "7a994c16aa550678846e82edc8c9d6a7d39cc6564baaaacc305a3fdc0bd8725f" "c83c095dd01cde64b631fb0fe5980587deec3834dc55144a6e78ff91ebc80b19" "fce3524887a0994f8b9b047aef9cc4cc017c5a93a5fb1f84d300391fba313743" "2c49d6ac8c0bf19648c9d2eabec9b246d46cb94d83713eaae4f26b49a8183fc4" "77113617a0642d74767295c4408e17da3bfd9aa80aaa2b4eeb34680f6172d71a" "bb08c73af94ee74453c90422485b29e5643b73b05e8de029a6909af6a3fb3f58" "628278136f88aa1a151bb2d6c8a86bf2b7631fbea5f0f76cba2a0079cd910f7d" "1b8d67b43ff1723960eb5e0cba512a2c7a2ad544ddb2533a90101fd1852b426e" "06f0b439b62164c6f8f84fdda32b62
-fb50b6d00e8b01c2208e55543a6337433a" default))
- '(doc-view-continuous t)
- '(flycheck-color-mode-line-face-to-color 'mode-line-buffer-id)
- '(helm-completion-style 'emacs)
- '(org-agenda-custom-commands
-   '(("x" "Tags dans links/docs/notes-pro/wishlist" tags ""
-      ((org-agenda-files
-        `(,(concat org-directory "notes_links.org")
-          ,(concat org-directory "notes_travail.org")
-          ,(concat org-directory "notes_perso.org")
-          ,(concat org-directory "notes_wishlist.org")))))
-     ("n" "Agenda / INTR / PROG / NEXT"
-      ((agenda "" nil)
-       (todo "INTR" nil)
-       (todo "PROG" nil)
-       (todo "NEXT" nil))
-      nil)))
- '(org-agenda-files
-   `(,(concat org-directory "travail.org")
-     ,(concat org-directory "perso.org")
-     ,(concat org-directory "projets.org")))
- '(org-agenda-search-view-max-outline-level 1)
- '(org-agenda-text-search-extra-files
-   `(,(concat org-directory "archive/archive.org")
-     ,(concat org-directory "projets_archive.org")
-     ,(concat org-directory "notes_famille.org")
-     ,(concat org-directory "notes_reference.org")
-     ,(concat org-directory "notes_inbox.org")
-     ,(concat org-directory "notes_links.org")
-     ,(concat org-directory "notes_travail.org")
-     ,(concat org-directory "notes_perso.org")
-     ,(concat org-directory "notes_wishlist.org")))
- '(org-export-with-sub-superscripts nil)
- '(org-id-extra-files t)
- '(org-id-track-globally t)
- '(org-roam-directory "/Users/patjennings/Dropbox/org-roam")
- '(package-selected-packages
-   '(sqlite3 org-roam magit pdf-tools json-reformat json-mode jq-format tabbar htmlize typit wttrin quelpa-use-package quelpa org-ql ivy monkeytype magit chronos chess mu4e-alert evil doom-themes color-theme-sanityinc-tomorrow soothe-theme deft org-journal yaml-mode yasnippet-snippets wrap-region web-mode visual-regexp use-package rjsx-mode processing-mode pomidor php-mode org-vcard org-agenda-property markdown-mode less-css-mode helm-swoop helm-c-yasnippet emms auto-complete))
- '(speedbar-show-unknown-files t)
- '(window-divider-mode nil))
-(custom-set-faces
- ;; custom-set-faces was added by Custom.
- ;; If you edit it by hand, you could mess it up, so be careful.
- ;; Your init file should contain only one such instance.
- ;; If there is more than one, they won't work right.
- )
-)
-
 ;; ---------------
 ;; PANDOC/MARKDOWN
 ;; ---------------
@@ -1243,3 +1205,78 @@ fb50b6d00e8b01c2208e55543a6337433a" default))
 (add-to-list 'auto-mode-alist '("\\.yml\\'" . yaml-mode))
 (add-to-list 'auto-mode-alist '("\\.js\\'" . js2-mode))
 (setq auto-mode-alist (cons '("\\.ly$" . LilyPond-mode) auto-mode-alist))
+
+;; ---------------
+;; BIBTEX
+;; ---------------
+(setq bibtex-completion-bibliography '("~/Dropbox/papers/references.bib")
+      bibtex-completion-library-path "~/Dropbox/papers/"
+      bibtex-completion-notes-path "~/Dropbox/papers/notes.org")
+
+(setq org-ref-bibliography-notes "~/Dropbox/papers/notes.org"
+      org-ref-default-bibliography '("~/Dropbox/papers/references.bib")
+      org-ref-pdf-directory "~/Dropbox/papers/bibtex-pdfs/")
+)
+;; Do not write anything past this comment. This is where Emacs will
+;; auto-generate custom variable definitions.
+(defun dotspacemacs/emacs-custom-settings ()
+  "Emacs custom settings.
+This is an auto-generated function, do not modify its content directly, use
+Emacs customize menu instead.
+This function is called at the very end of Spacemacs initialization."
+(custom-set-variables
+ ;; custom-set-variables was added by Custom.
+ ;; If you edit it by hand, you could mess it up, so be careful.
+ ;; Your init file should contain only one such instance.
+ ;; If there is more than one, they won't work right.
+ '(ansi-color-faces-vector
+   [default bold shadow italic underline bold bold-italic bold])
+ '(custom-safe-themes
+   '("02f57ef0a20b7f61adce51445b68b2a7e832648ce2e7efb19d217b6454c1b644" "ed5c37f3c823f0b4348e5025707ac40b95dbecd99a67d93cd4416c258eaf75f0" "966a49d899d00211fa2fa652b5f64e106782cd84b30dff4c658eb5d542fce5a1" "7f666327ab76c4cf1bd60d55e2fd17e46ebf44c10df466adc86312089bb3fdfe" "ae30c27916f58eb24285b19d52e2c4ae36b862a3856bbbc5e932f5d436dc7d61" "246a9596178bb806c5f41e5b571546bb6e0f4bd41a9da0df5dfbca7ec6e2250c" "835868dcd17131ba8b9619d14c67c127aa18b90a82438c8613586331129dda63" "8f5a7a9a3c510ef9cbb88e600c0b4c53cdcdb502cfe3eb50040b7e13c6f4e78e" "82d2cac368ccdec2fcc7573f24c3f79654b78bf133096f9b40c20d97ec1d8016" "b0334e8e314ea69f745eabbb5c1817a173f5e9715493d63b592a8dc9c19a4de6" "7a994c16aa550678846e82edc8c9d6a7d39cc6564baaaacc305a3fdc0bd8725f" "c83c095dd01cde64b631fb0fe5980587deec3834dc55144a6e78ff91ebc80b19" "fce3524887a0994f8b9b047aef9cc4cc017c5a93a5fb1f84d300391fba313743" "2c49d6ac8c0bf19648c9d2eabec9b246d46cb94d83713eaae4f26b49a8183fc4" "77113617a0642d74767295c4408e17da3bfd9aa80aaa2b4eeb34680f6172d71a" "bb08c73af94ee74453c90422485b29e5643b73b05e8de029a6909af6a3fb3f58" "628278136f88aa1a151bb2d6c8a86bf2b7631fbea5f0f76cba2a0079cd910f7d" "1b8d67b43ff1723960eb5e0cba512a2c7a2ad544ddb2533a90101fd1852b426e" "06f0b439b62164c6f8f84fdda32b62
+fb50b6d00e8b01c2208e55543a6337433a" default))
+ '(doc-view-continuous t)
+ '(flycheck-color-mode-line-face-to-color 'mode-line-buffer-id)
+ '(helm-completion-style 'emacs)
+ '(org-agenda-custom-commands
+   '(("x" "Tags dans links/docs/notes-pro/wishlist" tags ""
+      ((org-agenda-files
+        `(,(concat org-directory "notes_links.org")
+          ,(concat org-directory "notes_travail.org")
+          ,(concat org-directory "notes_perso.org")
+          ,(concat org-directory "notes_wishlist.org")))))
+     ("n" "Agenda / INTR / PROG / NEXT"
+      ((agenda "" nil)
+       (todo "INTR" nil)
+       (todo "PROG" nil)
+       (todo "NEXT" nil))
+      nil)))
+ '(org-agenda-files
+   `(,(concat org-directory "travail.org")
+     ,(concat org-directory "perso.org")
+     ,(concat org-directory "projets.org")))
+ '(org-agenda-search-view-max-outline-level 1)
+ '(org-agenda-text-search-extra-files
+   `(,(concat org-directory "archive/archive.org")
+     ,(concat org-directory "projets_archive.org")
+     ,(concat org-directory "notes_famille.org")
+     ,(concat org-directory "notes_reference.org")
+     ,(concat org-directory "notes_inbox.org")
+     ,(concat org-directory "notes_links.org")
+     ,(concat org-directory "notes_travail.org")
+     ,(concat org-directory "notes_perso.org")
+     ,(concat org-directory "notes_wishlist.org")))
+ '(org-export-with-sub-superscripts nil)
+ '(org-id-extra-files t)
+ '(org-id-track-globally t)
+ '(org-roam-directory "/Users/patjennings/Dropbox/org-roam")
+ '(package-selected-packages
+   '(org-roam-bibtex helm-bibtex org-ref ox-pandoc citeproc bibtex-completion biblio biblio-core parsebib org-roam-ui websocket sqlite3 org-roam magit pdf-tools json-reformat json-mode jq-format tabbar htmlize typit wttrin quelpa-use-package quelpa org-ql ivy monkeytype magit chronos chess mu4e-alert evil doom-themes color-theme-sanityinc-tomorrow soothe-theme deft org-journal yaml-mode yasnippet-snippets wrap-region web-mode visual-regexp use-package rjsx-mode processing-mode pomidor php-mode org-vcard org-agenda-property markdown-mode less-css-mode helm-swoop helm-c-yasnippet emms auto-complete))
+ '(speedbar-show-unknown-files t)
+ '(window-divider-mode nil))
+(custom-set-faces
+ ;; custom-set-faces was added by Custom.
+ ;; If you edit it by hand, you could mess it up, so be careful.
+ ;; Your init file should contain only one such instance.
+ ;; If there is more than one, they won't work right.
+ )
+)

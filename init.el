@@ -63,6 +63,7 @@ This function should only modify configuration layer settings."
      helm
      bibtex
      deft
+     sql
      ;; tabs
      ;; lsp
      ;; markdown
@@ -613,6 +614,8 @@ If you are unsure, try setting them in `dotspacemacs/user-config' first."
   (setq deft-directory "~/Dropbox/org-roam")
   (setq deft-extensions '("org" "md" "txt"))
   (setq deft-recursive t)
+
+  (setq bibtex-dialect 'biblatex)
 )
 
 
@@ -922,8 +925,6 @@ before packages are loaded."
 
     ;; customize item display in agenda
     ;; (setq org-agenda-prefix-format '((todo . "%-30b") (tags . "%-30b") (agenda . "%-30b")))
-    ;; (setq org-agenda-prefix-format '((todo . "%-30b") (tags . "%-30b") (agenda . "%-30b")))
-    ;; (setq org-agenda-prefix-format '((todo . "  %-12:b%?-12t% s") (agenda . "  %-12:b%?-12t% s")))
     ;; (setq org-agenda-prefix-format '((todo . "%c : %b % s") (agenda . "  %-12:b%? t%c %b % s")))
     (setq org-agenda-prefix-format '((todo . "%c : %b % s")
                                      (tags . "%c : %b % s")
@@ -1087,7 +1088,7 @@ TAG is chosen interactively from the global tags completion table."
                 nil)))
     (air--org-swap-tags new)))
 
-?;;;; Override default org-set-tags keybindings (C-c C-q and C-c C-c on a headline) to use air-org-set-tags.
+;;;; Override default org-set-tags keybindings (C-c C-q and C-c C-c on a headline) to use air-org-set-tags.
 (defun air-org-set-tags-ctrl-c-ctrl-c-hook ()
   (let* ((context (org-element-context))
          (type (org-element-type context)))
@@ -1270,7 +1271,7 @@ fb50b6d00e8b01c2208e55543a6337433a" default))
  '(org-id-track-globally t)
  '(org-roam-directory "/Users/patjennings/Dropbox/org-roam")
  '(package-selected-packages
-   '(org-roam-bibtex helm-bibtex org-ref ox-pandoc citeproc bibtex-completion biblio biblio-core parsebib org-roam-ui websocket sqlite3 org-roam magit pdf-tools json-reformat json-mode jq-format tabbar htmlize typit wttrin quelpa-use-package quelpa org-ql ivy monkeytype magit chronos chess mu4e-alert evil doom-themes color-theme-sanityinc-tomorrow soothe-theme deft org-journal yaml-mode yasnippet-snippets wrap-region web-mode visual-regexp use-package rjsx-mode processing-mode pomidor php-mode org-vcard org-agenda-property markdown-mode less-css-mode helm-swoop helm-c-yasnippet emms auto-complete))
+   '(sql-indent org-roam-bibtex helm-bibtex org-ref ox-pandoc citeproc bibtex-completion biblio biblio-core parsebib org-roam-ui websocket sqlite3 org-roam magit pdf-tools json-reformat json-mode jq-format tabbar htmlize typit wttrin quelpa-use-package quelpa org-ql ivy monkeytype magit chronos chess mu4e-alert evil doom-themes color-theme-sanityinc-tomorrow soothe-theme deft org-journal yaml-mode yasnippet-snippets wrap-region web-mode visual-regexp use-package rjsx-mode processing-mode pomidor php-mode org-vcard org-agenda-property markdown-mode less-css-mode helm-swoop helm-c-yasnippet emms auto-complete))
  '(speedbar-show-unknown-files t)
  '(window-divider-mode nil))
 (custom-set-faces

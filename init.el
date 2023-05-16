@@ -81,14 +81,14 @@ This function should only modify configuration layer settings."
      multiple-cursors
      org
      (org :variables
-           org-enable-roam-support t
-           org-enable-roam-ui t
-           org-roam-ui-mode t
-           org-enable-roam-protocol t
-           org-enable-org-contacts-support t
-           org-contacts-files '("~/Dropbox/org/contacts.org")
+          org-enable-roam-support t
+          org-enable-roam-ui t
+          org-roam-ui-mode t
+          org-enable-roam-protocol t
+          org-enable-org-contacts-support t
+          org-contacts-files '("~/Dropbox/org/contacts.org")
 
-           )
+          )
      org-roam-bibtex
      (shell :variables
             shell-default-height 30
@@ -1028,9 +1028,9 @@ before packages are loaded."
 (setq gnus-unbuttonized-mime-types nil)
 (setq mm-discouraged-alternatives '("text/html" "text/richtext"))
 
-;; (setq mu4e-view-prefer-html nil)
-;; (setq mu4e-view-show-images nil)
-;; (setq mu4e-show-images nil)
+(setq mu4e-view-prefer-html nil)
+(setq mu4e-view-show-images nil)
+(setq mu4e-show-images nil)
 (setq mu4e-confirm-quit nil)
 
 (setq auth-source-debug t)
@@ -1161,6 +1161,64 @@ before packages are loaded."
 		   ;; 		 :query "maildir:/bonjour/INBOX AND flag:unread"
 		   ;; 		 :key ?v))
 		   ))
+         ,(make-mu4e-context
+	   :name "webadmin@kernavelo.org"
+	   :enter-func (lambda () (mu4e-message "Bienvenue dans webadmin"))
+           :leave-func (lambda () (mu4e-message "On quitte webadmin"))
+	   :match-func (lambda (msg) (when msg
+				       (string-prefix-p "^/kernavelo-webadmin" (mu4e-message-field msg :maildir))))
+	   :vars '(
+		   (mu4e-sent-folder             . "/kernavelo-webadmin/Sent")
+		   (mu4e-drafts-folder           . "/kernavelo-webadmin/Drafts")
+		   (mu4e-trash-folder            . "/kernavelo-webadmin/Trash")
+		   ;; (mu4e-refile-folder "/kernavelo-webadmin/INBOX.Archive")
+		   (user-mail-address            . "webadmin@kernavelo.org")
+		   (mu4e-compose-signature       . t)
+		   (mu4e-compose-signature-auto-include . t)
+		   ;; (message-signature-file       . "~/sig-thomas")
+		   (user-full-name               . "Web admin Kernavélo")
+		   (smtpmail-smtp-service        . 465)
+		   (mu4e-maildir-shortcuts . (("/kernavelo-webadmin/INBOX" . ?i)
+					      ("/kernavelo-webadmin/Sent" . ?s)
+					      ("/kernavelo-webadmin/Drafts" . ?d)
+                ("/kernavelo-webadmin/Trash" . ?t)
+					      ))
+		   (mu4e-bookmarks . (("maildir:/kernavelo-webadmin/INBOX AND flag:unread" "Non-lus" ?u)))
+		   ;; (add-to-list 'mu4e-bookmarks
+		   ;; 		(make-mu4e-bookmark
+		   ;; 		 :name "Unread in bonjour"
+		   ;; 		 :query "maildir:/kernavelo-webadmin/INBOX AND flag:unread"
+		   ;; 		 :key ?v))
+		   ))
+         ,(make-mu4e-context
+	   :name "amenagements@kernavelo.org"
+	   :enter-func (lambda () (mu4e-message "Bienvenue dans amenagements"))
+           :leave-func (lambda () (mu4e-message "On quitte amenagements"))
+	   :match-func (lambda (msg) (when msg
+				       (string-prefix-p "^/kernavelo-amenagements" (mu4e-message-field msg :maildir))))
+	   :vars '(
+		   (mu4e-sent-folder             . "/kernavelo-amenagements/Sent")
+		   (mu4e-drafts-folder           . "/kernavelo-amenagements/Drafts")
+		   (mu4e-trash-folder            . "/kernavelo-amenagements/Trash")
+		   ;; (mu4e-refile-folder "/kernavelo-amenagements/INBOX.Archive")
+		   (user-mail-address            . "amenagements@kernavelo.org")
+		   (mu4e-compose-signature       . t)
+		   (mu4e-compose-signature-auto-include . t)
+		   ;; (message-signature-file       . "~/sig-thomas")
+		   (user-full-name               . "Web admin Kernavélo")
+		   (smtpmail-smtp-service        . 465)
+		   (mu4e-maildir-shortcuts . (("/kernavelo-amenagements/INBOX" . ?i)
+					      ("/kernavelo-amenagements/Sent" . ?s)
+					      ("/kernavelo-amenagements/Drafts" . ?d)
+                ("/kernavelo-amenagements/Trash" . ?t)
+					      ))
+		   (mu4e-bookmarks . (("maildir:/kernavelo-amenagements/INBOX AND flag:unread" "Non-lus" ?u)))
+		   ;; (add-to-list 'mu4e-bookmarks
+		   ;; 		(make-mu4e-bookmark
+		   ;; 		 :name "Unread in bonjour"
+		   ;; 		 :query "maildir:/kernavelo-amenagements/INBOX AND flag:unread"
+		   ;; 		 :key ?v))
+		   ))
               ,(make-mu4e-context
            :name "netcourrier"
            :enter-func (lambda () (mu4e-message "Change pour Netcourrier/Mailo"))
@@ -1171,6 +1229,11 @@ before packages are loaded."
                  :to "thomas.guesnon@netcourrier.com")))
            :vars '(  ( user-mail-address      . "thomas.guesnon@netcourrier.com" )
 		                 (mu4e-maildir-shortcuts . ())
+                     (mu4e-maildir-shortcuts . (("/netcourrier/INBOX" . ?i)
+					                                      ;; ("/netcourrier/Sent" . ?s)
+					                                      ;; ("/netcourrier/Drafts" . ?d)
+                                                ;; ("/netcourrier/Trash" . ?t)
+					                                      ))
                   ( user-full-name     . "Thomas Guesnon" )))
 	 ;; ,(make-mu4e-context
 	 ;;   :name "amenagements@kernavelo.org"

@@ -59,6 +59,17 @@ This function should only modify configuration layer settings."
                       auto-completion-enable-sort-by-usage nil)
      ;; better-defaults
      emacs-lisp
+     mu4e
+     (mu4e :variables
+           mu4e-installation-path "/opt/homebrew/Cellar/mu/1.10.3/share/emacs/site-lisp/mu/mu4e/"
+           mu4e-maildir "~/.maildir"
+           mu4e-trash-folder "/Trash"
+           mu4e-refile-folder "/Archive"
+           mu4e-get-mail-command "mbsync -a"
+           mu4e-update-interval nil
+           mu4e-compose-signature-auto-include nil
+           mu4e-view-show-images t
+           mu4e-view-show-addresses t)
      git
      helm
      bibtex
@@ -73,7 +84,11 @@ This function should only modify configuration layer settings."
            org-enable-roam-support t
            org-enable-roam-ui t
            org-roam-ui-mode t
-           org-enable-roam-protocol t)
+           org-enable-roam-protocol t
+           org-enable-org-contacts-support t
+           org-contacts-files '("~/Dropbox/org/contacts.org")
+
+           )
      org-roam-bibtex
      (shell :variables
             shell-default-height 30
@@ -672,15 +687,6 @@ before packages are loaded."
   ;; packages repos
   (require 'package)
   (add-to-list 'package-archives '("melpa" . "https://melpa.org/packages/") t)
-  ;; (add-to-list 'package-archives '("org" . "https://orgmode.org/elpa/") t)
-  ;; (add-to-list 'package-archives '("gnu" . "https://elpa.gnu.org/packages/") t)
-  ;; (add-to-list 'package-archives '("elpy" . "http://jorgenschaefer.github.io/packages/") t)
-  ;; (package-initialize)
-
-  ;; Install use-package
-  ;; (unless (package-installed-p 'use-package)
-  ;; (package-refresh-contents)
-  ;; (package-install 'use-package))
 
   ;; évite à Emacs d'ouvrir les nouvelles windows verticalement dans org-agenda
   (defadvice org-agenda (around split-vertically activate)
@@ -718,25 +724,10 @@ before packages are loaded."
   (set-face-attribute 'org-level-6 nil :height 1.0)
   (set-face-attribute 'org-level-7 nil :height 1.0)
   (set-face-attribute 'org-document-title nil :height 1.0)
+
   ;; ----------------
   ;; CUSTOM VARIABLES
   ;; ----------------
-
-  ;; (add-to-list 'load-path "~/.emacs.d/private/org-roam/")
-  ;; (add-to-list 'load-path "~/.emacs.d/private/org-roam/extensions/")
-  ;; (require 'org-roam)
-
-  ;; (use-package org-roam
-  ;;   :load-path "~/.emacs.d/private/org-roam"
-  ;;   :custom
-  ;;   (org-roam-directory "~/.emacs.d/private/org-roam") ; replace with your path
-  ;;   :bind (("C-c n l" . org-roam-buffer-toggle)
-  ;;          ("C-c n f" . org-roam-node-find))
-  ;;                                       ; global-page-break-lines-mode will break the org-roam buffer
-  ;;   :hook ( org-roam-mode . (lambda () (global-page-break-lines-mode -1)))
-  ;;   :config
-  ;;   (org-roam-setup))
-
   (custom-set-variables
    ;; custom-set-variables was added by Custom.
    ;; If you edit it by hand, you could mess it up, so be careful.
@@ -777,8 +768,6 @@ before packages are loaded."
    '(org-export-with-sub-superscripts nil)
    '(org-id-extra-files t)
    '(org-id-track-globally t)
-   ;; '(package-selected-packages
-     ;; '(magit pdf-tools json-reformat json-mode jq-format tabbar htmlize typit wttrin quelpa-use-package quelpa org-ql ivy monkeytype magit chronos chess mu4e-alert evil doom-themes color-theme-sanityinc-tomorrow soothe-theme deft org-journal yaml-mode yasnippet-snippets wrap-region web-mode visual-regexp use-package rjsx-mode processing-mode pomidor php-mode org-vcard org-agenda-property markdown-mode less-css-mode helm-swoop helm-c-yasnippet emms auto-complete))
    '(speedbar-show-unknown-files t)
    '(window-divider-mode nil))
 
@@ -906,7 +895,21 @@ before packages are loaded."
 				                      "Note d'écriture"
 				                      entry (file, (concat org-directory "notes_ecrire.org"))
 				                      "* %^{Titre}\n:PROPERTIES:\n:Created: %U\n:END:"
-				                      :prepend t :kill-buffer t :empty-lines 1)
+
+				                                        :prepend t :kill-buffer t :empty-lines 1)
+                             ("d"
+				                      "Documentation"
+				                      entry (file, (concat org-directory "notes_docs.org"))  ;; pour une tâche pro
+  				                    "* TODO [#B] %^{Titre}\n:PROPERTIES:\n:Created: %U\n:END:"
+  				                    :prepend t
+				                      :kill-buffer t
+				                      :empty-lines 1)
+
+                             ("c" "Contacts" entry (file, (concat org-directory "contacts.org"))
+                              "* %(org-contacts-template-name)
+:PROPERTIES:
+:EMAIL: %(org-contacts-template-email)
+:END:")
 
 				                     ;; un lien
 				                     ("l"
@@ -924,8 +927,6 @@ before packages are loaded."
 	  (setq org-agenda-span 'day)
 
     ;; customize item display in agenda
-    ;; (setq org-agenda-prefix-format '((todo . "%-30b") (tags . "%-30b") (agenda . "%-30b")))
-    ;; (setq org-agenda-prefix-format '((todo . "%c : %b % s") (agenda . "  %-12:b%? t%c %b % s")))
     (setq org-agenda-prefix-format '((todo . "%c : %b % s")
                                      (tags . "%c : %b % s")
                                      (search . "%c : %b % s")
@@ -1007,10 +1008,215 @@ before packages are loaded."
 
 
 ;; --------
+;; MU4E
+;; --------
+;; pour la lecture des mails, c'est effecuté avec Gnus depuis la version 1.6 de mu4e
+;; Voir la partie GNUS de ce fichier pour le formatage
+
+;; mu4e - pour que M-x mu4e fonctionne !
+;; Etonnant, il faut aussi appeler mu4e pour que org-agenda fonctionn
+;; (add-to-list 'load-path "~/.emacs.d/plugins/mu4e")
+;; (require 'mu4e)
+;; (require 'mu4e-contrib)
+;; (require 'org-mu4e)
+(setq mail-personal-alias-file (expand-file-name "~/.mailrc"))
+;; (setq mu4e-view-html-plaintext-ratio-heuristic most-positive-fixnum)
+;; (setq mu4e-org-contacts-file  (concat org-directory "contacts.org"))
+(setq mu4e-attachment-dir "~/Desktop")
+
+;; relatif au message view avec gnus
+(setq gnus-unbuttonized-mime-types nil)
+(setq mm-discouraged-alternatives '("text/html" "text/richtext"))
+
+;; (setq mu4e-view-prefer-html nil)
+;; (setq mu4e-view-show-images nil)
+;; (setq mu4e-show-images nil)
+(setq mu4e-confirm-quit nil)
+
+(setq auth-source-debug t)
+(setq auth-source-do-cache nil)
+
+(setq mu4e-update-interval 300)
+(setq mu4e-compose-dont-reply-to-self t)
+(setq mu4e-compose-signature-auto-include t)
+(setq message-kill-buffer-on-exit t)
+
+(setq mu4e-headers-show-threads nil)
+
+(setq mu4e-org-contacts-file  (concat org-directory "contacts.org"))
+
+(add-to-list 'mu4e-headers-actions
+	     '("org-contact-add" . mu4e-action-add-org-contact) t)
+(add-to-list 'mu4e-view-actions
+	     '("org-contact-add" . mu4e-action-add-org-contact) t)
+
+(setq mu4e-headers-fields
+      '((:human-date    .  30)    ;; alternatively, use :human-date
+	(:subject       .  80)
+	(:flags         .   6)
+	(:from          .  30)
+	(:to            .  30)
+	(:size          .  6)
+	(:maildir       .  15)))
+
+
+(setq mu4e-headers-date-format "%a %d %b %Y, %H:%M")
+
+;; Configure desktop notifs for incoming emails:
+(use-package mu4e-alert
+  :ensure t
+  :init
+  (defun perso--mu4e-notif ()
+    "Display both mode line and desktop alerts for incoming new emails."
+    (interactive)
+    (mu4e-update-mail-and-index 1)        ; getting new emails is ran in the background
+    (mu4e-alert-enable-mode-line-display) ; display new emails in mode-line
+    (mu4e-alert-enable-notifications))    ; enable desktop notifications for new emails
+  (defun perso--mu4e-refresh ()
+    "Refresh emails every 300 seconds and display desktop alerts."
+    (interactive)
+    (mu4e t)                            ; start silently mu4e (mandatory for mu>=1.3.8)
+    (run-with-timer 0 300 'perso--mu4e-notif))
+  :after mu4e
+  :bind ("<f2>" . perso--mu4e-refresh)  ; F2 turns Emacs into a mail client
+  :config
+  ;; Mode line alerts:
+  (add-hook 'after-init-hook #'mu4e-alert-enable-mode-line-display)
+  ;; Desktop alerts:
+  (mu4e-alert-set-default-style 'libnotify)
+  (add-hook 'after-init-hook #'mu4e-alert-enable-notifications)
+  ;; Only notify for "interesting" (non-trashed) new emails:
+  (setq mu4e-alert-interesting-mail-query
+        (concat
+         "flag:unread maildir:/INBOX"
+         " AND NOT flag:trashed"))); 
+
+;; smtp config
+(require 'smtpmail)
+
+;; (setq send-mail-function 'smtpmail-send-it)
+;; (setq smtpmail-stream-type 'ssl)
+(setq sendmail-program "/opt/homebrew/bin/msmtp"
+      send-mail-function 'smtpmail-send-it
+      message-sendmail-f-is-evil t
+      message-sendmail-extra-arguments '("--read-envelope-from")
+      message-send-mail-function 'message-send-mail-with-sendmail)
+
+;; (setq mu4e-contexts
+;;   `( ,(make-mu4e-context
+;;   :name "bonjour"
+;;   :enter-func (lambda () (mu4e-message "Change pour bonjour(at)thomasguesnon(point)fr"))
+;;   ;; leave-func not defined
+;;   :match-func (lambda (msg)
+;;     (when msg
+;;       (mu4e-message-contact-field-matches msg
+;;         :to "bonjour@thomasguesnon.fr")))
+;;   :vars '(  ( user-mail-address      . "bonjour@thomasguesnon.fr"  )
+;;      ( user-full-name     . "Thomas Guesnon" )
+;;      ( mu4e-compose-signature .
+;;        (concat
+;;          "Thomas Guesnon"
+;;          "0608551355"))))
+;;      ,(make-mu4e-context
+;;   :name "netcourrier"
+;;   :enter-func (lambda () (mu4e-message "Change pour Netcourrier/Mailo"))
+;;   ;; leave-fun not defined
+;;   :match-func (lambda (msg)
+;;     (when msg
+;;       (mu4e-message-contact-field-matches msg
+;;         :to "thomas.guesnon@netcourrier.com")))
+;;   :vars '(  ( user-mail-address      . "thomas.guesnon@netcourrier.com" )
+;;      ( user-full-name     . "Thomas Guesnon" )))
+;;      ))
+(setq mu4e-contexts
+      `( ,(make-mu4e-context
+	   :name "bonjour@thomasquesnon.fr"
+	   :enter-func (lambda () (mu4e-message "Bienvenue dans bonjour"))
+           :leave-func (lambda () (mu4e-message "On quitte bonjour"))
+	   :match-func (lambda (msg) (when msg
+				       (string-prefix-p "^/bonjour" (mu4e-message-field msg :maildir))))
+	   :vars '(
+		   (mu4e-sent-folder             . "/bonjour/Sent")
+		   (mu4e-drafts-folder           . "/bonjour/Drafts")
+		   (mu4e-trash-folder            . "/bonjour/Trash")
+		   ;; (mu4e-refile-folder "/bonjour/INBOX.Archive")
+		   (user-mail-address            . "bonjour@thomasguesnon.fr")
+		   (mu4e-compose-signature       . t)
+		   (mu4e-compose-signature-auto-include . t)
+		   (message-signature-file       . "~/sig-thomas")
+		   ;; (smtpmail-smtp-user           . "bonjour@thomasguesnon.fr")
+		   (user-full-name               . "Thomas Guesnon")
+		   ;; (smtpmail-default-smtp-server . "ssl0.ovh.net")
+		   ;; (smtpmail-smtp-server         . "ssl0.ovh.net")
+		   (smtpmail-smtp-service        . 465)
+		   (mu4e-maildir-shortcuts . (("/bonjour/INBOX" . ?i)
+					      ("/bonjour/Sent" . ?s)
+					      ("/bonjour/Drafts" . ?d)
+                ("/bonjour/Trash" . ?t)
+					      ))
+		   (mu4e-bookmarks . (("maildir:/bonjour/INBOX AND flag:unread" "Non-lus" ?u)))
+		   ;; (add-to-list 'mu4e-bookmarks
+		   ;; 		(make-mu4e-bookmark
+		   ;; 		 :name "Unread in bonjour"
+		   ;; 		 :query "maildir:/bonjour/INBOX AND flag:unread"
+		   ;; 		 :key ?v))
+		   ))
+              ,(make-mu4e-context
+           :name "netcourrier"
+           :enter-func (lambda () (mu4e-message "Change pour Netcourrier/Mailo"))
+           ;; leave-fun not defined
+           :match-func (lambda (msg)
+             (when msg
+               (mu4e-message-contact-field-matches msg
+                 :to "thomas.guesnon@netcourrier.com")))
+           :vars '(  ( user-mail-address      . "thomas.guesnon@netcourrier.com" )
+		                 (mu4e-maildir-shortcuts . ())
+                  ( user-full-name     . "Thomas Guesnon" )))
+	 ;; ,(make-mu4e-context
+	 ;;   :name "amenagements@kernavelo.org"
+	 ;;   :enter-func (lambda () (mu4e-message "Bienvenue dans amenagements"))
+	 ;;   :leave-func (lambda () (mu4e-message "On quitte amenagements"))
+	 ;;   :match-func (lambda (msg) (when msg
+	 ;;  		       (string-prefix-p "^/kernavelo-amenagements" (mu4e-message-field msg :maildir))))
+	 ;;   :vars '(
+	 ;;     (mu4e-sent-folder             . "/kernavelo-amenagements/INBOX.Sent")
+	 ;;     (mu4e-drafts-folder           . "/kernavelo-amenagements/INBOX.Drafts")
+	 ;;     (mu4e-trash-folder            . "/kernavelo-amenagements/INBOX.Trash")
+	 ;;     (mu4e-refile-folder           . "/kernavelo-amenagements/Archive")
+	 ;;     (user-mail-address            . "amenagements@kernavelo.org")
+	 ;;     (mu4e-compose-signature       . nil)
+	 ;;     (user-full-name               . "Thomas du GT Aménagements")
+	 ;;     ;; (smtpmail-smtp-user           . "amenagements@kernavelo.org")
+	 ;;     ;; (smtpmail-default-smtp-server . "ssl0.ovh.net")
+	 ;;     ;; (smtpmail-smtp-server         . "ssl0.ovh.net")
+	 ;;     ;; (smtpmail-smtp-service        . 465)
+	 ;;     (mu4e-maildir-shortcuts . (("/kernavelo-amenagements/INBOX" . ?i)
+	 ;;  			      ("/kernavelo-amenagements/INBOX.Sent" . ?s)
+	 ;;  			      ("/kernavelo-amenagements/INBOX.Drafts" . ?d)
+   ;;                                            ("/kernavelo-amenagements/INBOX.Trash" . ?t)
+	 ;;  			      ))
+	 ;;     (mu4e-bookmarks . (("maildir:/kernavelo-amenagements/INBOX AND flag:unread" "Non-lus" ?u)))
+	
+   ))
+
+;; start with the first (default) context;
+;; default is to ask-if-none (ask when there's no context yet, and none match)
+(setq mu4e-context-policy 'pick-first)
+
+;; compose with the current context is no context matches;
+;; default is to ask
+(setq mu4e-compose-context-policy nil)
+
+;; lires les mails html dans le browser de'emacs (eww)
+;; source : https://irreal.org/blog/?p=9587
+(defun jcs-view-in-eww (msg)
+  "Display current message in EWW browser."
+  (eww-browse-url (concat "file://" (mu4e~write-body-to-html msg))))
+
+
+;; --------
 ;; MAGIT
 ;; --------
-;; (add-hook 'magit-process-find-password-functions
-;; 'magit-process-password-auth-source)
 
 ;; --------
 ;; CALENDAR
@@ -1143,13 +1349,10 @@ TAG is chosen interactively from the global tags completion table."
 ;; ---------------
 ;; EMACS TRR
 ;; ---------------
-;; (add-to-list 'load-path "~/.emacs.d/plugins/emacs-trr")
-;; (require 'trr)
 
 ;; -------------
 ;; YAML
 ;; -------------
-;; (require 'yaml-mode)
 
 ;; -------------
 ;; BOOKMARKS
@@ -1169,20 +1372,6 @@ TAG is chosen interactively from the global tags completion table."
 ;; -------------
 ;; CODE SNIPPETS
 ;; -------------
-;; (require 'yasnippet)
-;; (setq yas-snippet-dirs
-;; '("~/.emacs.d/snippets"                 ;; personal snippets
-;; ))
-;; (yas-global-mode 1) ;; or M-x yas-reload-all if you've started YASnippet already.
-
-;; Autocomplete
-;; (use-package auto-complete
-;;   :ensure t
-;;   :init
-;;   (progn
-;;     (ac-config-default)
-;;     (global-auto-complete-mode t)
-;;     ))
 
 ;; --------
 ;; ELECTRIC PAIR
@@ -1211,12 +1400,29 @@ TAG is chosen interactively from the global tags completion table."
 ;; BIBTEX
 ;; ---------------
 (setq bibtex-completion-bibliography '("~/Dropbox/papers/references.bib")
-      bibtex-completion-library-path "~/Dropbox/papers/"
+      ;; helm-bibtex-bibliography '("~/Dropbox/papers/references.bib")
+      bibtex-completion-library-path '("~/Dropbox/papers/pdf_papers" "~/Dropbox/papers/pdf_books")
       bibtex-completion-notes-path "~/Dropbox/papers/notes.org")
+(setq bibtex-completion-pdf-field "file")
+;; (setq bibtex-completion-pdf-open-function
+      ;; (lambda (fpath)
+        ;; (debug)
+        ;; (message fpath)
+        ;; (start-process "open" "*open*" "open" fpath)))
+;; (setq bibtex-completion-pdf-open-function (fpath))
+;; (setq bibtex-completion-pdf-open-function 'helm-open-file-with-default-tool)
+;; (setq org-ref-get-pdf-filename-function
+      ;; (lambda (key) (car (bibtex-completion-find-pdf key))))
 
-(setq org-ref-bibliography-notes "~/Dropbox/papers/notes.org"
-      org-ref-default-bibliography '("~/Dropbox/papers/references.bib")
-      org-ref-pdf-directory "~/Dropbox/papers/bibtex-pdfs/")
+;; https://github.com/jkitchin/org-ref/issues/184
+(defun my/org-ref-open-pdf-at-point ()
+  "Open the pdf for bibtex key under point if it exists."
+  (interactive)
+  (let* ((results (org-ref-get-bibtex-key-and-file))
+         (key (car results)))
+    (funcall bibtex-completion-pdf-open-function (car (bibtex-completion-find-pdf key)))))
+
+(setq org-ref-open-pdf-function 'my/org-ref-open-pdf-at-point)
 )
 ;; Do not write anything past this comment. This is where Emacs will
 ;; auto-generate custom variable definitions.
@@ -1230,50 +1436,8 @@ This function is called at the very end of Spacemacs initialization."
  ;; If you edit it by hand, you could mess it up, so be careful.
  ;; Your init file should contain only one such instance.
  ;; If there is more than one, they won't work right.
- '(ansi-color-faces-vector
-   [default bold shadow italic underline bold bold-italic bold])
- '(custom-safe-themes
-   '("02f57ef0a20b7f61adce51445b68b2a7e832648ce2e7efb19d217b6454c1b644" "ed5c37f3c823f0b4348e5025707ac40b95dbecd99a67d93cd4416c258eaf75f0" "966a49d899d00211fa2fa652b5f64e106782cd84b30dff4c658eb5d542fce5a1" "7f666327ab76c4cf1bd60d55e2fd17e46ebf44c10df466adc86312089bb3fdfe" "ae30c27916f58eb24285b19d52e2c4ae36b862a3856bbbc5e932f5d436dc7d61" "246a9596178bb806c5f41e5b571546bb6e0f4bd41a9da0df5dfbca7ec6e2250c" "835868dcd17131ba8b9619d14c67c127aa18b90a82438c8613586331129dda63" "8f5a7a9a3c510ef9cbb88e600c0b4c53cdcdb502cfe3eb50040b7e13c6f4e78e" "82d2cac368ccdec2fcc7573f24c3f79654b78bf133096f9b40c20d97ec1d8016" "b0334e8e314ea69f745eabbb5c1817a173f5e9715493d63b592a8dc9c19a4de6" "7a994c16aa550678846e82edc8c9d6a7d39cc6564baaaacc305a3fdc0bd8725f" "c83c095dd01cde64b631fb0fe5980587deec3834dc55144a6e78ff91ebc80b19" "fce3524887a0994f8b9b047aef9cc4cc017c5a93a5fb1f84d300391fba313743" "2c49d6ac8c0bf19648c9d2eabec9b246d46cb94d83713eaae4f26b49a8183fc4" "77113617a0642d74767295c4408e17da3bfd9aa80aaa2b4eeb34680f6172d71a" "bb08c73af94ee74453c90422485b29e5643b73b05e8de029a6909af6a3fb3f58" "628278136f88aa1a151bb2d6c8a86bf2b7631fbea5f0f76cba2a0079cd910f7d" "1b8d67b43ff1723960eb5e0cba512a2c7a2ad544ddb2533a90101fd1852b426e" "06f0b439b62164c6f8f84fdda32b62
-fb50b6d00e8b01c2208e55543a6337433a" default))
- '(doc-view-continuous t)
- '(flycheck-color-mode-line-face-to-color 'mode-line-buffer-id)
- '(helm-completion-style 'emacs)
- '(org-agenda-custom-commands
-   '(("x" "Tags dans links/docs/notes-pro/wishlist" tags ""
-      ((org-agenda-files
-        `(,(concat org-directory "notes_links.org")
-          ,(concat org-directory "notes_travail.org")
-          ,(concat org-directory "notes_perso.org")
-          ,(concat org-directory "notes_wishlist.org")))))
-     ("n" "Agenda / INTR / PROG / NEXT"
-      ((agenda "" nil)
-       (todo "INTR" nil)
-       (todo "PROG" nil)
-       (todo "NEXT" nil))
-      nil)))
- '(org-agenda-files
-   `(,(concat org-directory "travail.org")
-     ,(concat org-directory "perso.org")
-     ,(concat org-directory "projets.org")))
- '(org-agenda-search-view-max-outline-level 1)
- '(org-agenda-text-search-extra-files
-   `(,(concat org-directory "archive/archive.org")
-     ,(concat org-directory "projets_archive.org")
-     ,(concat org-directory "notes_famille.org")
-     ,(concat org-directory "notes_reference.org")
-     ,(concat org-directory "notes_inbox.org")
-     ,(concat org-directory "notes_links.org")
-     ,(concat org-directory "notes_travail.org")
-     ,(concat org-directory "notes_perso.org")
-     ,(concat org-directory "notes_wishlist.org")))
- '(org-export-with-sub-superscripts nil)
- '(org-id-extra-files t)
- '(org-id-track-globally t)
- '(org-roam-directory "/Users/patjennings/Dropbox/org-roam")
  '(package-selected-packages
-   '(sql-indent org-roam-bibtex helm-bibtex org-ref ox-pandoc citeproc bibtex-completion biblio biblio-core parsebib org-roam-ui websocket sqlite3 org-roam magit pdf-tools json-reformat json-mode jq-format tabbar htmlize typit wttrin quelpa-use-package quelpa org-ql ivy monkeytype magit chronos chess mu4e-alert evil doom-themes color-theme-sanityinc-tomorrow soothe-theme deft org-journal yaml-mode yasnippet-snippets wrap-region web-mode visual-regexp use-package rjsx-mode processing-mode pomidor php-mode org-vcard org-agenda-property markdown-mode less-css-mode helm-swoop helm-c-yasnippet emms auto-complete))
- '(speedbar-show-unknown-files t)
- '(window-divider-mode nil))
+   '(org-contacts org-vcard org-superstar yasnippet-snippets yapfify yaml-mode xterm-color ws-butler writeroom-mode winum which-key web-mode web-beautify volatile-highlights vim-powerline vi-tilde-fringe uuidgen use-package undo-tree treemacs-projectile treemacs-persp treemacs-magit treemacs-icons-dired treemacs-evil toc-org tern terminal-here term-cursor tagedit symon symbol-overlay string-edit-at-point sql-indent sphinx-doc spacemacs-whitespace-cleanup spacemacs-purpose-popwin spaceline-all-the-icons space-doc smeargle slim-mode shell-pop seeing-is-believing scss-mode sass-mode rvm ruby-tools ruby-test-mode ruby-refactor ruby-hash-syntax rubocopfmt rubocop rspec-mode robe restart-emacs request rbenv rake rainbow-delimiters quickrun pytest pylookup pyenv-mode pydoc py-isort pug-mode prettier-js popwin poetry pippel pipenv pip-requirements phpunit phpcbf php-extras php-auto-yasnippets password-generator paradox overseer orgit-forge org-roam-ui org-roam-bibtex org-rich-yank org-ref org-projectile org-present org-pomodoro org-mime org-download org-contrib org-cliplink open-junk-file npm-mode nose nodejs-repl nameless multi-vterm multi-term multi-line mu4e-maildirs-extension mu4e-alert minitest macrostep lorem-ipsum livid-mode live-py-mode link-hint json-reformat json-navigator json-mode js2-refactor js-doc inspector info+ indent-guide importmagic impatient-mode hybrid-mode hungry-delete holy-mode hl-todo highlight-parentheses highlight-numbers highlight-indentation hide-comnt help-fns+ helm-xref helm-themes helm-swoop helm-pydoc helm-purpose helm-projectile helm-org-rifle helm-org helm-mu helm-mode-manager helm-make helm-ls-git helm-git-grep helm-descbinds helm-css-scss helm-company helm-c-yasnippet helm-bibtex helm-ag google-translate golden-ratio gnuplot gitignore-templates git-timemachine git-modes git-messenger git-link geben fuzzy font-lock+ flycheck-package flycheck-elsa flx-ido fancy-battery eyebrowse expand-region evil-visualstar evil-visual-mark-mode evil-unimpaired evil-tutor evil-textobj-line evil-surround evil-org evil-numbers evil-nerd-commenter evil-mc evil-matchit evil-lisp-state evil-lion evil-indent-plus evil-iedit-state evil-goggles evil-exchange evil-evilified-state evil-escape evil-easymotion evil-collection evil-cleverparens evil-args evil-anzu eval-sexp-fu eshell-z eshell-prompt-extras esh-help emr emmet-mode elisp-slime-nav elisp-def editorconfig dumb-jump drupal-mode drag-stuff dotenv-mode dired-quick-sort diminish devdocs deft define-word cython-mode csv-mode company-web company-phpactor company-php company-anaconda column-enforce-mode code-cells clean-aindent-mode chruby centered-cursor-mode bundler blacken auto-yasnippet auto-highlight-symbol auto-compile aggressive-indent ace-link ace-jump-helm-line ac-ispell)))
 (custom-set-faces
  ;; custom-set-faces was added by Custom.
  ;; If you edit it by hand, you could mess it up, so be careful.

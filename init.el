@@ -1072,8 +1072,8 @@ before packages are loaded."
     (mu4e-update-mail-and-index 1)        ; getting new emails is ran in the background
     (mu4e-alert-enable-mode-line-display) ; display new emails in mode-line
     (mu4e-alert-enable-notifications))    ; enable desktop notifications for new emails
-  (defun perso--mu4e-refresh ()
-    "Refresh emails every 300 seconds and display desktop alerts."
+  (defun perso--mu4e-Refresh ()
+    "refresh emails every 300 seconds and display desktop alerts."
     (interactive)
     (mu4e t)                            ; start silently mu4e (mandatory for mu>=1.3.8)
     (run-with-timer 0 300 'perso--mu4e-notif))

@@ -758,7 +758,6 @@ before packages are loaded."
      `(,(concat org-directory "archive/archive.org")
        ,(concat org-directory "projets_archive.org")
        ,(concat org-directory "notes_famille.org")
-       ,(concat org-directory "notes_reference.org")
        ,(concat org-directory "notes_inbox.org")
        ,(concat org-directory "notes_links.org")
        ,(concat org-directory "notes_travail.org")
@@ -778,7 +777,6 @@ before packages are loaded."
 	  (setq org-refile-targets `((,(concat org-directory "notes_ecrire.org") :maxlevel . 9)
 				                       (,(concat org-directory "notes_famille.org") :maxlevel . 9)
 				                       (,(concat org-directory "notes_docs.org") :maxlevel . 9)
-				                       (,(concat org-directory "notes_reference.org") :maxlevel . 9)
 				                       (,(concat org-directory "notes_links.org") :maxlevel . 9)
 				                       (,(concat org-directory "notes_travail.org") :maxlevel . 9)
 				                       (,(concat org-directory "notes_perso.org") :maxlevel . 9)
@@ -1022,7 +1020,7 @@ before packages are loaded."
 (setq mail-personal-alias-file (expand-file-name "~/.mailrc"))
 ;; (setq mu4e-view-html-plaintext-ratio-heuristic most-positive-fixnum)
 ;; (setq mu4e-org-contacts-file  (concat org-directory "contacts.org"))
-(setq mu4e-attachment-dir "~/Desktop")
+(setq mu4e-attachment-dir "~/Downloads")
 
 ;; relatif au message view avec gnus
 (setq gnus-unbuttonized-mime-types nil)
@@ -1179,9 +1177,9 @@ before packages are loaded."
 		   (user-full-name               . "Web admin Kernavélo")
 		   (smtpmail-smtp-service        . 465)
 		   (mu4e-maildir-shortcuts . (("/kernavelo-webadmin/INBOX" . ?i)
-					      ("/kernavelo-webadmin/Sent" . ?s)
-					      ("/kernavelo-webadmin/Drafts" . ?d)
-                ("/kernavelo-webadmin/Trash" . ?t)
+					                        ("/kernavelo-webadmin/&AMk-l&AOk-ments envoy&AOk-s" . ?s)
+					                        ("/kernavelo-webadmin/Brouillons" . ?d)
+                                  ("/kernavelo-webadmin/&AMk-l&AOk-ments supprim&AOk-s" . ?t)
 					      ))
 		   (mu4e-bookmarks . (("maildir:/kernavelo-webadmin/INBOX AND flag:unread" "Non-lus" ?u)))
 		   ;; (add-to-list 'mu4e-bookmarks
@@ -1205,12 +1203,12 @@ before packages are loaded."
 		   (mu4e-compose-signature       . t)
 		   (mu4e-compose-signature-auto-include . t)
 		   ;; (message-signature-file       . "~/sig-thomas")
-		   (user-full-name               . "Web admin Kernavélo")
+		   (user-full-name               . "Aménagements Kernavélo")
 		   (smtpmail-smtp-service        . 465)
 		   (mu4e-maildir-shortcuts . (("/kernavelo-amenagements/INBOX" . ?i)
-					      ("/kernavelo-amenagements/Sent" . ?s)
-					      ("/kernavelo-amenagements/Drafts" . ?d)
-                ("/kernavelo-amenagements/Trash" . ?t)
+					                        ("/kernavelo-amenagements/&AMk-l&AOk-ments envoy&AOk-s" . ?s)
+					      ("/kernavelo-amenagements/Brouillons" . ?d)
+                ("/kernavelo-amenagements/&AMk-l&AOk-ments supprim&AOk-s" . ?t)
 					      ))
 		   (mu4e-bookmarks . (("maildir:/kernavelo-amenagements/INBOX AND flag:unread" "Non-lus" ?u)))
 		   ;; (add-to-list 'mu4e-bookmarks
@@ -1220,7 +1218,7 @@ before packages are loaded."
 		   ;; 		 :key ?v))
 		   ))
               ,(make-mu4e-context
-           :name "netcourrier"
+           :name "thomas.guesnon@netcourrier.com"
            :enter-func (lambda () (mu4e-message "Change pour Netcourrier/Mailo"))
            ;; leave-fun not defined
            :match-func (lambda (msg)
@@ -1234,6 +1232,7 @@ before packages are loaded."
 					                                      ;; ("/netcourrier/Drafts" . ?d)
                                                 ;; ("/netcourrier/Trash" . ?t)
 					                                      ))
+		                 (mu4e-bookmarks . (("maildir:/netcourrier/INBOX AND flag:unread" "Non-lus" ?u)))
                   ( user-full-name     . "Thomas Guesnon" )))
 	 ;; ,(make-mu4e-context
 	 ;;   :name "amenagements@kernavelo.org"

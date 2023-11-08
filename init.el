@@ -111,7 +111,9 @@ This function should only modify configuration layer settings."
    ;; `dotspacemacs/user-config'. To use a local version of a package, use the
    ;; `:location' property: '(your-package :location "~/path/to/your-package/")
    ;; Also include the dependencies as they will not be resolved automatically.
-   dotspacemacs-additional-packages '()
+   dotspacemacs-additional-packages '(
+                                      sqlite3
+                                      )
 
    ;; A list of packages that cannot be updated.
    dotspacemacs-frozen-packages '()
@@ -680,6 +682,7 @@ before packages are loaded."
   (global-auto-revert-mode 1)
 
   (require 'org-protocol)
+  (require 'sqlite3)
   ;; --------
   ;; PACKAGES
   ;; --------

@@ -39,6 +39,7 @@ This function should only modify configuration layer settings."
      ruby
      javascript
      html
+     django
      ;; ----------------------------------------------------------------
      ;; Example of useful layers you may want to use right away.
      ;; Uncomment some layer names and press `SPC f e R' (Vim style) or
@@ -85,8 +86,9 @@ This function should only modify configuration layer settings."
           org-enable-roam-ui t
           org-roam-ui-mode t
           org-enable-roam-protocol t
-          org-enable-org-contacts-support t
-          org-contacts-files '("~/Dropbox/org/contacts.org")
+          ;; org-enable-org-contacts-support t
+          org-enable-bootstrap-support t
+          ;; org-contacts-files '("~/SynologyDrive/org/contacts.org")
 
           )
      org-roam-bibtex
@@ -116,7 +118,7 @@ This function should only modify configuration layer settings."
 
    ;; A list of packages that will not be installed and loaded.
    dotspacemacs-excluded-packages '(org-superstar)
-   
+
    ;; Defines the behaviour of Spacemacs when installing packages.
    ;; Possible values are `used-only', `used-but-keep-unused' and `all'.
    ;; `used-only' installs only explicitly used packages and deletes any unused
@@ -302,7 +304,7 @@ It should only modify the values of Spacemacs settings."
    ;; Default font or prioritized list of fonts. The `:size' can be specified as
    ;; a non-negative integer (pixel size), or a floating-point (point size).
    ;; Point size is recommended, because it's device independent. (default 10.0)
-   dotspacemacs-default-font '("JetBrains Mono"
+   dotspacemacs-default-font '("IBM Plex Mono"
                                :size 13.0
                                :weight normal
                                :width normal)
@@ -613,20 +615,20 @@ If you are unsure, try setting them in `dotspacemacs/user-config' first."
 
   (add-to-list 'image-types 'svg) ;; solve a problem raised by launching dired - svg reading in Mac OS Ventura - https://emacs.stackexchange.com/questions/74289/emacs-28-2-error-in-macos-ventura-image-type-invalid-image-type-svg
 
-  (setq org-roam-directory "~/Dropbox/org-roam/")
+  (setq org-roam-directory "~/SynologyDrive/org-roam/")
   (setq org-roam-capture-templates
         '(("c" "concept" plain "%?"
            :if-new
-           (file+head "~/Dropbox/org-roam/concept/%<%Y%m%d%H%M%S>-${title}.org" "#+title: ${title}\n")
+           (file+head "~/SynologyDrive/org-roam/concept/%<%Y%m%d%H%M%S>-${title}.org" "#+title: ${title}\n")
            :immediate-finish t
            :unnarrowed t)
           ("r" "reference" plain "%?"
            :if-new
-           (file+head "~/Dropbox/org-roam/reference/%<%Y%m%d%H%M%S>-${title}.org" "#+title: ${title}\n#+filetags: :reference:\n")
+           (file+head "~/SynologyDrive/org-roam/reference/%<%Y%m%d%H%M%S>-${title}.org" "#+title: ${title}\n#+filetags: :reference:\n")
            :immediate-finish t
            :unnarrowed t)))
 
-  (setq deft-directory "~/Dropbox/org-roam")
+  (setq deft-directory "~/SynologyDrive/org-roam")
   (setq deft-extensions '("org" "md" "txt"))
   (setq deft-recursive t)
 
@@ -659,7 +661,7 @@ before packages are loaded."
 
   ;; default path for file creation
   (setq default-directory "~/Documents/")
-  (setq org-directory "~/Dropbox/org/")
+  (setq org-directory "~/SynologyDrive/org/")
 
 
   (org-roam-db-autosync-mode)
@@ -755,8 +757,8 @@ before packages are loaded."
        ,(concat org-directory "projets.org")))
    '(org-agenda-search-view-max-outline-level 1)
    '(org-agenda-text-search-extra-files
-     `(,(concat org-directory "archive/archive.org")
-       ,(concat org-directory "projets_archive.org")
+     ;; ,(concat org-directory "archive/archive.org")
+     `(,(concat org-directory "projets.org_archive")
        ,(concat org-directory "notes_famille.org")
        ,(concat org-directory "notes_inbox.org")
        ,(concat org-directory "notes_links.org")
@@ -780,8 +782,9 @@ before packages are loaded."
 				                       (,(concat org-directory "notes_links.org") :maxlevel . 9)
 				                       (,(concat org-directory "notes_travail.org") :maxlevel . 9)
 				                       (,(concat org-directory "notes_perso.org") :maxlevel . 9)
+				                       (,(concat org-directory "notes_visual.org") :maxlevel . 9)
 				                       (,(concat org-directory "notes_wishlist.org") :maxlevel . 9)
-				                       (,(concat org-directory "projets_archive.org") :maxlevel . 9)
+				                       (,(concat org-directory "projets.org_archive") :maxlevel . 9)
 				                       (,(concat org-directory "notes_son.org") :maxlevel . 9)
                                (org-agenda-files :maxlevel . 9)))
 	  (setq org-outline-path-complete-in-steps nil)         ; Refile in a single go
@@ -903,11 +906,11 @@ before packages are loaded."
 				                      :kill-buffer t
 				                      :empty-lines 1)
 
-                             ("c" "Contacts" entry (file, (concat org-directory "contacts.org"))
-                              "* %(org-contacts-template-name)
-:PROPERTIES:
-:EMAIL: %(org-contacts-template-email)
-:END:")
+                             ;; ("c" "Contacts" entry (file, (concat org-directory "contacts.org"))
+                              ;; "* %(org-contacts-template-name)
+;; :PROPERTIES:
+;; :EMAIL: %(org-contacts-template-email)
+;; :END:")
 
 				                     ;; un lien
 				                     ("l"
@@ -964,19 +967,31 @@ before packages are loaded."
 (require 'ox-publish)
 (setq org-publish-project-alist
       '(
-	      ("server-notes"
-	       :base-directory "~/Dropbox/org/"
+	      ("Projects"
+	       :base-directory "~/SynologyDrive/org/gestion_projets/"
+	       :base-extension "org"
+	       :publishing-directory "/ssh:debian@51.210.101.191:/var/www/platform.thomasguesnon.net/org"
+	       :recursive nil
+	       :publishing-function org-html-publish-to-html
+	       :headline-levels 4             ; Just the default for this project.
+	       :auto-preamble t
+         :with-date nil
+         :with-author nil
+         :html-validation-link nil
+	       )
+        ("server-notes"
+	       :base-directory "~/SynologyDrive/org/"
 	       :base-extension "org"
 	       ;; :publishing-directory "~/public_html/"
 	       :publishing-directory "/ssh:debian@51.210.101.191:/var/www/platform.thomasguesnon.net/org"
 	       :recursive nil
-	       :exclude "perso.org\\|travail.org\\|projets.org\\|projets_archive.org\\|notes_famille.org\\|notes_ecrire.org\\|notes_travail.org\\|notes_perso.org\\|notes_inbox.org\\|notes_son.org"
+	       :exclude "perso.org\\|travail.org\\|projets.org\\|projets.org_archive\\|notes_famille.org\\|notes_ecrire.org\\|notes_travail.org\\|notes_perso.org\\|notes_inbox.org\\|notes_son.org"
 	       :publishing-function org-html-publish-to-html
 	       :headline-levels 4             ; Just the default for this project.
 	       :auto-preamble t
 	       )
 	      ("server-static"
-	       :base-directory "~/Dropbox/org/"
+	       :base-directory "~/SynologyDrive/org/"
 	       :base-extension "css\\|js\\|png\\|jpg\\|gif\\|pdf\\|mp3\\|ogg\\|ttf\\|otf\\|eot"
 	       ;; :publishing-directory "~/public_html/"
 	       :publishing-directory "/ssh:debian@51.210.101.191:/var/www/platform.thomasguesnon.net/org"
@@ -985,17 +1000,17 @@ before packages are loaded."
 	       )
 	      ("server" :components ("server-notes" "server-static"))
 	      ("local-notes"
-	       :base-directory "~/Dropbox/org/"
+	       :base-directory "~/SynologyDrive/org/"
 	       :base-extension "org"
 	       :publishing-directory "~/public_html/"
 	       :recursive nil
-	       :exclude "perso.org\\|travail.org\\|projets.org\\|projets_archive.org\\|notes_famille.org\\|notes_ecrire.org\\|notes_travail.org\\|notes_perso.org\\|notes_inbox.org\\|notes_son.org"
+	       :exclude "perso.org\\|travail.org\\|projets.org\\|projets.org_archive\\|notes_famille.org\\|notes_ecrire.org\\|notes_travail.org\\|notes_perso.org\\|notes_inbox.org\\|notes_son.org"
 	       :publishing-function org-html-publish-to-html
 	       :headline-levels 4             ; Just the default for this project.
 	       :auto-preamble t
 	       )
 	      ("local-static"
-	       :base-directory "~/Dropbox/org/"
+	       :base-directory "~/SynologyDrive/org/"
 	       :base-extension "css\\|js\\|png\\|jpg\\|gif\\|pdf\\|mp3\\|ogg\\|ttf\\|otf\\|eot"
 	       :publishing-directory "~/public_html/"
 	       :recursive t
@@ -1041,7 +1056,7 @@ before packages are loaded."
 
 (setq mu4e-headers-show-threads nil)
 
-(setq mu4e-org-contacts-file  (concat org-directory "contacts.org"))
+;; (setq mu4e-org-contacts-file  (concat org-directory "contacts.org"))
 
 (add-to-list 'mu4e-headers-actions
 	     '("org-contact-add" . mu4e-action-add-org-contact) t)
@@ -1100,32 +1115,6 @@ before packages are loaded."
       message-sendmail-extra-arguments '("--read-envelope-from")
       message-send-mail-function 'message-send-mail-with-sendmail)
 
-;; (setq mu4e-contexts
-;;   `( ,(make-mu4e-context
-;;   :name "bonjour"
-;;   :enter-func (lambda () (mu4e-message "Change pour bonjour(at)thomasguesnon(point)fr"))
-;;   ;; leave-func not defined
-;;   :match-func (lambda (msg)
-;;     (when msg
-;;       (mu4e-message-contact-field-matches msg
-;;         :to "bonjour@thomasguesnon.fr")))
-;;   :vars '(  ( user-mail-address      . "bonjour@thomasguesnon.fr"  )
-;;      ( user-full-name     . "Thomas Guesnon" )
-;;      ( mu4e-compose-signature .
-;;        (concat
-;;          "Thomas Guesnon"
-;;          "0608551355"))))
-;;      ,(make-mu4e-context
-;;   :name "netcourrier"
-;;   :enter-func (lambda () (mu4e-message "Change pour Netcourrier/Mailo"))
-;;   ;; leave-fun not defined
-;;   :match-func (lambda (msg)
-;;     (when msg
-;;       (mu4e-message-contact-field-matches msg
-;;         :to "thomas.guesnon@netcourrier.com")))
-;;   :vars '(  ( user-mail-address      . "thomas.guesnon@netcourrier.com" )
-;;      ( user-full-name     . "Thomas Guesnon" )))
-;;      ))
 (setq mu4e-contexts
       `( ,(make-mu4e-context
 	   :name "bonjour@thomasquesnon.fr"
@@ -1166,9 +1155,9 @@ before packages are loaded."
 	   :match-func (lambda (msg) (when msg
 				       (string-prefix-p "^/kernavelo-webadmin" (mu4e-message-field msg :maildir))))
 	   :vars '(
-		   (mu4e-sent-folder             . "/kernavelo-webadmin/Sent")
-		   (mu4e-drafts-folder           . "/kernavelo-webadmin/Drafts")
-		   (mu4e-trash-folder            . "/kernavelo-webadmin/Trash")
+		         (mu4e-sent-folder             . "/kernavelo-webadmin/&AMk-l&AOk-ments envoy&AOk-s")
+		   (mu4e-drafts-folder           . "/kernavelo-webadmin/Brouillons")
+		   (mu4e-trash-folder            . "/kernavelo-webadmin/&AMk-l&AOk-ments supprim&AOk-s")
 		   ;; (mu4e-refile-folder "/kernavelo-webadmin/INBOX.Archive")
 		   (user-mail-address            . "webadmin@kernavelo.org")
 		   (mu4e-compose-signature       . t)
@@ -1195,9 +1184,9 @@ before packages are loaded."
 	   :match-func (lambda (msg) (when msg
 				       (string-prefix-p "^/kernavelo-amenagements" (mu4e-message-field msg :maildir))))
 	   :vars '(
-		   (mu4e-sent-folder             . "/kernavelo-amenagements/Sent")
-		   (mu4e-drafts-folder           . "/kernavelo-amenagements/Drafts")
-		   (mu4e-trash-folder            . "/kernavelo-amenagements/Trash")
+		         (mu4e-sent-folder             . "/kernavelo-amenagements/&AMk-l&AOk-ments envoy&AOk-s")
+		   (mu4e-drafts-folder           . "/kernavelo-amenagements/Brouillons")
+		   (mu4e-trash-folder            . "/kernavelo-amenagements/&AMk-l&AOk-ments supprim&AOk-s")
 		   ;; (mu4e-refile-folder "/kernavelo-amenagements/INBOX.Archive")
 		   (user-mail-address            . "amenagements@kernavelo.org")
 		   (mu4e-compose-signature       . t)
@@ -1274,6 +1263,17 @@ before packages are loaded."
 (defun jcs-view-in-eww (msg)
   "Display current message in EWW browser."
   (eww-browse-url (concat "file://" (mu4e~write-body-to-html msg))))
+
+;; --------------
+;; THEME CHANGER
+;; --------------
+(setq calendar-location-name "Rennes, FR") 
+(setq calendar-latitude 48.11)
+(setq calendar-longitude -1.68)
+
+(require 'theme-changer)
+(change-theme 'spacemacs-light 'spacemacs-dark)
+
 
 
 ;; --------
@@ -1461,10 +1461,10 @@ TAG is chosen interactively from the global tags completion table."
 ;; ---------------
 ;; BIBTEX
 ;; ---------------
-(setq bibtex-completion-bibliography '("~/Dropbox/papers/references.bib")
-      ;; helm-bibtex-bibliography '("~/Dropbox/papers/references.bib")
-      bibtex-completion-library-path '("~/Dropbox/papers/pdf_papers" "~/Dropbox/papers/pdf_books")
-      bibtex-completion-notes-path "~/Dropbox/papers/notes.org")
+(setq bibtex-completion-bibliography '("~/SynologyDrive/papers/references.bib")
+      ;; helm-bibtex-bibliography '("~/SynologyDrive/papers/references.bib")
+      bibtex-completion-library-path '("~/SynologyDrive/papers/pdf_papers" "~/SynologyDrive/papers/pdf_books")
+      bibtex-completion-notes-path "~/SynologyDrive/papers/notes.org")
 (setq bibtex-completion-pdf-field "file")
 ;; (setq bibtex-completion-pdf-open-function
       ;; (lambda (fpath)
@@ -1498,12 +1498,51 @@ This function is called at the very end of Spacemacs initialization."
  ;; If you edit it by hand, you could mess it up, so be careful.
  ;; Your init file should contain only one such instance.
  ;; If there is more than one, they won't work right.
+ '(doc-view-continuous t)
+ '(flycheck-color-mode-line-face-to-color 'mode-line-buffer-id)
+ '(helm-completion-style 'emacs)
+ '(org-agenda-custom-commands
+   '(("x" "Tags dans links/docs/notes-pro/wishlist" tags ""
+      ((org-agenda-files
+        `(,(concat org-directory "notes_links.org")
+          ,(concat org-directory "notes_travail.org")
+          ,(concat org-directory "notes_perso.org")
+          ,(concat org-directory "notes_wishlist.org")))))
+     ("n" "Agenda / INTR / PROG / NEXT"
+      ((agenda "" nil)
+       (todo "INTR" nil)
+       (todo "PROG" nil)
+       (todo "NEXT" nil))
+      nil)))
+ '(org-agenda-files
+   '("/Users/patjennings/SynologyDrive/org/travail.org" "/Users/patjennings/SynologyDrive/org/projets.org" "/Users/patjennings/SynologyDrive/org/perso.org"))
+ '(org-agenda-search-view-max-outline-level 1)
+ '(org-agenda-text-search-extra-files
+   `(,(concat org-directory "projets.org_archive")
+     ,(concat org-directory "notes_famille.org")
+     ,(concat org-directory "notes_inbox.org")
+     ,(concat org-directory "notes_links.org")
+     ,(concat org-directory "notes_travail.org")
+     ,(concat org-directory "notes_perso.org")
+     ,(concat org-directory "notes_wishlist.org")))
+ '(org-export-with-sub-superscripts nil)
+ '(org-id-extra-files t)
+ '(org-id-track-globally t)
  '(package-selected-packages
-   '(org-contacts org-vcard org-superstar yasnippet-snippets yapfify yaml-mode xterm-color ws-butler writeroom-mode winum which-key web-mode web-beautify volatile-highlights vim-powerline vi-tilde-fringe uuidgen use-package undo-tree treemacs-projectile treemacs-persp treemacs-magit treemacs-icons-dired treemacs-evil toc-org tern terminal-here term-cursor tagedit symon symbol-overlay string-edit-at-point sql-indent sphinx-doc spacemacs-whitespace-cleanup spacemacs-purpose-popwin spaceline-all-the-icons space-doc smeargle slim-mode shell-pop seeing-is-believing scss-mode sass-mode rvm ruby-tools ruby-test-mode ruby-refactor ruby-hash-syntax rubocopfmt rubocop rspec-mode robe restart-emacs request rbenv rake rainbow-delimiters quickrun pytest pylookup pyenv-mode pydoc py-isort pug-mode prettier-js popwin poetry pippel pipenv pip-requirements phpunit phpcbf php-extras php-auto-yasnippets password-generator paradox overseer orgit-forge org-roam-ui org-roam-bibtex org-rich-yank org-ref org-projectile org-present org-pomodoro org-mime org-download org-contrib org-cliplink open-junk-file npm-mode nose nodejs-repl nameless multi-vterm multi-term multi-line mu4e-maildirs-extension mu4e-alert minitest macrostep lorem-ipsum livid-mode live-py-mode link-hint json-reformat json-navigator json-mode js2-refactor js-doc inspector info+ indent-guide importmagic impatient-mode hybrid-mode hungry-delete holy-mode hl-todo highlight-parentheses highlight-numbers highlight-indentation hide-comnt help-fns+ helm-xref helm-themes helm-swoop helm-pydoc helm-purpose helm-projectile helm-org-rifle helm-org helm-mu helm-mode-manager helm-make helm-ls-git helm-git-grep helm-descbinds helm-css-scss helm-company helm-c-yasnippet helm-bibtex helm-ag google-translate golden-ratio gnuplot gitignore-templates git-timemachine git-modes git-messenger git-link geben fuzzy font-lock+ flycheck-package flycheck-elsa flx-ido fancy-battery eyebrowse expand-region evil-visualstar evil-visual-mark-mode evil-unimpaired evil-tutor evil-textobj-line evil-surround evil-org evil-numbers evil-nerd-commenter evil-mc evil-matchit evil-lisp-state evil-lion evil-indent-plus evil-iedit-state evil-goggles evil-exchange evil-evilified-state evil-escape evil-easymotion evil-collection evil-cleverparens evil-args evil-anzu eval-sexp-fu eshell-z eshell-prompt-extras esh-help emr emmet-mode elisp-slime-nav elisp-def editorconfig dumb-jump drupal-mode drag-stuff dotenv-mode dired-quick-sort diminish devdocs deft define-word cython-mode csv-mode company-web company-phpactor company-php company-anaconda column-enforce-mode code-cells clean-aindent-mode chruby centered-cursor-mode bundler blacken auto-yasnippet auto-highlight-symbol auto-compile aggressive-indent ace-link ace-jump-helm-line ac-ispell)))
+   '(theme-changer xah-fly-keys sqlite3 django-mode org-contacts org-vcard org-superstar yasnippet-snippets yapfify yaml-mode xterm-color ws-butler writeroom-mode winum which-key web-mode web-beautify volatile-highlights vim-powerline vi-tilde-fringe uuidgen use-package undo-tree treemacs-projectile treemacs-persp treemacs-magit treemacs-icons-dired treemacs-evil toc-org tern terminal-here term-cursor tagedit symon symbol-overlay string-edit-at-point sql-indent sphinx-doc spacemacs-whitespace-cleanup spacemacs-purpose-popwin spaceline-all-the-icons space-doc smeargle slim-mode shell-pop seeing-is-believing scss-mode sass-mode rvm ruby-tools ruby-test-mode ruby-refactor ruby-hash-syntax rubocopfmt rubocop rspec-mode robe restart-emacs request rbenv rake rainbow-delimiters quickrun pytest pylookup pyenv-mode pydoc py-isort pug-mode prettier-js popwin poetry pippel pipenv pip-requirements phpunit phpcbf php-extras php-auto-yasnippets password-generator paradox overseer orgit-forge org-roam-ui org-roam-bibtex org-rich-yank org-ref org-projectile org-present org-pomodoro org-mime org-download org-contrib org-cliplink open-junk-file npm-mode nose nodejs-repl nameless multi-vterm multi-term multi-line mu4e-maildirs-extension mu4e-alert minitest macrostep lorem-ipsum livid-mode live-py-mode link-hint json-reformat json-navigator json-mode js2-refactor js-doc inspector info+ indent-guide importmagic impatient-mode hybrid-mode hungry-delete holy-mode hl-todo highlight-parentheses highlight-numbers highlight-indentation hide-comnt help-fns+ helm-xref helm-themes helm-swoop helm-pydoc helm-purpose helm-projectile helm-org-rifle helm-org helm-mu helm-mode-manager helm-make helm-ls-git helm-git-grep helm-descbinds helm-css-scss helm-company helm-c-yasnippet helm-bibtex helm-ag google-translate golden-ratio gnuplot gitignore-templates git-timemachine git-modes git-messenger git-link geben fuzzy font-lock+ flycheck-package flycheck-elsa flx-ido fancy-battery eyebrowse expand-region evil-visualstar evil-visual-mark-mode evil-unimpaired evil-tutor evil-textobj-line evil-surround evil-org evil-numbers evil-nerd-commenter evil-mc evil-matchit evil-lisp-state evil-lion evil-indent-plus evil-iedit-state evil-goggles evil-exchange evil-evilified-state evil-escape evil-easymotion evil-collection evil-cleverparens evil-args evil-anzu eval-sexp-fu eshell-z eshell-prompt-extras esh-help emr emmet-mode elisp-slime-nav elisp-def editorconfig dumb-jump drupal-mode drag-stuff dotenv-mode dired-quick-sort diminish devdocs deft define-word cython-mode csv-mode company-web company-phpactor company-php company-anaconda column-enforce-mode code-cells clean-aindent-mode chruby centered-cursor-mode bundler blacken auto-yasnippet auto-highlight-symbol auto-compile aggressive-indent ace-link ace-jump-helm-line ac-ispell))
+ '(speedbar-show-unknown-files t)
+ '(warning-suppress-log-types '((use-package)))
+ '(window-divider-mode nil))
 (custom-set-faces
  ;; custom-set-faces was added by Custom.
  ;; If you edit it by hand, you could mess it up, so be careful.
  ;; Your init file should contain only one such instance.
  ;; If there is more than one, they won't work right.
- )
+ '(org-level-1 ((t (:inherit bold :extend nil :foreground "#3a81c3" :weight bold :height 1.0))))
+ '(org-level-2 ((t (:inherit bold :extend nil :foreground "#3a81c3" :weight bold :height 1.0))))
+ '(org-level-3 ((t (:inherit bold :extend nil :foreground "#3a81c3" :weight bold :height 1.0))))
+ '(org-level-4 ((t (:inherit bold :extend nil :foreground "#3a81c3" :weight bold :height 1.0))))
+ '(org-level-5 ((t (:inherit bold :extend nil :foreground "#3a81c3" :weight bold :height 1.0))))
+ '(org-level-7 ((t (:inherit bold :extend nil :foreground "#3a81c3" :weight bold :height 1.0))))
+ '(org-level-8 ((t (:inherit bold :extend nil :foreground "#3a81c3" :weight bold :height 1.0)))))
 )

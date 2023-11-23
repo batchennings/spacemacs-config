@@ -1057,6 +1057,15 @@ before packages are loaded."
 (setq mu4e-compose-signature-auto-include t)
 (setq message-kill-buffer-on-exit t)
 
+(defun insert-mu4e-sig-here ()
+  "Insert the mu4e signature here, assuming it is a string."
+  (interactive)
+  (save-excursion
+    (when (stringp mu4e-compose-signature)
+      (insert mu4e-compose-signature))))
+
+(add-hook 'mu4e-compose-mode-hook 'insert-mu4e-sig-here)
+
 (setq mu4e-headers-show-threads nil)
 
 ;; (setq mu4e-org-contacts-file  (concat org-directory "contacts.org"))
@@ -1180,78 +1189,36 @@ before packages are loaded."
 		   ;; 		 :query "maildir:/kernavelo-webadmin/INBOX AND flag:unread"
 		   ;; 		 :key ?v))
 		   ))
-         ,(make-mu4e-context
-	   :name "amenagements@kernavelo.org"
-	   :enter-func (lambda () (mu4e-message "Bienvenue dans amenagements"))
-           :leave-func (lambda () (mu4e-message "On quitte amenagements"))
-	   :match-func (lambda (msg) (when msg
-				       (string-prefix-p "^/kernavelo-amenagements" (mu4e-message-field msg :maildir))))
-	   :vars '(
-		         (mu4e-sent-folder             . "/kernavelo-amenagements/&AMk-l&AOk-ments envoy&AOk-s")
-		   (mu4e-drafts-folder           . "/kernavelo-amenagements/Brouillons")
-		   (mu4e-trash-folder            . "/kernavelo-amenagements/&AMk-l&AOk-ments supprim&AOk-s")
-		   ;; (mu4e-refile-folder "/kernavelo-amenagements/INBOX.Archive")
-		   (user-mail-address            . "amenagements@kernavelo.org")
-		   (mu4e-compose-signature       . t)
-		   (mu4e-compose-signature-auto-include . t)
-		   ;; (message-signature-file       . "~/sig-thomas")
-		   (user-full-name               . "Aménagements Kernavélo")
-		   (smtpmail-smtp-service        . 465)
-		   (mu4e-maildir-shortcuts . (("/kernavelo-amenagements/INBOX" . ?i)
-					                        ("/kernavelo-amenagements/&AMk-l&AOk-ments envoy&AOk-s" . ?s)
-					      ("/kernavelo-amenagements/Brouillons" . ?d)
-                ("/kernavelo-amenagements/&AMk-l&AOk-ments supprim&AOk-s" . ?t)
-					      ))
-		   (mu4e-bookmarks . (("maildir:/kernavelo-amenagements/INBOX AND flag:unread" "Non-lus" ?u)))
-		   ;; (add-to-list 'mu4e-bookmarks
-		   ;; 		(make-mu4e-bookmark
-		   ;; 		 :name "Unread in bonjour"
-		   ;; 		 :query "maildir:/kernavelo-amenagements/INBOX AND flag:unread"
-		   ;; 		 :key ?v))
-		   ))
-              ,(make-mu4e-context
-           :name "thomas.guesnon@netcourrier.com"
-           :enter-func (lambda () (mu4e-message "Change pour Netcourrier/Mailo"))
-           ;; leave-fun not defined
-           :match-func (lambda (msg)
-             (when msg
-               (mu4e-message-contact-field-matches msg
-                 :to "thomas.guesnon@netcourrier.com")))
-           :vars '(  ( user-mail-address      . "thomas.guesnon@netcourrier.com" )
-		                 (mu4e-maildir-shortcuts . ())
-                     (mu4e-maildir-shortcuts . (("/netcourrier/INBOX" . ?i)
-					                                      ;; ("/netcourrier/Sent" . ?s)
-					                                      ;; ("/netcourrier/Drafts" . ?d)
-                                                ;; ("/netcourrier/Trash" . ?t)
-					                                      ))
-		                 (mu4e-bookmarks . (("maildir:/netcourrier/INBOX AND flag:unread" "Non-lus" ?u)))
-                  ( user-full-name     . "Thomas Guesnon" )))
-	 ;; ,(make-mu4e-context
-	 ;;   :name "amenagements@kernavelo.org"
-	 ;;   :enter-func (lambda () (mu4e-message "Bienvenue dans amenagements"))
-	 ;;   :leave-func (lambda () (mu4e-message "On quitte amenagements"))
-	 ;;   :match-func (lambda (msg) (when msg
-	 ;;  		       (string-prefix-p "^/kernavelo-amenagements" (mu4e-message-field msg :maildir))))
-	 ;;   :vars '(
-	 ;;     (mu4e-sent-folder             . "/kernavelo-amenagements/INBOX.Sent")
-	 ;;     (mu4e-drafts-folder           . "/kernavelo-amenagements/INBOX.Drafts")
-	 ;;     (mu4e-trash-folder            . "/kernavelo-amenagements/INBOX.Trash")
-	 ;;     (mu4e-refile-folder           . "/kernavelo-amenagements/Archive")
-	 ;;     (user-mail-address            . "amenagements@kernavelo.org")
-	 ;;     (mu4e-compose-signature       . nil)
-	 ;;     (user-full-name               . "Thomas du GT Aménagements")
-	 ;;     ;; (smtpmail-smtp-user           . "amenagements@kernavelo.org")
-	 ;;     ;; (smtpmail-default-smtp-server . "ssl0.ovh.net")
-	 ;;     ;; (smtpmail-smtp-server         . "ssl0.ovh.net")
-	 ;;     ;; (smtpmail-smtp-service        . 465)
-	 ;;     (mu4e-maildir-shortcuts . (("/kernavelo-amenagements/INBOX" . ?i)
-	 ;;  			      ("/kernavelo-amenagements/INBOX.Sent" . ?s)
-	 ;;  			      ("/kernavelo-amenagements/INBOX.Drafts" . ?d)
-   ;;                                            ("/kernavelo-amenagements/INBOX.Trash" . ?t)
-	 ;;  			      ))
-	 ;;     (mu4e-bookmarks . (("maildir:/kernavelo-amenagements/INBOX AND flag:unread" "Non-lus" ?u)))
-	
+           ;;    ,(make-mu4e-context
+           ;; :name "thomas.guesnon@netcourrier.com"
+           ;; :enter-func (lambda () (mu4e-message "Change pour Netcourrier/Mailo"))
+           ;; ;; leave-fun not defined
+           ;; :match-func (lambda (msg)
+           ;;   (when msg
+           ;;     (mu4e-message-contact-field-matches msg
+           ;;       :to "thomas.guesnon@netcourrier.com")))
+           ;; :vars '(  ( user-mail-address      . "thomas.guesnon@netcourrier.com" )
+		       ;;           (mu4e-maildir-shortcuts . ())
+           ;;           (mu4e-maildir-shortcuts . (("/netcourrier/INBOX" . ?i)
+					 ;;                                      ;; ("/netcourrier/Sent" . ?s)
+					 ;;                                      ;; ("/netcourrier/Drafts" . ?d)
+           ;;                                      ;; ("/netcourrier/Trash" . ?t)
+					 ;;                                      ))
+		       ;;           (mu4e-bookmarks . (("maildir:/netcourrier/INBOX AND flag:unread" "Non-lus" ?u)))
+           ;;        ( user-full-name     . "Thomas Guesnon" )))
    ))
+
+;; use macos contacts into emacs
+;; https://codeisgreat.org/notes/emacs-macos-contacts.html
+(when (eq system-type 'darwin)
+	(eval-and-compile (require 'eudcb-macos-contacts))
+	(eudc-macos-contacts-set-server "localhost"))
+(eval-when-compile (require 'message))
+(define-key message-mode-map
+	[(control ?c) (tab)] 'eudc-expand-inline)
+(eval-when-compile (require 'sendmail))
+(define-key mail-mode-map
+	[(control ?c) (tab)] 'eudc-expand-inline)
 
 ;; start with the first (default) context;
 ;; default is to ask-if-none (ask when there's no context yet, and none match)
@@ -1541,11 +1508,12 @@ This function is called at the very end of Spacemacs initialization."
  ;; If you edit it by hand, you could mess it up, so be careful.
  ;; Your init file should contain only one such instance.
  ;; If there is more than one, they won't work right.
- '(org-level-1 ((t (:inherit bold :extend nil :foreground "#3a81c3" :weight bold :height 1.0))))
- '(org-level-2 ((t (:inherit bold :extend nil :foreground "#3a81c3" :weight bold :height 1.0))))
- '(org-level-3 ((t (:inherit bold :extend nil :foreground "#3a81c3" :weight bold :height 1.0))))
- '(org-level-4 ((t (:inherit bold :extend nil :foreground "#3a81c3" :weight bold :height 1.0))))
- '(org-level-5 ((t (:inherit bold :extend nil :foreground "#3a81c3" :weight bold :height 1.0))))
- '(org-level-7 ((t (:inherit bold :extend nil :foreground "#3a81c3" :weight bold :height 1.0))))
- '(org-level-8 ((t (:inherit bold :extend nil :foreground "#3a81c3" :weight bold :height 1.0)))))
+ '(hl-line ((t (:inherit bold :extend nil :weight bold :height 1.0))))
+ '(org-level-1 ((t (:inherit bold :extend nil :weight bold :height 1.0))))
+ '(org-level-2 ((t (:inherit bold :extend nil :weight bold :height 1.0))))
+ '(org-level-3 ((t (:inherit bold :extend nil :weight bold :height 1.0))))
+ '(org-level-4 ((t (:inherit bold :extend nil :weight bold :height 1.0))))
+ '(org-level-5 ((t (:inherit bold :extend nil :weight bold :height 1.0))))
+ '(org-level-7 ((t (:inherit bold :extend nil :weight bold :height 1.0))))
+ '(org-level-8 ((t (:inherit bold :extend nil :weight bold :height 1.0)))))
 )

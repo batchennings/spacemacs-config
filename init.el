@@ -1210,6 +1210,7 @@ before packages are loaded."
 
 ;; use macos contacts into emacs
 ;; https://codeisgreat.org/notes/emacs-macos-contacts.html
+;; type C-c TAB when marker is in TO field
 (when (eq system-type 'darwin)
 	(eval-and-compile (require 'eudcb-macos-contacts))
 	(eudc-macos-contacts-set-server "localhost"))

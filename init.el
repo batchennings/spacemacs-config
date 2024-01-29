@@ -32,7 +32,8 @@ This function should only modify configuration layer settings."
 
    ;; List of configuration layers to load.
    dotspacemacs-configuration-layers
-   '(php
+   '(graphviz
+     php
      python
      csv
      yaml
@@ -287,8 +288,7 @@ It should only modify the values of Spacemacs settings."
    ;; List of themes, the first of the list is loaded when spacemacs starts.
    ;; Press `SPC T n' to cycle to the next theme in the list (works great
    ;; with 2 themes variants, one dark and one light)
-   dotspacemacs-themes '(spacemacs-dark
-                         spacemacs-light)
+   dotspacemacs-themes '(spacemacs-dark)
 
    ;; Set the theme for the Spaceline. Supported themes are `spacemacs',
    ;; `all-the-icons', `custom', `doom', `vim-powerline' and `vanilla'. The
@@ -303,7 +303,7 @@ It should only modify the values of Spacemacs settings."
    ;; (default t)
    dotspacemacs-colorize-cursor-according-to-state t
 
-   ;; Default font or prioritized list of fonts. The `:size' can be specified as
+   ;; Default font or poioritized list of fonts. The `:size' can be specified as
    ;; a non-negative integer (pixel size), or a floating-point (point size).
    ;; Point size is recommended, because it's device independent. (default 10.0)
    dotspacemacs-default-font '("IBM Plex Mono"
@@ -752,12 +752,11 @@ before packages are loaded."
         ((agenda "" nil)
          (todo "INTR" nil)
          (todo "PROG" nil)
-         (todo "NEXT" nil))
-        nil)))
+         (todo "NEXT" nil)
+         (tags "attente"))
+       nil)))
    '(org-agenda-files
-     `(,(concat org-directory "travail.org")
-       ,(concat org-directory "perso.org")
-       ,(concat org-directory "projets.org")))
+     `(,(concat org-directory "travail.org"),(concat org-directory "perso.org")))
    '(org-agenda-search-view-max-outline-level 1)
    '(org-agenda-text-search-extra-files
      ;; ,(concat org-directory "archive/archive.org")
@@ -783,6 +782,7 @@ before packages are loaded."
 				                       (,(concat org-directory "notes_famille.org") :maxlevel . 9)
 				                       (,(concat org-directory "notes_docs.org") :maxlevel . 9)
 				                       (,(concat org-directory "notes_links.org") :maxlevel . 9)
+				                       (,(concat org-directory "notes_inbox.org") :maxlevel . 9)
 				                       (,(concat org-directory "notes_travail.org") :maxlevel . 9)
 				                       (,(concat org-directory "notes_perso.org") :maxlevel . 9)
 				                       (,(concat org-directory "notes_visual.org") :maxlevel . 9)
@@ -988,7 +988,7 @@ before packages are loaded."
 	       ;; :publishing-directory "~/public_html/"
 	       :publishing-directory "/ssh:debian@51.210.101.191:/var/www/platform.thomasguesnon.net/org"
 	       :recursive nil
-	       :exclude "perso.org\\|travail.org\\|projets.org\\|projets.org_archive\\|notes_famille.org\\|notes_ecrire.org\\|notes_travail.org\\|notes_perso.org\\|notes_inbox.org\\|notes_son.org"
+	       :exclude "perso.org\\|travail.org\\|projets.org_archive\\|notes_famille.org\\|notes_ecrire.org\\|notes_travail.org\\|notes_perso.org\\|notes_inbox.org\\|notes_son.org"
 	       :publishing-function org-html-publish-to-html
 	       :headline-levels 4             ; Just the default for this project.
 	       :auto-preamble t
@@ -1007,7 +1007,7 @@ before packages are loaded."
 	       :base-extension "org"
 	       :publishing-directory "~/public_html/"
 	       :recursive nil
-	       :exclude "perso.org\\|travail.org\\|projets.org\\|projets.org_archive\\|notes_famille.org\\|notes_ecrire.org\\|notes_travail.org\\|notes_perso.org\\|notes_inbox.org\\|notes_son.org"
+	       :exclude "perso.org\\|travail.org\\|projets.org_archive\\|notes_famille.org\\|notes_ecrire.org\\|notes_travail.org\\|notes_perso.org\\|notes_inbox.org\\|notes_son.org"
 	       :publishing-function org-html-publish-to-html
 	       :headline-levels 4             ; Just the default for this project.
 	       :auto-preamble t
@@ -1086,6 +1086,54 @@ before packages are loaded."
 
 
 (setq mu4e-headers-date-format "%a %d %b %Y, %H:%M")
+
+;; Function to interactively prompt for a destination (minimally changed from mu4e~mark-get-move-target() )
+(defun my~mark-get-copy-target ()
+   "Ask for a copy target, and propose to create it if it does not exist."
+   (interactive)
+   ;;  (mu4e-message-at-point) ;; raises error if there is none
+   (let* ((target (mu4e-ask-maildir "Copy message to: "))
+      (target (if (string= (substring target 0 1) "/")
+            target
+            (concat "/" target)))
+      (fulltarget (concat mu4e-maildir target)))
+    (when (or (file-directory-p fulltarget)
+        (and (yes-or-no-p
+           (format "%s does not exist.  Create now?" fulltarget))
+          (mu4e--server-mkdir fulltarget)))
+      target)))
+
+;; Function to duplicate a message given by its docid, msg, and that will be copied to target when the mark is executed.
+(defun copy-message-to-target(docid msg target)
+  (let (
+        (new_msg_path nil) ;; local variable
+        (msg_flags (mu4e-message-field msg :flags))
+        )
+    ;; 1. target is already determined interactively when executing the mark (:ask-target)
+
+    ;; 2. Determine the path for the new file: we use mu4e~draft-message-filename-construct from
+    ;; mu4e-draft.el to create a new random filename, and append the original's msg_flags
+    (setq new_msg_path (format "%s/%s/cur/%s" mu4e-maildir target (mu4e~draft-message-filename-construct
+    (mu4e-flags-to-string msg_flags))))
+
+    ;; 3. Copy the message using file system call (copy-file) to new_msg_path:
+    ;; (See e.g. mu4e-draft.el > mu4e-draft-open > resend)
+    (copy-file (mu4e-message-field msg :path) new_msg_path)
+
+    ;; 4. Add the information to the database (may need to update current search query with 'g' if duplicating to current box. Try also 'V' to toggle the display of duplicates) 
+    (mu4e--server-add new_msg_path (mu4e--mark-check-target target))
+    )
+  )
+
+;; Set this up for marking: see https://www.djcbsoftware.nl/code/mu/mu4e/Adding-a-new-kind-of-mark.html
+(add-to-list 'mu4e-marks
+    '(copy
+     :char ("c" . "c")
+     :prompt "copy"
+     :ask-target  my~mark-get-copy-target
+     :action copy-message-to-target))
+(mu4e~headers-defun-mark-for copy)
+(define-key mu4e-headers-mode-map (kbd "c") 'mu4e-headers-mark-for-copy)
 
 ;; Configure desktop notifs for incoming emails:
 (use-package mu4e-alert
@@ -1238,14 +1286,12 @@ before packages are loaded."
 ;; --------------
 ;; THEME CHANGER
 ;; --------------
-(setq calendar-location-name "Rennes, FR") 
-(setq calendar-latitude 48.11)
-(setq calendar-longitude -1.68)
+;; (setq calendar-location-name "Rennes, FR") 
+;; (setq calendar-latitude 48.11)
+;; (setq calendar-longitude -1.68)
 
-(require 'theme-changer)
-(change-theme 'spacemacs-light 'spacemacs-dark)
-
-
+;; (require 'theme-changer)
+;; (change-theme 'spacemacs-light 'spacemacs-dark)
 
 ;; --------
 ;; MAGIT
@@ -1429,6 +1475,17 @@ TAG is chosen interactively from the global tags completion table."
 (add-to-list 'auto-mode-alist '("\\.js\\'" . js2-mode))
 (setq auto-mode-alist (cons '("\\.ly$" . LilyPond-mode) auto-mode-alist))
 
+(require 'web-mode)
+
+(add-to-list 'auto-mode-alist '("\\.tsx\\'" . web-mode))
+(add-hook 'web-mode-hook
+          (lambda ()
+            (when (string-equal "tsx" (file-name-extension buffer-file-name))
+              (setup-tide-mode))))
+
+;; enable typescript - tslint checker
+;; (flycheck-add-mode 'typescript-tslint 'web-mode)
+
 ;; ---------------
 ;; BIBTEX
 ;; ---------------
@@ -1485,8 +1542,6 @@ This function is called at the very end of Spacemacs initialization."
        (todo "PROG" nil)
        (todo "NEXT" nil))
       nil)))
- '(org-agenda-files
-   '("/Users/patjennings/SynologyDrive/org/travail.org" "/Users/patjennings/SynologyDrive/org/projets.org" "/Users/patjennings/SynologyDrive/org/perso.org"))
  '(org-agenda-search-view-max-outline-level 1)
  '(org-agenda-text-search-extra-files
    `(,(concat org-directory "projets.org_archive")
@@ -1500,7 +1555,7 @@ This function is called at the very end of Spacemacs initialization."
  '(org-id-extra-files t)
  '(org-id-track-globally t)
  '(package-selected-packages
-   '(theme-changer xah-fly-keys sqlite3 django-mode org-contacts org-vcard org-superstar yasnippet-snippets yapfify yaml-mode xterm-color ws-butler writeroom-mode winum which-key web-mode web-beautify volatile-highlights vim-powerline vi-tilde-fringe uuidgen use-package undo-tree treemacs-projectile treemacs-persp treemacs-magit treemacs-icons-dired treemacs-evil toc-org tern terminal-here term-cursor tagedit symon symbol-overlay string-edit-at-point sql-indent sphinx-doc spacemacs-whitespace-cleanup spacemacs-purpose-popwin spaceline-all-the-icons space-doc smeargle slim-mode shell-pop seeing-is-believing scss-mode sass-mode rvm ruby-tools ruby-test-mode ruby-refactor ruby-hash-syntax rubocopfmt rubocop rspec-mode robe restart-emacs request rbenv rake rainbow-delimiters quickrun pytest pylookup pyenv-mode pydoc py-isort pug-mode prettier-js popwin poetry pippel pipenv pip-requirements phpunit phpcbf php-extras php-auto-yasnippets password-generator paradox overseer orgit-forge org-roam-ui org-roam-bibtex org-rich-yank org-ref org-projectile org-present org-pomodoro org-mime org-download org-contrib org-cliplink open-junk-file npm-mode nose nodejs-repl nameless multi-vterm multi-term multi-line mu4e-maildirs-extension mu4e-alert minitest macrostep lorem-ipsum livid-mode live-py-mode link-hint json-reformat json-navigator json-mode js2-refactor js-doc inspector info+ indent-guide importmagic impatient-mode hybrid-mode hungry-delete holy-mode hl-todo highlight-parentheses highlight-numbers highlight-indentation hide-comnt help-fns+ helm-xref helm-themes helm-swoop helm-pydoc helm-purpose helm-projectile helm-org-rifle helm-org helm-mu helm-mode-manager helm-make helm-ls-git helm-git-grep helm-descbinds helm-css-scss helm-company helm-c-yasnippet helm-bibtex helm-ag google-translate golden-ratio gnuplot gitignore-templates git-timemachine git-modes git-messenger git-link geben fuzzy font-lock+ flycheck-package flycheck-elsa flx-ido fancy-battery eyebrowse expand-region evil-visualstar evil-visual-mark-mode evil-unimpaired evil-tutor evil-textobj-line evil-surround evil-org evil-numbers evil-nerd-commenter evil-mc evil-matchit evil-lisp-state evil-lion evil-indent-plus evil-iedit-state evil-goggles evil-exchange evil-evilified-state evil-escape evil-easymotion evil-collection evil-cleverparens evil-args evil-anzu eval-sexp-fu eshell-z eshell-prompt-extras esh-help emr emmet-mode elisp-slime-nav elisp-def editorconfig dumb-jump drupal-mode drag-stuff dotenv-mode dired-quick-sort diminish devdocs deft define-word cython-mode csv-mode company-web company-phpactor company-php company-anaconda column-enforce-mode code-cells clean-aindent-mode chruby centered-cursor-mode bundler blacken auto-yasnippet auto-highlight-symbol auto-compile aggressive-indent ace-link ace-jump-helm-line ac-ispell))
+   '(graphviz-dot-mode theme-changer xah-fly-keys sqlite3 django-mode org-contacts org-vcard org-superstar yasnippet-snippets yapfify yaml-mode xterm-color ws-butler writeroom-mode winum which-key web-mode web-beautify volatile-highlights vim-powerline vi-tilde-fringe uuidgen use-package undo-tree treemacs-projectile treemacs-persp treemacs-magit treemacs-icons-dired treemacs-evil toc-org tern terminal-here term-cursor tagedit symon symbol-overlay string-edit-at-point sql-indent sphinx-doc spacemacs-whitespace-cleanup spacemacs-purpose-popwin spaceline-all-the-icons space-doc smeargle slim-mode shell-pop seeing-is-believing scss-mode sass-mode rvm ruby-tools ruby-test-mode ruby-refactor ruby-hash-syntax rubocopfmt rubocop rspec-mode robe restart-emacs request rbenv rake rainbow-delimiters quickrun pytest pylookup pyenv-mode pydoc py-isort pug-mode prettier-js popwin poetry pippel pipenv pip-requirements phpunit phpcbf php-extras php-auto-yasnippets password-generator paradox overseer orgit-forge org-roam-ui org-roam-bibtex org-rich-yank org-ref org-projectile org-present org-pomodoro org-mime org-download org-contrib org-cliplink open-junk-file npm-mode nose nodejs-repl nameless multi-vterm multi-term multi-line mu4e-maildirs-extension mu4e-alert minitest macrostep lorem-ipsum livid-mode live-py-mode link-hint json-reformat json-navigator json-mode js2-refactor js-doc inspector info+ indent-guide importmagic impatient-mode hybrid-mode hungry-delete holy-mode hl-todo highlight-parentheses highlight-numbers highlight-indentation hide-comnt help-fns+ helm-xref helm-themes helm-swoop helm-pydoc helm-purpose helm-projectile helm-org-rifle helm-org helm-mu helm-mode-manager helm-make helm-ls-git helm-git-grep helm-descbinds helm-css-scss helm-company helm-c-yasnippet helm-bibtex helm-ag google-translate golden-ratio gnuplot gitignore-templates git-timemachine git-modes git-messenger git-link geben fuzzy font-lock+ flycheck-package flycheck-elsa flx-ido fancy-battery eyebrowse expand-region evil-visualstar evil-visual-mark-mode evil-unimpaired evil-tutor evil-textobj-line evil-surround evil-org evil-numbers evil-nerd-commenter evil-mc evil-matchit evil-lisp-state evil-lion evil-indent-plus evil-iedit-state evil-goggles evil-exchange evil-evilified-state evil-escape evil-easymotion evil-collection evil-cleverparens evil-args evil-anzu eval-sexp-fu eshell-z eshell-prompt-extras esh-help emr emmet-mode elisp-slime-nav elisp-def editorconfig dumb-jump drupal-mode drag-stuff dotenv-mode dired-quick-sort diminish devdocs deft define-word cython-mode csv-mode company-web company-phpactor company-php company-anaconda column-enforce-mode code-cells clean-aindent-mode chruby centered-cursor-mode bundler blacken auto-yasnippet auto-highlight-symbol auto-compile aggressive-indent ace-link ace-jump-helm-line ac-ispell))
  '(speedbar-show-unknown-files t)
  '(warning-suppress-log-types '((use-package)))
  '(window-divider-mode nil))

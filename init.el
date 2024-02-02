@@ -63,7 +63,7 @@ This function should only modify configuration layer settings."
      emacs-lisp
      mu4e
      (mu4e :variables
-           mu4e-installation-path "/opt/homebrew/Cellar/mu/1.10.3/share/emacs/site-lisp/mu/mu4e/"
+           mu4e-installation-path "/opt/homebrew/Cellar/mu/1.10.8/share/emacs/site-lisp/mu/mu4e/"
            mu4e-maildir "~/.maildir"
            mu4e-trash-folder "/Trash"
            mu4e-refile-folder "/Archive"
@@ -653,7 +653,7 @@ configuration.
 Put your configuration code here, except for variables that should be set
 before packages are loaded."
   (define-key evil-normal-state-map (kbd "M-5") "[")
-
+  ;; (setq debug-on-error t)
   ;; on signale à emacs l'emplacement des plugins
   (setq-default flycheck-emacs-lisp-load-path 'inherit)
 
@@ -748,12 +748,12 @@ before packages are loaded."
 	          ,(concat org-directory "notes_travail.org")
 	          ,(concat org-directory "notes_perso.org")
 	          ,(concat org-directory "notes_wishlist.org")))))
-       ("n" "Agenda / INTR / PROG / NEXT"
+       ("n" "Agenda with states"
         ((agenda "" nil)
          (todo "INTR" nil)
          (todo "PROG" nil)
          (todo "NEXT" nil)
-         (tags "attente"))
+         (todo "WAIT" nil))
        nil)))
    '(org-agenda-files
      `(,(concat org-directory "travail.org"),(concat org-directory "perso.org")))
@@ -925,7 +925,7 @@ before packages are loaded."
 
 
 	  (setq org-todo-keywords
-		      '((sequence "TODO(t)" "NEXT(n)" "PROG(p)" "INTR(i)" "CANCELED(c)" "DONE(d)")))
+		      '((sequence "TODO(t)" "NEXT(n)" "PROG(p)" "INTR(i)" "CANCELED(c)" "WAIT(w)" "DONE(d)")))
 
 	  ;; Show the daily agenda by default.
 	  (setq org-agenda-span 'day)
@@ -1529,19 +1529,6 @@ This function is called at the very end of Spacemacs initialization."
  '(doc-view-continuous t)
  '(flycheck-color-mode-line-face-to-color 'mode-line-buffer-id)
  '(helm-completion-style 'emacs)
- '(org-agenda-custom-commands
-   '(("x" "Tags dans links/docs/notes-pro/wishlist" tags ""
-      ((org-agenda-files
-        `(,(concat org-directory "notes_links.org")
-          ,(concat org-directory "notes_travail.org")
-          ,(concat org-directory "notes_perso.org")
-          ,(concat org-directory "notes_wishlist.org")))))
-     ("n" "Agenda / INTR / PROG / NEXT"
-      ((agenda "" nil)
-       (todo "INTR" nil)
-       (todo "PROG" nil)
-       (todo "NEXT" nil))
-      nil)))
  '(org-agenda-search-view-max-outline-level 1)
  '(org-agenda-text-search-extra-files
    `(,(concat org-directory "projets.org_archive")

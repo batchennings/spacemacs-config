@@ -61,17 +61,17 @@ This function should only modify configuration layer settings."
                       auto-completion-enable-sort-by-usage nil)
      ;; better-defaults
      emacs-lisp
-     mu4e
-     (mu4e :variables
-           mu4e-installation-path "/opt/homebrew/Cellar/mu/1.10.8/share/emacs/site-lisp/mu/mu4e/"
-           mu4e-maildir "~/.maildir"
-           mu4e-trash-folder "/Trash"
-           mu4e-refile-folder "/Archive"
-           mu4e-get-mail-command "mbsync -a"
-           mu4e-update-interval nil
-           mu4e-compose-signature-auto-include nil
-           mu4e-view-show-images t
-           mu4e-view-show-addresses t)
+     ;; mu4e
+     ;; (mu4e :variables
+     ;;       mu4e-installation-path "/opt/homebrew/Cellar/mu/1.10.8/share/emacs/site-lisp/mu/mu4e/"
+     ;;       mu4e-maildir "~/.maildir"
+     ;;       mu4e-trash-folder "/Trash"
+     ;;       mu4e-refile-folder "/Archive"
+     ;;       mu4e-get-mail-command "mbsync -a"
+     ;;       mu4e-update-interval nil
+     ;;       mu4e-compose-signature-auto-include nil
+     ;;       mu4e-view-show-images t
+     ;;       mu4e-view-show-addresses t)
      git
      helm
      bibtex

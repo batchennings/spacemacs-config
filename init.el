@@ -63,7 +63,7 @@ This function should only modify configuration layer settings."
      emacs-lisp
      ;; mu4e
      ;; (mu4e :variables
-     ;;       mu4e-installation-path "/opt/homebrew/Cellar/mu/1.10.8/share/emacs/site-lisp/mu/mu4e/"
+     ;;       mu4e-installation-path "/opt/homebrew/Cellar/mu/1.12.1/share/emacs/site-lisp/mu/mu4e/"
      ;;       mu4e-maildir "~/.maildir"
      ;;       mu4e-trash-folder "/Trash"
      ;;       mu4e-refile-folder "/Archive"
@@ -621,16 +621,16 @@ If you are unsure, try setting them in `dotspacemacs/user-config' first."
   (setq org-roam-capture-templates
         '(("c" "concept" plain "%?"
            :if-new
-           (file+head "~/SynologyDrive/org-roam/concept/%<%Y%m%d%H%M%S>-${title}.org" "#+title: ${title}\n")
+           (file+head (concat org-roam-directory "concept/%<%Y%m%d%H%M%S>-${title}.org" "#+title: ${title}\n"))
            :immediate-finish t
            :unnarrowed t)
           ("r" "reference" plain "%?"
            :if-new
-           (file+head "~/SynologyDrive/org-roam/reference/%<%Y%m%d%H%M%S>-${title}.org" "#+title: ${title}\n#+filetags: :reference:\n")
+           (file+head (concat org-roam-directory "reference/%<%Y%m%d%H%M%S>-${title}.org" "#+title: ${title}\n#+filetags: :reference:\n"))
            :immediate-finish t
            :unnarrowed t)))
 
-  (setq deft-directory "~/SynologyDrive/org-roam")
+  (setq deft-directory org-roam-directory)
   (setq deft-extensions '("org" "md" "txt"))
   (setq deft-recursive t)
 
@@ -971,7 +971,7 @@ before packages are loaded."
 (setq org-publish-project-alist
       '(
 	      ("Projects"
-	       :base-directory "~/SynologyDrive/org/gestion_projets/"
+	       :base-directory (concat org-directory "gestion_projets/")
 	       :base-extension "org"
 	       :publishing-directory "/ssh:debian@51.210.101.191:/var/www/platform.thomasguesnon.net/org"
 	       :recursive nil
@@ -983,7 +983,7 @@ before packages are loaded."
          :html-validation-link nil
 	       )
         ("server-notes"
-	       :base-directory "~/SynologyDrive/org/"
+	       :base-directory org-directory
 	       :base-extension "org"
 	       ;; :publishing-directory "~/public_html/"
 	       :publishing-directory "/ssh:debian@51.210.101.191:/var/www/platform.thomasguesnon.net/org"
@@ -994,7 +994,7 @@ before packages are loaded."
 	       :auto-preamble t
 	       )
 	      ("server-static"
-	       :base-directory "~/SynologyDrive/org/"
+	       :base-directory org-directory 
 	       :base-extension "css\\|js\\|png\\|jpg\\|gif\\|pdf\\|mp3\\|ogg\\|ttf\\|otf\\|eot"
 	       ;; :publishing-directory "~/public_html/"
 	       :publishing-directory "/ssh:debian@51.210.101.191:/var/www/platform.thomasguesnon.net/org"
@@ -1003,7 +1003,7 @@ before packages are loaded."
 	       )
 	      ("server" :components ("server-notes" "server-static"))
 	      ("local-notes"
-	       :base-directory "~/SynologyDrive/org/"
+	       :base-directory org-directory
 	       :base-extension "org"
 	       :publishing-directory "~/public_html/"
 	       :recursive nil
@@ -1013,7 +1013,7 @@ before packages are loaded."
 	       :auto-preamble t
 	       )
 	      ("local-static"
-	       :base-directory "~/SynologyDrive/org/"
+	       :base-directory org-directory 
 	       :base-extension "css\\|js\\|png\\|jpg\\|gif\\|pdf\\|mp3\\|ogg\\|ttf\\|otf\\|eot"
 	       :publishing-directory "~/public_html/"
 	       :recursive t
@@ -1035,253 +1035,253 @@ before packages are loaded."
 ;; (require 'mu4e)
 ;; (require 'mu4e-contrib)
 ;; (require 'org-mu4e)
-(setq mail-personal-alias-file (expand-file-name "~/.mailrc"))
-;; (setq mu4e-view-html-plaintext-ratio-heuristic most-positive-fixnum)
-;; (setq mu4e-org-contacts-file  (concat org-directory "contacts.org"))
-(setq mu4e-attachment-dir "~/Downloads")
+;; (setq mail-personal-alias-file (expand-file-name "~/.mailrc"))
+;; ;; (setq mu4e-view-html-plaintext-ratio-heuristic most-positive-fixnum)
+;; ;; (setq mu4e-org-contacts-file  (concat org-directory "contacts.org"))
+;; (setq mu4e-attachment-dir "~/Downloads")
 
-;; relatif au message view avec gnus
-(setq gnus-unbuttonized-mime-types nil)
-(setq mm-discouraged-alternatives '("text/html" "text/richtext"))
+;; ;; relatif au message view avec gnus
+;; (setq gnus-unbuttonized-mime-types nil)
+;; (setq mm-discouraged-alternatives '("text/html" "text/richtext"))
 
-(setq mu4e-view-prefer-html nil)
-(setq mu4e-view-show-images nil)
-(setq mu4e-show-images nil)
-(setq mu4e-confirm-quit nil)
+;; (setq mu4e-view-prefer-html nil)
+;; (setq mu4e-view-show-images nil)
+;; (setq mu4e-show-images nil)
+;; (setq mu4e-confirm-quit nil)
 
-(setq auth-source-debug t)
-(setq auth-source-do-cache nil)
+;; (setq auth-source-debug t)
+;; (setq auth-source-do-cache nil)
 
-(setq mu4e-update-interval 300)
-(setq mu4e-compose-dont-reply-to-self t)
-(setq mu4e-compose-signature-auto-include t)
-(setq message-kill-buffer-on-exit t)
+;; (setq mu4e-update-interval 300)
+;; (setq mu4e-compose-dont-reply-to-self t)
+;; (setq mu4e-compose-signature-auto-include t)
+;; (setq message-kill-buffer-on-exit t)
 
-(defun insert-mu4e-sig-here ()
-  "Insert the mu4e signature here, assuming it is a string."
-  (interactive)
-  (save-excursion
-    (when (stringp mu4e-compose-signature)
-      (insert mu4e-compose-signature))))
+;; (defun insert-mu4e-sig-here ()
+;;   "Insert the mu4e signature here, assuming it is a string."
+;;   (interactive)
+;;   (save-excursion
+;;     (when (stringp mu4e-compose-signature)
+;;       (insert mu4e-compose-signature))))
 
-(add-hook 'mu4e-compose-mode-hook 'insert-mu4e-sig-here)
+;; (add-hook 'mu4e-compose-mode-hook 'insert-mu4e-sig-here)
 
-(setq mu4e-headers-show-threads nil)
+;; (setq mu4e-headers-show-threads nil)
 
-;; (setq mu4e-org-contacts-file  (concat org-directory "contacts.org"))
+;; ;; (setq mu4e-org-contacts-file  (concat org-directory "contacts.org"))
 
-(add-to-list 'mu4e-headers-actions
-	     '("org-contact-add" . mu4e-action-add-org-contact) t)
-(add-to-list 'mu4e-view-actions
-	     '("org-contact-add" . mu4e-action-add-org-contact) t)
+;; (add-to-list 'mu4e-headers-actions
+;; 	     '("org-contact-add" . mu4e-action-add-org-contact) t)
+;; (add-to-list 'mu4e-view-actions
+;; 	     '("org-contact-add" . mu4e-action-add-org-contact) t)
 
-(setq mu4e-headers-fields
-      '((:human-date    .  30)    ;; alternatively, use :human-date
-	(:subject       .  80)
-	(:flags         .   6)
-	(:from          .  30)
-	(:to            .  30)
-	(:size          .  6)
-	(:maildir       .  15)))
+;; (setq mu4e-headers-fields
+;;       '((:human-date    .  30)    ;; alternatively, use :human-date
+;; 	(:subject       .  80)
+;; 	(:flags         .   6)
+;; 	(:from          .  30)
+;; 	(:to            .  30)
+;; 	(:size          .  6)
+;; 	(:maildir       .  15)))
 
 
-(setq mu4e-headers-date-format "%a %d %b %Y, %H:%M")
+;; (setq mu4e-headers-date-format "%a %d %b %Y, %H:%M")
 
-;; Function to interactively prompt for a destination (minimally changed from mu4e~mark-get-move-target() )
-(defun my~mark-get-copy-target ()
-   "Ask for a copy target, and propose to create it if it does not exist."
-   (interactive)
-   ;;  (mu4e-message-at-point) ;; raises error if there is none
-   (let* ((target (mu4e-ask-maildir "Copy message to: "))
-      (target (if (string= (substring target 0 1) "/")
-            target
-            (concat "/" target)))
-      (fulltarget (concat mu4e-maildir target)))
-    (when (or (file-directory-p fulltarget)
-        (and (yes-or-no-p
-           (format "%s does not exist.  Create now?" fulltarget))
-          (mu4e--server-mkdir fulltarget)))
-      target)))
+;; ;; Function to interactively prompt for a destination (minimally changed from mu4e~mark-get-move-target() )
+;; (defun my~mark-get-copy-target ()
+;;    "Ask for a copy target, and propose to create it if it does not exist."
+;;    (interactive)
+;;    ;;  (mu4e-message-at-point) ;; raises error if there is none
+;;    (let* ((target (mu4e-ask-maildir "Copy message to: "))
+;;       (target (if (string= (substring target 0 1) "/")
+;;             target
+;;             (concat "/" target)))
+;;       (fulltarget (concat mu4e-maildir target)))
+;;     (when (or (file-directory-p fulltarget)
+;;         (and (yes-or-no-p
+;;            (format "%s does not exist.  Create now?" fulltarget))
+;;           (mu4e--server-mkdir fulltarget)))
+;;       target)))
 
-;; Function to duplicate a message given by its docid, msg, and that will be copied to target when the mark is executed.
-(defun copy-message-to-target(docid msg target)
-  (let (
-        (new_msg_path nil) ;; local variable
-        (msg_flags (mu4e-message-field msg :flags))
-        )
-    ;; 1. target is already determined interactively when executing the mark (:ask-target)
+;; ;; Function to duplicate a message given by its docid, msg, and that will be copied to target when the mark is executed.
+;; (defun copy-message-to-target(docid msg target)
+;;   (let (
+;;         (new_msg_path nil) ;; local variable
+;;         (msg_flags (mu4e-message-field msg :flags))
+;;         )
+;;     ;; 1. target is already determined interactively when executing the mark (:ask-target)
 
-    ;; 2. Determine the path for the new file: we use mu4e~draft-message-filename-construct from
-    ;; mu4e-draft.el to create a new random filename, and append the original's msg_flags
-    (setq new_msg_path (format "%s/%s/cur/%s" mu4e-maildir target (mu4e~draft-message-filename-construct
-    (mu4e-flags-to-string msg_flags))))
+;;     ;; 2. Determine the path for the new file: we use mu4e~draft-message-filename-construct from
+;;     ;; mu4e-draft.el to create a new random filename, and append the original's msg_flags
+;;     (setq new_msg_path (format "%s/%s/cur/%s" mu4e-maildir target (mu4e~draft-message-filename-construct
+;;     (mu4e-flags-to-string msg_flags))))
 
-    ;; 3. Copy the message using file system call (copy-file) to new_msg_path:
-    ;; (See e.g. mu4e-draft.el > mu4e-draft-open > resend)
-    (copy-file (mu4e-message-field msg :path) new_msg_path)
+;;     ;; 3. Copy the message using file system call (copy-file) to new_msg_path:
+;;     ;; (See e.g. mu4e-draft.el > mu4e-draft-open > resend)
+;;     (copy-file (mu4e-message-field msg :path) new_msg_path)
 
-    ;; 4. Add the information to the database (may need to update current search query with 'g' if duplicating to current box. Try also 'V' to toggle the display of duplicates) 
-    (mu4e--server-add new_msg_path (mu4e--mark-check-target target))
-    )
-  )
+;;     ;; 4. Add the information to the database (may need to update current search query with 'g' if duplicating to current box. Try also 'V' to toggle the display of duplicates) 
+;;     (mu4e--server-add new_msg_path (mu4e--mark-check-target target))
+;;     )
+;;   )
 
-;; Set this up for marking: see https://www.djcbsoftware.nl/code/mu/mu4e/Adding-a-new-kind-of-mark.html
-(add-to-list 'mu4e-marks
-    '(copy
-     :char ("c" . "c")
-     :prompt "copy"
-     :ask-target  my~mark-get-copy-target
-     :action copy-message-to-target))
-(mu4e~headers-defun-mark-for copy)
-(define-key mu4e-headers-mode-map (kbd "c") 'mu4e-headers-mark-for-copy)
+;; ;; Set this up for marking: see https://www.djcbsoftware.nl/code/mu/mu4e/Adding-a-new-kind-of-mark.html
+;; (add-to-list 'mu4e-marks
+;;     '(copy
+;;      :char ("c" . "c")
+;;      :prompt "copy"
+;;      :ask-target  my~mark-get-copy-target
+;;      :action copy-message-to-target))
+;; (mu4e~headers-defun-mark-for copy)
+;; (define-key mu4e-headers-mode-map (kbd "c") 'mu4e-headers-mark-for-copy)
 
-;; Configure desktop notifs for incoming emails:
-(use-package mu4e-alert
-  :ensure t
-  :init
-  (defun perso--mu4e-notif ()
-    "Display both mode line and desktop alerts for incoming new emails."
-    (interactive)
-    (mu4e-update-mail-and-index 1)        ; getting new emails is ran in the background
-    (mu4e-alert-enable-mode-line-display) ; display new emails in mode-line
-    (mu4e-alert-enable-notifications))    ; enable desktop notifications for new emails
-  (defun perso--mu4e-Refresh ()
-    "refresh emails every 300 seconds and display desktop alerts."
-    (interactive)
-    (mu4e t)                            ; start silently mu4e (mandatory for mu>=1.3.8)
-    (run-with-timer 0 300 'perso--mu4e-notif))
-  :after mu4e
-  :bind ("<f2>" . perso--mu4e-refresh)  ; F2 turns Emacs into a mail client
-  :config
-  ;; Mode line alerts:
-  (add-hook 'after-init-hook #'mu4e-alert-enable-mode-line-display)
-  ;; Desktop alerts:
-  (mu4e-alert-set-default-style 'libnotify)
-  (add-hook 'after-init-hook #'mu4e-alert-enable-notifications)
-  ;; Only notify for "interesting" (non-trashed) new emails:
-  (setq mu4e-alert-interesting-mail-query
-        (concat
-         "flag:unread maildir:/INBOX"
-         " AND NOT flag:trashed"))); 
+;; ;; Configure desktop notifs for incoming emails:
+;; (use-package mu4e-alert
+;;   :ensure t
+;;   :init
+;;   (defun perso--mu4e-notif ()
+;;     "Display both mode line and desktop alerts for incoming new emails."
+;;     (interactive)
+;;     (mu4e-update-mail-and-index 1)        ; getting new emails is ran in the background
+;;     (mu4e-alert-enable-mode-line-display) ; display new emails in mode-line
+;;     (mu4e-alert-enable-notifications))    ; enable desktop notifications for new emails
+;;   (defun perso--mu4e-Refresh ()
+;;     "refresh emails every 300 seconds and display desktop alerts."
+;;     (interactive)
+;;     (mu4e t)                            ; start silently mu4e (mandatory for mu>=1.3.8)
+;;     (run-with-timer 0 300 'perso--mu4e-notif))
+;;   :after mu4e
+;;   :bind ("<f2>" . perso--mu4e-refresh)  ; F2 turns Emacs into a mail client
+;;   :config
+;;   ;; Mode line alerts:
+;;   (add-hook 'after-init-hook #'mu4e-alert-enable-mode-line-display)
+;;   ;; Desktop alerts:
+;;   (mu4e-alert-set-default-style 'libnotify)
+;;   (add-hook 'after-init-hook #'mu4e-alert-enable-notifications)
+;;   ;; Only notify for "interesting" (non-trashed) new emails:
+;;   (setq mu4e-alert-interesting-mail-query
+;;         (concat
+;;          "flag:unread maildir:/INBOX"
+;;          " AND NOT flag:trashed"))); 
 
-;; smtp config
-(require 'smtpmail)
+;; ;; smtp config
+;; (require 'smtpmail)
 
-;; (setq send-mail-function 'smtpmail-send-it)
-;; (setq smtpmail-stream-type 'ssl)
-(setq sendmail-program "/opt/homebrew/bin/msmtp"
-      send-mail-function 'smtpmail-send-it
-      message-sendmail-f-is-evil t
-      message-sendmail-extra-arguments '("--read-envelope-from")
-      message-send-mail-function 'message-send-mail-with-sendmail)
+;; ;; (setq send-mail-function 'smtpmail-send-it)
+;; ;; (setq smtpmail-stream-type 'ssl)
+;; (setq sendmail-program "/opt/homebrew/bin/msmtp"
+;;       send-mail-function 'smtpmail-send-it
+;;       message-sendmail-f-is-evil t
+;;       message-sendmail-extra-arguments '("--read-envelope-from")
+;;       message-send-mail-function 'message-send-mail-with-sendmail)
 
-(setq mu4e-contexts
-      `( ,(make-mu4e-context
-	   :name "bonjour@thomasquesnon.fr"
-	   :enter-func (lambda () (mu4e-message "Bienvenue dans bonjour"))
-           :leave-func (lambda () (mu4e-message "On quitte bonjour"))
-	   :match-func (lambda (msg) (when msg
-				       (string-prefix-p "^/bonjour" (mu4e-message-field msg :maildir))))
-	   :vars '(
-		   (mu4e-sent-folder             . "/bonjour/Sent")
-		   (mu4e-drafts-folder           . "/bonjour/Drafts")
-		   (mu4e-trash-folder            . "/bonjour/Trash")
-		   ;; (mu4e-refile-folder "/bonjour/INBOX.Archive")
-		   (user-mail-address            . "bonjour@thomasguesnon.fr")
-		   (mu4e-compose-signature       . t)
-		   (mu4e-compose-signature-auto-include . t)
-		   (message-signature-file       . "~/sig-thomas")
-		   ;; (smtpmail-smtp-user           . "bonjour@thomasguesnon.fr")
-		   (user-full-name               . "Thomas Guesnon")
-		   ;; (smtpmail-default-smtp-server . "ssl0.ovh.net")
-		   ;; (smtpmail-smtp-server         . "ssl0.ovh.net")
-		   (smtpmail-smtp-service        . 465)
-		   (mu4e-maildir-shortcuts . (("/bonjour/INBOX" . ?i)
-					      ("/bonjour/Sent" . ?s)
-					      ("/bonjour/Drafts" . ?d)
-                ("/bonjour/Trash" . ?t)
-					      ))
-		   (mu4e-bookmarks . (("maildir:/bonjour/INBOX AND flag:unread" "Non-lus" ?u)))
-		   ;; (add-to-list 'mu4e-bookmarks
-		   ;; 		(make-mu4e-bookmark
-		   ;; 		 :name "Unread in bonjour"
-		   ;; 		 :query "maildir:/bonjour/INBOX AND flag:unread"
-		   ;; 		 :key ?v))
-		   ))
-         ,(make-mu4e-context
-	   :name "webadmin@kernavelo.org"
-	   :enter-func (lambda () (mu4e-message "Bienvenue dans webadmin"))
-           :leave-func (lambda () (mu4e-message "On quitte webadmin"))
-	   :match-func (lambda (msg) (when msg
-				       (string-prefix-p "^/kernavelo-webadmin" (mu4e-message-field msg :maildir))))
-	   :vars '(
-		         (mu4e-sent-folder             . "/kernavelo-webadmin/&AMk-l&AOk-ments envoy&AOk-s")
-		   (mu4e-drafts-folder           . "/kernavelo-webadmin/Brouillons")
-		   (mu4e-trash-folder            . "/kernavelo-webadmin/&AMk-l&AOk-ments supprim&AOk-s")
-		   ;; (mu4e-refile-folder "/kernavelo-webadmin/INBOX.Archive")
-		   (user-mail-address            . "webadmin@kernavelo.org")
-		   (mu4e-compose-signature       . t)
-		   (mu4e-compose-signature-auto-include . t)
-		   ;; (message-signature-file       . "~/sig-thomas")
-		   (user-full-name               . "Web admin Kernavélo")
-		   (smtpmail-smtp-service        . 465)
-		   (mu4e-maildir-shortcuts . (("/kernavelo-webadmin/INBOX" . ?i)
-					                        ("/kernavelo-webadmin/&AMk-l&AOk-ments envoy&AOk-s" . ?s)
-					                        ("/kernavelo-webadmin/Brouillons" . ?d)
-                                  ("/kernavelo-webadmin/&AMk-l&AOk-ments supprim&AOk-s" . ?t)
-					      ))
-		   (mu4e-bookmarks . (("maildir:/kernavelo-webadmin/INBOX AND flag:unread" "Non-lus" ?u)))
-		   ;; (add-to-list 'mu4e-bookmarks
-		   ;; 		(make-mu4e-bookmark
-		   ;; 		 :name "Unread in bonjour"
-		   ;; 		 :query "maildir:/kernavelo-webadmin/INBOX AND flag:unread"
-		   ;; 		 :key ?v))
-		   ))
-           ;;    ,(make-mu4e-context
-           ;; :name "thomas.guesnon@netcourrier.com"
-           ;; :enter-func (lambda () (mu4e-message "Change pour Netcourrier/Mailo"))
-           ;; ;; leave-fun not defined
-           ;; :match-func (lambda (msg)
-           ;;   (when msg
-           ;;     (mu4e-message-contact-field-matches msg
-           ;;       :to "thomas.guesnon@netcourrier.com")))
-           ;; :vars '(  ( user-mail-address      . "thomas.guesnon@netcourrier.com" )
-		       ;;           (mu4e-maildir-shortcuts . ())
-           ;;           (mu4e-maildir-shortcuts . (("/netcourrier/INBOX" . ?i)
-					 ;;                                      ;; ("/netcourrier/Sent" . ?s)
-					 ;;                                      ;; ("/netcourrier/Drafts" . ?d)
-           ;;                                      ;; ("/netcourrier/Trash" . ?t)
-					 ;;                                      ))
-		       ;;           (mu4e-bookmarks . (("maildir:/netcourrier/INBOX AND flag:unread" "Non-lus" ?u)))
-           ;;        ( user-full-name     . "Thomas Guesnon" )))
-   ))
+;; (setq mu4e-contexts
+;;       `( ,(make-mu4e-context
+;; 	   :name "bonjour@thomasquesnon.fr"
+;; 	   :enter-func (lambda () (mu4e-message "Bienvenue dans bonjour"))
+;;            :leave-func (lambda () (mu4e-message "On quitte bonjour"))
+;; 	   :match-func (lambda (msg) (when msg
+;; 				       (string-prefix-p "^/bonjour" (mu4e-message-field msg :maildir))))
+;; 	   :vars '(
+;; 		   (mu4e-sent-folder             . "/bonjour/Sent")
+;; 		   (mu4e-drafts-folder           . "/bonjour/Drafts")
+;; 		   (mu4e-trash-folder            . "/bonjour/Trash")
+;; 		   ;; (mu4e-refile-folder "/bonjour/INBOX.Archive")
+;; 		   (user-mail-address            . "bonjour@thomasguesnon.fr")
+;; 		   (mu4e-compose-signature       . t)
+;; 		   (mu4e-compose-signature-auto-include . t)
+;; 		   (message-signature-file       . "~/sig-thomas")
+;; 		   ;; (smtpmail-smtp-user           . "bonjour@thomasguesnon.fr")
+;; 		   (user-full-name               . "Thomas Guesnon")
+;; 		   ;; (smtpmail-default-smtp-server . "ssl0.ovh.net")
+;; 		   ;; (smtpmail-smtp-server         . "ssl0.ovh.net")
+;; 		   (smtpmail-smtp-service        . 465)
+;; 		   (mu4e-maildir-shortcuts . (("/bonjour/INBOX" . ?i)
+;; 					      ("/bonjour/Sent" . ?s)
+;; 					      ("/bonjour/Drafts" . ?d)
+;;                 ("/bonjour/Trash" . ?t)
+;; 					      ))
+;; 		   (mu4e-bookmarks . (("maildir:/bonjour/INBOX AND flag:unread" "Non-lus" ?u)))
+;; 		   ;; (add-to-list 'mu4e-bookmarks
+;; 		   ;; 		(make-mu4e-bookmark
+;; 		   ;; 		 :name "Unread in bonjour"
+;; 		   ;; 		 :query "maildir:/bonjour/INBOX AND flag:unread"
+;; 		   ;; 		 :key ?v))
+;; 		   ))
+;;          ,(make-mu4e-context
+;; 	   :name "webadmin@kernavelo.org"
+;; 	   :enter-func (lambda () (mu4e-message "Bienvenue dans webadmin"))
+;;            :leave-func (lambda () (mu4e-message "On quitte webadmin"))
+;; 	   :match-func (lambda (msg) (when msg
+;; 				       (string-prefix-p "^/kernavelo-webadmin" (mu4e-message-field msg :maildir))))
+;; 	   :vars '(
+;; 		         (mu4e-sent-folder             . "/kernavelo-webadmin/&AMk-l&AOk-ments envoy&AOk-s")
+;; 		   (mu4e-drafts-folder           . "/kernavelo-webadmin/Brouillons")
+;; 		   (mu4e-trash-folder            . "/kernavelo-webadmin/&AMk-l&AOk-ments supprim&AOk-s")
+;; 		   ;; (mu4e-refile-folder "/kernavelo-webadmin/INBOX.Archive")
+;; 		   (user-mail-address            . "webadmin@kernavelo.org")
+;; 		   (mu4e-compose-signature       . t)
+;; 		   (mu4e-compose-signature-auto-include . t)
+;; 		   ;; (message-signature-file       . "~/sig-thomas")
+;; 		   (user-full-name               . "Web admin Kernavélo")
+;; 		   (smtpmail-smtp-service        . 465)
+;; 		   (mu4e-maildir-shortcuts . (("/kernavelo-webadmin/INBOX" . ?i)
+;; 					                        ("/kernavelo-webadmin/&AMk-l&AOk-ments envoy&AOk-s" . ?s)
+;; 					                        ("/kernavelo-webadmin/Brouillons" . ?d)
+;;                                   ("/kernavelo-webadmin/&AMk-l&AOk-ments supprim&AOk-s" . ?t)
+;; 					      ))
+;; 		   (mu4e-bookmarks . (("maildir:/kernavelo-webadmin/INBOX AND flag:unread" "Non-lus" ?u)))
+;; 		   ;; (add-to-list 'mu4e-bookmarks
+;; 		   ;; 		(make-mu4e-bookmark
+;; 		   ;; 		 :name "Unread in bonjour"
+;; 		   ;; 		 :query "maildir:/kernavelo-webadmin/INBOX AND flag:unread"
+;; 		   ;; 		 :key ?v))
+;; 		   ))
+;;            ;;    ,(make-mu4e-context
+;;            ;; :name "thomas.guesnon@netcourrier.com"
+;;            ;; :enter-func (lambda () (mu4e-message "Change pour Netcourrier/Mailo"))
+;;            ;; ;; leave-fun not defined
+;;            ;; :match-func (lambda (msg)
+;;            ;;   (when msg
+;;            ;;     (mu4e-message-contact-field-matches msg
+;;            ;;       :to "thomas.guesnon@netcourrier.com")))
+;;            ;; :vars '(  ( user-mail-address      . "thomas.guesnon@netcourrier.com" )
+;; 		       ;;           (mu4e-maildir-shortcuts . ())
+;;            ;;           (mu4e-maildir-shortcuts . (("/netcourrier/INBOX" . ?i)
+;; 					 ;;                                      ;; ("/netcourrier/Sent" . ?s)
+;; 					 ;;                                      ;; ("/netcourrier/Drafts" . ?d)
+;;            ;;                                      ;; ("/netcourrier/Trash" . ?t)
+;; 					 ;;                                      ))
+;; 		       ;;           (mu4e-bookmarks . (("maildir:/netcourrier/INBOX AND flag:unread" "Non-lus" ?u)))
+;;            ;;        ( user-full-name     . "Thomas Guesnon" )))
+;;    ))
 
-;; use macos contacts into emacs
-;; https://codeisgreat.org/notes/emacs-macos-contacts.html
-;; type C-c TAB when marker is in TO field
-(when (eq system-type 'darwin)
-	(eval-and-compile (require 'eudcb-macos-contacts))
-	(eudc-macos-contacts-set-server "localhost"))
-(eval-when-compile (require 'message))
-(define-key message-mode-map
-	[(control ?c) (tab)] 'eudc-expand-inline)
-(eval-when-compile (require 'sendmail))
-(define-key mail-mode-map
-	[(control ?c) (tab)] 'eudc-expand-inline)
+;; ;; use macos contacts into emacs
+;; ;; https://codeisgreat.org/notes/emacs-macos-contacts.html
+;; ;; type C-c TAB when marker is in TO field
+;; (when (eq system-type 'darwin)
+;; 	(eval-and-compile (require 'eudcb-macos-contacts))
+;; 	(eudc-macos-contacts-set-server "localhost"))
+;; (eval-when-compile (require 'message))
+;; (define-key message-mode-map
+;; 	[(control ?c) (tab)] 'eudc-expand-inline)
+;; (eval-when-compile (require 'sendmail))
+;; (define-key mail-mode-map
+;; 	[(control ?c) (tab)] 'eudc-expand-inline)
 
-;; start with the first (default) context;
-;; default is to ask-if-none (ask when there's no context yet, and none match)
-(setq mu4e-context-policy 'pick-first)
+;; ;; start with the first (default) context;
+;; ;; default is to ask-if-none (ask when there's no context yet, and none match)
+;; (setq mu4e-context-policy 'pick-first)
 
-;; compose with the current context is no context matches;
-;; default is to ask
-(setq mu4e-compose-context-policy nil)
+;; ;; compose with the current context is no context matches;
+;; ;; default is to ask
+;; (setq mu4e-compose-context-policy nil)
 
-;; lires les mails html dans le browser de'emacs (eww)
-;; source : https://irreal.org/blog/?p=9587
-(defun jcs-view-in-eww (msg)
-  "Display current message in EWW browser."
-  (eww-browse-url (concat "file://" (mu4e~write-body-to-html msg))))
+;; ;; lires les mails html dans le browser de'emacs (eww)
+;; ;; source : https://irreal.org/blog/?p=9587
+;; (defun jcs-view-in-eww (msg)
+;;   "Display current message in EWW browser."
+;;   (eww-browse-url (concat "file://" (mu4e~write-body-to-html msg))))
 
 ;; --------------
 ;; THEME CHANGER

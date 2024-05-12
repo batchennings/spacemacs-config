@@ -621,12 +621,12 @@ If you are unsure, try setting them in `dotspacemacs/user-config' first."
   (setq org-roam-capture-templates
         '(("c" "concept" plain "%?"
            :if-new
-           (file+head (concat org-roam-directory "concept/%<%Y%m%d%H%M%S>-${title}.org" "#+title: ${title}\n"))
+           (file+head "~/SynologyDrive/org-roam/concept/%<%Y%m%d%H%M%S>-${title}.org" "#+title: ${title}\n"))
            :immediate-finish t
            :unnarrowed t)
           ("r" "reference" plain "%?"
            :if-new
-           (file+head (concat org-roam-directory "reference/%<%Y%m%d%H%M%S>-${title}.org" "#+title: ${title}\n#+filetags: :reference:\n"))
+           (file+head "~/SynologyDrive/org-roam/reference/%<%Y%m%d%H%M%S>-${title}.org" "#+title: ${title}\n#+filetags: :reference:\n"))
            :immediate-finish t
            :unnarrowed t)))
 

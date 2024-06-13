@@ -41,6 +41,7 @@ This function should only modify configuration layer settings."
      javascript
      html
      django
+     themes-megapack
      ;; ----------------------------------------------------------------
      ;; Example of useful layers you may want to use right away.
      ;; Uncomment some layer names and press `SPC f e R' (Vim style) or
@@ -652,6 +653,15 @@ This function is called at the very end of Spacemacs startup, after layer
 configuration.
 Put your configuration code here, except for variables that should be set
 before packages are loaded."
+ ;; (when (string= system-type "darwin")
+ ;;   (setq dired-use-ls-dired nil))
+ ;; (cond ((eq system-type 'berkeley-unix)
+ ;;        (setq insert-directory-program "/opt/homebrew/bin/gls")))
+  (when (string= system-type "darwin")
+    (setq dired-use-ls-dired t
+          insert-directory-program "/opt/homebrew/bin/gls"
+          dired-listing-switches "-aBhl --group-directories-first"))
+
   (define-key evil-normal-state-map (kbd "M-5") "[")
   ;; (setq debug-on-error t)
   ;; on signale à emacs l'emplacement des plugins
@@ -673,6 +683,8 @@ before packages are loaded."
 
   ;; delete/replace selected text (plutôt que de le placer après, ce qui me fait enrager)
   (setq dired-hide-details-mode t)
+;;  (setq ls-lisp-dirs-first t)
+
 
   (delete-selection-mode 1)
 
@@ -744,10 +756,10 @@ before packages are loaded."
    '(org-agenda-custom-commands
      '(("x" "Tags dans links/docs/notes-pro/wishlist" tags ""
         ((org-agenda-files
-	        `(,(concat org-directory "notes_links.org")
-	          ,(concat org-directory "notes_travail.org")
-	          ,(concat org-directory "notes_perso.org")
-	          ,(concat org-directory "notes_wishlist.org")))))
+	        `(,(concat org-directory "links.org")
+	          ,(concat org-directory "travail_notes.org")
+	          ,(concat org-directory "perso_notes.org")
+	          ,(concat org-directory "wishlist.org")))))
        ("n" "Agenda with states"
         ((agenda "" nil)
          (todo "INTR" nil)
@@ -761,12 +773,12 @@ before packages are loaded."
    '(org-agenda-text-search-extra-files
      ;; ,(concat org-directory "archive/archive.org")
      `(,(concat org-directory "projets.org_archive")
-       ,(concat org-directory "notes_famille.org")
-       ,(concat org-directory "notes_inbox.org")
-       ,(concat org-directory "notes_links.org")
-       ,(concat org-directory "notes_travail.org")
-       ,(concat org-directory "notes_perso.org")
-       ,(concat org-directory "notes_wishlist.org"))
+       ,(concat org-directory "famille.org")
+       ,(concat org-directory "inbox.org")
+       ,(concat org-directory "links.org")
+       ,(concat org-directory "travail_notes.org")
+       ,(concat org-directory "perso_notes.org")
+       ,(concat org-directory "wishlist.org"))
      )
    '(org-export-with-sub-superscripts nil)
    '(org-id-extra-files t)
@@ -778,17 +790,15 @@ before packages are loaded."
   (require 'evil-org)
 
 
-	  (setq org-refile-targets `((,(concat org-directory "notes_ecrire.org") :maxlevel . 9)
-				                       (,(concat org-directory "notes_famille.org") :maxlevel . 9)
-				                       (,(concat org-directory "notes_docs.org") :maxlevel . 9)
-				                       (,(concat org-directory "notes_links.org") :maxlevel . 9)
-				                       (,(concat org-directory "notes_inbox.org") :maxlevel . 9)
-				                       (,(concat org-directory "notes_travail.org") :maxlevel . 9)
-				                       (,(concat org-directory "notes_perso.org") :maxlevel . 9)
-				                       (,(concat org-directory "notes_visual.org") :maxlevel . 9)
-				                       (,(concat org-directory "notes_wishlist.org") :maxlevel . 9)
+	(setq org-refile-targets `((,(concat org-directory "famille.org") :maxlevel . 9)
+				                       (,(concat org-directory "docs.org") :maxlevel . 9)
+				                       (,(concat org-directory "links.org") :maxlevel . 9)
+				                       (,(concat org-directory "inbox.org") :maxlevel . 9)
+				                       (,(concat org-directory "travail_notes.org") :maxlevel . 9)
+				                       (,(concat org-directory "perso_notes.org") :maxlevel . 9)
+				                       (,(concat org-directory "visual.org") :maxlevel . 9)
+				                       (,(concat org-directory "wishlist.org") :maxlevel . 9)
 				                       (,(concat org-directory "projets.org_archive") :maxlevel . 9)
-				                       (,(concat org-directory "notes_son.org") :maxlevel . 9)
                                (org-agenda-files :maxlevel . 9)))
 	  (setq org-outline-path-complete-in-steps nil)         ; Refile in a single go
 	  ;; (setq org-refile-use-outline-path t)                  ; Show full paths for refiling
@@ -850,10 +860,10 @@ before packages are loaded."
   	 org-habit-graph-column 80
 
   	 ;; Setup Org Capture
-  	 org-default-notes-file (concat org-directory "notes_inbox.org")
+  	 org-default-notes-file (concat org-directory "inbox.org")
 
-  	 org-capture-templates `(		     ;; inbox
-				                     ("i" "Inbox" entry (file, (concat org-directory "notes_inbox.org"))
+  	 org-capture-templates `(;; inbox
+				                     ("i" "Inbox" entry (file, (concat org-directory "inbox.org"))
 				                      "* %^{Titre}\n \n:PROPERTIES:\n:Created: %U\n:END:"
 				                      :prepend t
 				                      :kill-buffer t
@@ -879,7 +889,7 @@ before packages are loaded."
 	                           ;; un item de wishlist
 				                     ("w"
 				                      "à lire/voir/entendre"
-				                      entry (file, (concat org-directory "notes_wishlist.org"))
+				                      entry (file, (concat org-directory "wishlist.org"))
 				                      "* TODO %^{Titre}\n:PROPERTIES:\n:Created: %U\n:END:"
 				                      :prepend t
 				                      :kill-buffer t
@@ -888,22 +898,15 @@ before packages are loaded."
 				                     ;; un groupe/compositeur/interprète
 				                     ("u"
 				                      "musique à écouter"
-				                      entry (file, (concat org-directory "notes_wishlist.org"))
+				                      entry (file, (concat org-directory "wishlist.org"))
 				                      "* TODO %^{Titre} :musique: \n:PROPERTIES:\n:Created: %U\n:END:"
 			                        :prepend t
 				                      :kill-buffer t
 				                      :empty-lines 1)
 
-				                     ;; une note d'écriture
-				                     ("e"
-				                      "Note d'écriture"
-				                      entry (file, (concat org-directory "notes_ecrire.org"))
-				                      "* %^{Titre}\n:PROPERTIES:\n:Created: %U\n:END:"
-
-				                                        :prepend t :kill-buffer t :empty-lines 1)
                              ("d"
 				                      "Documentation"
-				                      entry (file, (concat org-directory "notes_docs.org"))  ;; pour une tâche pro
+				                      entry (file, (concat org-directory "docs.org"))  ;; pour une tâche pro
   				                    "* TODO [#B] %^{Titre}\n:PROPERTIES:\n:Created: %U\n:END:"
   				                    :prepend t
 				                      :kill-buffer t
@@ -918,7 +921,7 @@ before packages are loaded."
 				                     ;; un lien
 				                     ("l"
 				                      "Lien"
-				                      entry (file, (concat org-directory "notes_links.org"))
+				                      entry (file, (concat org-directory "links.org"))
 				                      "* %^{Titre}\n:PROPERTIES:\n:Created: %U\n:END:"
 				                      :prepend t :kill-buffer t :empty-lines 1)
 				                     ))
@@ -988,7 +991,7 @@ before packages are loaded."
 	       ;; :publishing-directory "~/public_html/"
 	       :publishing-directory "/ssh:debian@51.210.101.191:/var/www/platform.thomasguesnon.net/org"
 	       :recursive nil
-	       :exclude "perso.org\\|travail.org\\|projets.org_archive\\|notes_famille.org\\|notes_ecrire.org\\|notes_travail.org\\|notes_perso.org\\|notes_inbox.org\\|notes_son.org"
+	       :exclude "perso.org\\|travail.org\\|projets.org_archive\\|famille.org\\|ecrire.org\\|travail.org\\|perso.org\\|inbox.org\\|son.org"
 	       :publishing-function org-html-publish-to-html
 	       :headline-levels 4             ; Just the default for this project.
 	       :auto-preamble t
@@ -1007,7 +1010,7 @@ before packages are loaded."
 	       :base-extension "org"
 	       :publishing-directory "~/public_html/"
 	       :recursive nil
-	       :exclude "perso.org\\|travail.org\\|projets.org_archive\\|notes_famille.org\\|notes_ecrire.org\\|notes_travail.org\\|notes_perso.org\\|notes_inbox.org\\|notes_son.org"
+	       :exclude "perso.org\\|travail.org\\|projets.org_archive\\|famille.org\\|ecrire.org\\|travail.org\\|perso.org\\|inbox.org\\|son.org"
 	       :publishing-function org-html-publish-to-html
 	       :headline-levels 4             ; Just the default for this project.
 	       :auto-preamble t
@@ -1529,20 +1532,37 @@ This function is called at the very end of Spacemacs initialization."
  '(doc-view-continuous t)
  '(flycheck-color-mode-line-face-to-color 'mode-line-buffer-id)
  '(helm-completion-style 'emacs)
+ '(org-agenda-custom-commands
+   '(("x" "Tags dans links/docs/notes-pro/wishlist" tags ""
+      ((org-agenda-files
+        `(,(concat org-directory "links.org")
+          ,(concat org-directory "travail_notes.org")
+          ,(concat org-directory "perso_notes.org")
+          ,(concat org-directory "wishlist.org")))))
+     ("n" "Agenda with states"
+      ((agenda "" nil)
+       (todo "INTR" nil)
+       (todo "PROG" nil)
+       (todo "NEXT" nil)
+       (todo "WAIT" nil))
+      nil)))
+ '(org-agenda-files
+   `(,(concat org-directory "travail.org")
+     ,(concat org-directory "perso.org")))
  '(org-agenda-search-view-max-outline-level 1)
  '(org-agenda-text-search-extra-files
    `(,(concat org-directory "projets.org_archive")
-     ,(concat org-directory "notes_famille.org")
-     ,(concat org-directory "notes_inbox.org")
-     ,(concat org-directory "notes_links.org")
-     ,(concat org-directory "notes_travail.org")
-     ,(concat org-directory "notes_perso.org")
-     ,(concat org-directory "notes_wishlist.org")))
+     ,(concat org-directory "famille.org")
+     ,(concat org-directory "inbox.org")
+     ,(concat org-directory "links.org")
+     ,(concat org-directory "travail_notes.org")
+     ,(concat org-directory "perso_notes.org")
+     ,(concat org-directory "wishlist.org")))
  '(org-export-with-sub-superscripts nil)
  '(org-id-extra-files t)
  '(org-id-track-globally t)
  '(package-selected-packages
-   '(graphviz-dot-mode theme-changer xah-fly-keys sqlite3 django-mode org-contacts org-vcard org-superstar yasnippet-snippets yapfify yaml-mode xterm-color ws-butler writeroom-mode winum which-key web-mode web-beautify volatile-highlights vim-powerline vi-tilde-fringe uuidgen use-package undo-tree treemacs-projectile treemacs-persp treemacs-magit treemacs-icons-dired treemacs-evil toc-org tern terminal-here term-cursor tagedit symon symbol-overlay string-edit-at-point sql-indent sphinx-doc spacemacs-whitespace-cleanup spacemacs-purpose-popwin spaceline-all-the-icons space-doc smeargle slim-mode shell-pop seeing-is-believing scss-mode sass-mode rvm ruby-tools ruby-test-mode ruby-refactor ruby-hash-syntax rubocopfmt rubocop rspec-mode robe restart-emacs request rbenv rake rainbow-delimiters quickrun pytest pylookup pyenv-mode pydoc py-isort pug-mode prettier-js popwin poetry pippel pipenv pip-requirements phpunit phpcbf php-extras php-auto-yasnippets password-generator paradox overseer orgit-forge org-roam-ui org-roam-bibtex org-rich-yank org-ref org-projectile org-present org-pomodoro org-mime org-download org-contrib org-cliplink open-junk-file npm-mode nose nodejs-repl nameless multi-vterm multi-term multi-line mu4e-maildirs-extension mu4e-alert minitest macrostep lorem-ipsum livid-mode live-py-mode link-hint json-reformat json-navigator json-mode js2-refactor js-doc inspector info+ indent-guide importmagic impatient-mode hybrid-mode hungry-delete holy-mode hl-todo highlight-parentheses highlight-numbers highlight-indentation hide-comnt help-fns+ helm-xref helm-themes helm-swoop helm-pydoc helm-purpose helm-projectile helm-org-rifle helm-org helm-mu helm-mode-manager helm-make helm-ls-git helm-git-grep helm-descbinds helm-css-scss helm-company helm-c-yasnippet helm-bibtex helm-ag google-translate golden-ratio gnuplot gitignore-templates git-timemachine git-modes git-messenger git-link geben fuzzy font-lock+ flycheck-package flycheck-elsa flx-ido fancy-battery eyebrowse expand-region evil-visualstar evil-visual-mark-mode evil-unimpaired evil-tutor evil-textobj-line evil-surround evil-org evil-numbers evil-nerd-commenter evil-mc evil-matchit evil-lisp-state evil-lion evil-indent-plus evil-iedit-state evil-goggles evil-exchange evil-evilified-state evil-escape evil-easymotion evil-collection evil-cleverparens evil-args evil-anzu eval-sexp-fu eshell-z eshell-prompt-extras esh-help emr emmet-mode elisp-slime-nav elisp-def editorconfig dumb-jump drupal-mode drag-stuff dotenv-mode dired-quick-sort diminish devdocs deft define-word cython-mode csv-mode company-web company-phpactor company-php company-anaconda column-enforce-mode code-cells clean-aindent-mode chruby centered-cursor-mode bundler blacken auto-yasnippet auto-highlight-symbol auto-compile aggressive-indent ace-link ace-jump-helm-line ac-ispell))
+   '(afternoon-theme alect-themes ample-theme ample-zen-theme anti-zenburn-theme apropospriate-theme badwolf-theme birds-of-paradise-plus-theme bubbleberry-theme busybee-theme cherry-blossom-theme chocolate-theme clues-theme color-theme-sanityinc-solarized color-theme-sanityinc-tomorrow cyberpunk-theme dakrone-theme darkmine-theme darkokai-theme darktooth-theme django-theme doom-themes dracula-theme espresso-theme exotica-theme eziam-themes farmhouse-themes flatland-theme flatui-theme gandalf-theme gotham-theme grandshell-theme gruber-darker-theme gruvbox-theme hc-zenburn-theme hemisu-theme heroku-theme inkpot-theme ir-black-theme jazz-theme jbeans-theme kaolin-themes light-soap-theme lush-theme madhat2r-theme majapahit-themes material-theme minimal-theme modus-themes moe-theme molokai-theme monochrome-theme monokai-theme mustang-theme naquadah-theme noctilux-theme obsidian-theme occidental-theme oldlace-theme omtose-phellack-theme organic-green-theme phoenix-dark-mono-theme phoenix-dark-pink-theme planet-theme professional-theme purple-haze-theme railscasts-theme rebecca-theme reverse-theme seti-theme smyx-theme soft-charcoal-theme soft-morning-theme soft-stone-theme solarized-theme soothe-theme autothemer spacegray-theme subatomic-theme subatomic256-theme sublime-themes sunny-day-theme tango-2-theme tango-plus-theme tangotango-theme tao-theme toxi-theme twilight-anti-bright-theme twilight-bright-theme twilight-theme ujelly-theme underwater-theme white-sand-theme zen-and-art-theme zenburn-theme zonokai-emacs graphviz-dot-mode theme-changer xah-fly-keys sqlite3 django-mode org-contacts org-vcard org-superstar yasnippet-snippets yapfify yaml-mode xterm-color ws-butler writeroom-mode winum which-key web-mode web-beautify volatile-highlights vim-powerline vi-tilde-fringe uuidgen use-package undo-tree treemacs-projectile treemacs-persp treemacs-magit treemacs-icons-dired treemacs-evil toc-org tern terminal-here term-cursor tagedit symon symbol-overlay string-edit-at-point sql-indent sphinx-doc spacemacs-whitespace-cleanup spacemacs-purpose-popwin spaceline-all-the-icons space-doc smeargle slim-mode shell-pop seeing-is-believing scss-mode sass-mode rvm ruby-tools ruby-test-mode ruby-refactor ruby-hash-syntax rubocopfmt rubocop rspec-mode robe restart-emacs request rbenv rake rainbow-delimiters quickrun pytest pylookup pyenv-mode pydoc py-isort pug-mode prettier-js popwin poetry pippel pipenv pip-requirements phpunit phpcbf php-extras php-auto-yasnippets password-generator paradox overseer orgit-forge org-roam-ui org-roam-bibtex org-rich-yank org-ref org-projectile org-present org-pomodoro org-mime org-download org-contrib org-cliplink open-junk-file npm-mode nose nodejs-repl nameless multi-vterm multi-term multi-line mu4e-maildirs-extension mu4e-alert minitest macrostep lorem-ipsum livid-mode live-py-mode link-hint json-reformat json-navigator json-mode js2-refactor js-doc inspector info+ indent-guide importmagic impatient-mode hybrid-mode hungry-delete holy-mode hl-todo highlight-parentheses highlight-numbers highlight-indentation hide-comnt help-fns+ helm-xref helm-themes helm-swoop helm-pydoc helm-purpose helm-projectile helm-org-rifle helm-org helm-mu helm-mode-manager helm-make helm-ls-git helm-git-grep helm-descbinds helm-css-scss helm-company helm-c-yasnippet helm-bibtex helm-ag google-translate golden-ratio gnuplot gitignore-templates git-timemachine git-modes git-messenger git-link geben fuzzy font-lock+ flycheck-package flycheck-elsa flx-ido fancy-battery eyebrowse expand-region evil-visualstar evil-visual-mark-mode evil-unimpaired evil-tutor evil-textobj-line evil-surround evil-org evil-numbers evil-nerd-commenter evil-mc evil-matchit evil-lisp-state evil-lion evil-indent-plus evil-iedit-state evil-goggles evil-exchange evil-evilified-state evil-escape evil-easymotion evil-collection evil-cleverparens evil-args evil-anzu eval-sexp-fu eshell-z eshell-prompt-extras esh-help emr emmet-mode elisp-slime-nav elisp-def editorconfig dumb-jump drupal-mode drag-stuff dotenv-mode dired-quick-sort diminish devdocs deft define-word cython-mode csv-mode company-web company-phpactor company-php company-anaconda column-enforce-mode code-cells clean-aindent-mode chruby centered-cursor-mode bundler blacken auto-yasnippet auto-highlight-symbol auto-compile aggressive-indent ace-link ace-jump-helm-line ac-ispell))
  '(speedbar-show-unknown-files t)
  '(warning-suppress-log-types '((use-package)))
  '(window-divider-mode nil))

@@ -90,7 +90,7 @@ This function should only modify configuration layer settings."
           org-enable-roam-protocol t
           ;; org-enable-org-contacts-support t
           org-enable-bootstrap-support t
-          ;; org-contacts-files '("~/SynologyDrive/org/contacts.org")
+          ;; org-contacts-files '("~/Dropbox/org/contacts.org")
 
           )
      org-roam-bibtex
@@ -618,16 +618,16 @@ If you are unsure, try setting them in `dotspacemacs/user-config' first."
 
   (add-to-list 'image-types 'svg) ;; solve a problem raised by launching dired - svg reading in Mac OS Ventura - https://emacs.stackexchange.com/questions/74289/emacs-28-2-error-in-macos-ventura-image-type-invalid-image-type-svg
 
-  (setq org-roam-directory "~/SynologyDrive/org-roam/")
+  (setq org-roam-directory "~/Dropbox/org-roam/")
   (setq org-roam-capture-templates
         '(("c" "concept" plain "%?"
            :if-new
-           (file+head "~/SynologyDrive/org-roam/concept/%<%Y%m%d%H%M%S>-${title}.org" "#+title: ${title}\n")
+           (file+head "~/Dropbox/org-roam/concept/%<%Y%m%d%H%M%S>-${title}.org" "#+title: ${title}\n")
            :immediate-finish t
            :unnarrowed t)
           ("r" "reference" plain "%?"
            :if-new
-           (file+head "~/SynologyDrive/org-roam/reference/%<%Y%m%d%H%M%S>-${title}.org" "#+title: ${title}\n#+filetags: :reference:\n")
+           (file+head "~/Dropbox/org-roam/reference/%<%Y%m%d%H%M%S>-${title}.org" "#+title: ${title}\n#+filetags: :reference:\n")
            :immediate-finish t
            :unnarrowed t)))
 
@@ -673,7 +673,7 @@ before packages are loaded."
 
   ;; default path for file creation
   (setq default-directory "~/Documents/")
-  (setq org-directory "~/SynologyDrive/org/")
+  (setq org-directory "~/Dropbox/org/")
 
 
   (org-roam-db-autosync-mode)
@@ -1492,10 +1492,10 @@ TAG is chosen interactively from the global tags completion table."
 ;; ---------------
 ;; BIBTEX
 ;; ---------------
-(setq bibtex-completion-bibliography '("~/SynologyDrive/papers/references.bib")
-      ;; helm-bibtex-bibliography '("~/SynologyDrive/papers/references.bib")
-      bibtex-completion-library-path '("~/SynologyDrive/papers/pdf_papers" "~/SynologyDrive/papers/pdf_books")
-      bibtex-completion-notes-path "~/SynologyDrive/papers/notes.org")
+(setq bibtex-completion-bibliography '("~/Dropbox/papers/references.bib")
+      ;; helm-bibtex-bibliography '("~/Dropbox/papers/references.bib")
+      bibtex-completion-library-path '("~/Dropbox/papers/pdf_papers" "~/Dropbox/papers/pdf_books")
+      bibtex-completion-notes-path "~/Dropbox/papers/notes.org")
 (setq bibtex-completion-pdf-field "file")
 ;; (setq bibtex-completion-pdf-open-function
       ;; (lambda (fpath)

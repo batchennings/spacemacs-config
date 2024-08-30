@@ -618,16 +618,11 @@ If you are unsure, try setting them in `dotspacemacs/user-config' first."
 
   (add-to-list 'image-types 'svg) ;; solve a problem raised by launching dired - svg reading in Mac OS Ventura - https://emacs.stackexchange.com/questions/74289/emacs-28-2-error-in-macos-ventura-image-type-invalid-image-type-svg
 
-  (setq org-roam-directory "~/Dropbox/org-roam/")
+  (setq org-roam-directory "/Users/patjennings/Library/Mobile Documents/iCloud~com~logseq~logseq/Documents/notes/pages")
   (setq org-roam-capture-templates
         '(("c" "concept" plain "%?"
            :if-new
-           (file+head "~/Dropbox/org-roam/concept/%<%Y%m%d%H%M%S>-${title}.org" "#+title: ${title}\n")
-           :immediate-finish t
-           :unnarrowed t)
-          ("r" "reference" plain "%?"
-           :if-new
-           (file+head "~/Dropbox/org-roam/reference/%<%Y%m%d%H%M%S>-${title}.org" "#+title: ${title}\n#+filetags: :reference:\n")
+           (file+head "/Users/patjennings/Library/Mobile Documents/iCloud~com~logseq~logseq/Documents/notes/pages/%<%Y%m%d%H%M%S>-${title}.org" "#+title: ${title}\n")
            :immediate-finish t
            :unnarrowed t)))
 
@@ -1417,6 +1412,24 @@ TAG is chosen interactively from the global tags completion table."
 (add-hook 'LilyPond-mode-hook (lambda () (turn-on-font-lock)))
 
 ;; ---------------
+;; ORG FILE TO MULTIPLES
+;; ---------------
+(defun my-org-export-each-level-1-headline-to-org (&optional scope)
+  (interactive)
+  (org-map-entries
+   (lambda ()
+     (let* ((title (car (last (org-get-outline-path t))))
+            (dir (file-name-directory buffer-file-name))
+            (filename (concat dir title ".org"))
+            content)
+       (org-narrow-to-subtree)
+       (setq content (buffer-substring-no-properties (point-min) (point-max)))
+       (with-temp-buffer
+         (insert content)
+         (write-file filename))
+       (widen)))
+   "LEVEL=1" scope))
+;; ---------------
 ;; PANDOC/MARKDOWN
 ;; ---------------
 (setq markdown-command "/opt/homebrew/bin/pandoc")
@@ -1531,7 +1544,7 @@ This function is called at the very end of Spacemacs initialization."
  ;; If there is more than one, they won't work right.
  '(doc-view-continuous t)
  '(flycheck-color-mode-line-face-to-color 'mode-line-buffer-id)
- '(helm-completion-style 'emacs)
+ '(helm-completion-style 'emacs t)
  '(org-agenda-custom-commands
    '(("x" "Tags dans links/docs/notes-pro/wishlist" tags ""
       ((org-agenda-files
@@ -1546,9 +1559,7 @@ This function is called at the very end of Spacemacs initialization."
        (todo "NEXT" nil)
        (todo "WAIT" nil))
       nil)))
- '(org-agenda-files
-   `(,(concat org-directory "travail.org")
-     ,(concat org-directory "perso.org")))
+ '(org-agenda-files '("/Users/patjennings/Dropbox/org/travail.org"))
  '(org-agenda-search-view-max-outline-level 1)
  '(org-agenda-text-search-extra-files
    `(,(concat org-directory "projets.org_archive")
